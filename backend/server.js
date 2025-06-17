@@ -90,6 +90,9 @@ app.post('/api/generate-resume', async (req, res) => {
     };
 
     const child = exec('python3 resume.py', { cwd: __dirname });
+    child.stderr.on('data', (data) => {
+      console.error(`🔴 resume.py stderr: ${data}`);
+    });
     let summary = [];
 
     child.stdin.write(JSON.stringify(resumeData));

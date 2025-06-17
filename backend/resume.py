@@ -24,13 +24,15 @@ Projects: {', '.join([f"{p['title']} - {p['description']}" for p in projects])}
 Start directly with the summary. Do not repeat the inputs.
 """
 
-    try:
-        model = genai.GenerativeModel("models/gemini-1.5-flash-latest")
-        response = model.generate_content(prompt)
-        return [line.strip() for line in response.text.split('\n') if line.strip()][:3]
-    except Exception as e:
-        print("⚠️ Gemini generation failed:", e, file=sys.stderr)
-        return []
+    
+try:
+    model = genai.GenerativeModel("models/gemini-1.5-flash-latest")
+    response = model.generate_content(prompt)
+    print("✅ Gemini API Response:", response.text, file=sys.stderr)  # 👈 Log full response
+    return [line.strip() for line in response.text.split('\n') if line.strip()][:3]
+except Exception as e:
+    print("⚠️ Gemini generation failed:", e, file=sys.stderr)
+    return ["Summary generation failed."]
 
 if __name__ == "__main__":
     # 🔽 Minimal addition: read from stdin and return summary as JSON
