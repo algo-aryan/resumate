@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Resume Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+  <style>
+    /* Default: Professional & Modern Bluish Dark Theme Palette */
+    :root {
+      --primary-bg: #0d1a26;
+      --secondary-bg: #1a2a3a;
+      --accent-main: #007bff;
+      --accent-light: #00c6ff;
+      --highlight-green: #00e676; /* Vibrant green for dark theme highlights */
+
+      --text-header: #ffffff;
+      --text-body: #e0e7ed;
+      --text-muted: #9fb3c8;
+
+      --border-color: rgba(255, 255, 255, 0.08);
+      --shadow-primary: rgba(0, 0, 0, 0.6);
+      --shadow-secondary: rgba(0, 0, 0, 0.3);
+      --glass-overlay: rgba(255, 255, 255, 0.05);
+      --glass-blur: 10px;
+
+      --gradient-button: linear-gradient(135deg, var(--accent-main) 0%, var(--accent-light) 100%);
+      --gradient-card-border: linear-gradient(90deg, var(--highlight-green), var(--accent-main));
+
+      /* RGB values for transparent colors for rgba() usage */
+      --highlight-green-rgb: 0, 230, 118;
+      --accent-main-rgb: 0, 123, 255;
+      --text-header-rgb: 255, 255, 255;
+      --accent-light-rgb: 0, 198, 255;
+      --secondary-bg-rgb-alpha-low: rgba(26, 42, 58, 0.08); /* For body radial gradient */
+    }
+
+    /* Light Theme Overrides (Now Bluish) */
+    body.light-theme {
+      --primary-bg: #f0f2f5;
+      --secondary-bg: #ffffff;
+      --accent-main: #1976d2; /* Primary Blue */
+      --accent-light: #2196f3; /* Lighter Blue */
+      --highlight-green: #4caf50; /* Green for light theme highlights - a more standard green */
+
+      --text-header: #212121;
+      --text-body: #424242;
+      --text-muted: #757575;
+
+      --border-color: rgba(0, 0, 0, 0.08);
+      --shadow-primary: rgba(0, 0, 0, 0.2);
+      --shadow-secondary: rgba(0, 0, 0, 0.1);
+      --glass-overlay: rgba(255, 255, 255, 0.5);
+
+      --gradient-button: linear-gradient(135deg, var(--accent-main) 0%, var(--accent-light) 100%);
+      --gradient-card-border: linear-gradient(90deg, var(--highlight-green), var(--accent-main));
+
+      /* RGB values for transparent colors */
+      --highlight-green-rgb: 76, 175, 80;
+      --accent-main-rgb: 25, 118, 210;
+      --text-header-rgb: 0, 0, 0;
+      --accent-light-rgb: 33, 150, 243;
+      --secondary-bg-rgb-alpha-low: rgba(0, 0, 0, 0.02); /* For body radial gradient */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif; /* Changed font */
+      transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out, transform 0.4s ease-in-out,
+                  box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    }
+
+    body {
+      background: var(--primary-bg);
+      color: var(--text-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; /* Aligns content to the top */
+      padding: 20px;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle at 10% 20%, var(--secondary-bg-rgb-alpha-low) 0%, transparent 10%),
+                        radial-gradient(circle at 90% 80%, var(--secondary-bg-rgb-alpha-low) 0%, transparent 10%);
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    /* Main container for the chatbot itself, to center it and apply glassmorphism */
+    .chatbot-wrapper { /* New wrapper for centering the chatbox and input */
+      background: var(--glass-overlay);
+      backdrop-filter: blur(var(--glass-blur));
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px; /* Space from title */
+      box-shadow: 0 8px 32px var(--shadow-primary);
+      width: 100%;
+      max-width: 550px; /* Reduced width for a more standard chatbot look */
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    h1 {
+      margin: 30px 0 0; /* Adjusted margin to not push down from back button */
+      font-size: 2.5rem; /* Larger, more impactful heading */
+      text-align: center;
+      color: var(--text-header);
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-shadow: 0 0 20px rgba(var(--text-header-rgb), 0.05); /* Soft text shadow */
+      position: relative;
+    }
+
+    .chatbox {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.02); /* Slightly less opaque for inner chatbox */
+      border-radius: 12px; /* Slightly less rounded than outer container */
+      padding: 15px;
+      flex-grow: 1; /* Allows chatbox to take available height */
+      min-height: 300px; /* Minimum height for visibility */
+      max-height: 50vh; /* Max height to allow scrolling */
+      overflow-y: auto;
+      box-shadow: inset 0 2px 10px var(--shadow-secondary); /* Inner shadow */
+      border: 1px solid rgba(255, 255, 255, 0.05); /* Lighter border for inner chatbox */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Custom Scrollbar for Chatbox */
+    .chatbox::-webkit-scrollbar {
+      width: 8px;
+    }
+    .chatbox::-webkit-scrollbar-track {
+      background: var(--secondary-bg);
+      border-radius: 10px;
+    }
+    .chatbox::-webkit-scrollbar-thumb {
+      background: var(--accent-light);
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
+    .chatbox::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-main);
+    }
+
+    .message {
+      padding: 10px 18px;
+      margin: 8px 0;
+      border-radius: 18px;
+      max-width: 85%;
+      font-size: 15px;
+      line-height: 1.6;
+      animation: fadeInUp 0.25s ease forwards;
+      opacity: 0;
+      box-shadow: 0 2px 8px var(--shadow-secondary);
+    }
+
+    .bot {
+      background: var(--secondary-bg);
+      align-self: flex-start;
+      color: var(--text-body);
+      border: 1px solid var(--border-color);
+    }
+
+    .user {
+      background: var(--gradient-button);
+      align-self: flex-end;
+      color: var(--text-header);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .input-box {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-top: 15px; /* Space between chatbox and input */
+    }
+
+    input {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px 0 0 12px;
+      outline: none;
+      background: var(--secondary-bg);
+      color: var(--text-body);
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      background: rgba(var(--text-header-rgb), 0.1);
+      border-color: var(--accent-light);
+      box-shadow: 0 0 0 3px rgba(var(--accent-light-rgb), 0.2);
+    }
+
+    button {
+      padding: 14px 24px;
+      font-size: 16px;
+      background: var(--gradient-button);
+      color: var(--text-header);
+      border: 2px solid transparent;
+      border-radius: 0 12px 12px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-weight: 600;
+    }
+    button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2); /* Shine effect */
+        transform: skewX(-20deg);
+        transition: transform 0.6s ease-out;
+    }
+    button:hover::before {
+        transform: translateX(100%) skewX(-20deg);
+    }
+    button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(var(--accent-main-rgb), 0.4);
+      border-color: var(--highlight-green);
+    }
+
+    #resumeOutput {
+      max-width: 700px; /* Remains wider for resume preview */
+      margin: 30px auto;
+      background: var(--secondary-bg);
+      color: var(--text-body);
+      padding: 25px;
+      border-radius: 18px;
+      font-size: 15px;
+      line-height: 1.7;
+      box-shadow: 0 10px 30px var(--shadow-primary);
+      display: none;
+      border: 1px solid var(--border-color);
+    }
+    #resumeOutput h3 {
+        color: var(--text-header);
+        margin-bottom: 15px;
+    }
+    #resumeOutput p {
+        margin-bottom: 8px;
+    }
+
+    #downloadBtn {
+      display: none;
+      margin: 15px auto 40px auto;
+      padding: 14px 30px;
+      font-size: 16px;
+      background: var(--gradient-button);
+      color: var(--text-header);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 5px 20px rgba(var(--accent-main-rgb), 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    #downloadBtn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: skewX(-20deg);
+        transition: transform 0.6s ease-out;
+    }
+    #downloadBtn:hover::before {
+        transform: translateX(100%) skewX(-20deg);
+    }
+    #downloadBtn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 30px rgba(var(--accent-main-rgb), 0.5);
+      border-color: var(--highlight-green);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Back Button - added for navigation */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: inline-block;
+      color: var(--accent-light);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      background-color: var(--glass-overlay);
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.3s, transform 0.2s;
+      border: 1px solid var(--border-color);
+      z-index: 10;
+    }
+
+    .back-btn:hover {
+      background-color: rgba(var(--text-header-rgb), 0.1);
+      transform: translateX(-2px);
+    }
+
+    /* Theme Toggle Switch - added for user preference */
+    .theme-switch {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+      z-index: 10;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--secondary-bg);
+      transition: .4s;
+      border-radius: 28px;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 3px;
+      background-color: var(--accent-main);
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+      background-color: var(--secondary-bg);
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--accent-main);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+      background-color: var(--highlight-green);
+    }
+    .slider .icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+
+    .slider .icon.sun {
+        left: 8px;
+        color: #f7b237;
+        opacity: 1;
+    }
+    .slider .icon.moon {
+        right: 8px;
+        color: #c9d6ea;
+        opacity: 0;
+    }
+    input:checked + .slider .icon.sun {
+        opacity: 0;
+    }
+    input:checked + .slider .icon.moon {
+        opacity: 1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+        margin-top: 80px; /* Space for fixed elements on top */
+      }
+      .chatbot-wrapper {
+        max-width: 95%;
+        padding: 15px;
+      }
+      .chatbox {
+        max-height: 60vh; /* Adjust height for smaller screens */
+      }
+      .message {
+        font-size: 13px;
+        padding: 6px 10px;
+      }
+      input, button, #downloadBtn {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+      .back-btn {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+        top: 15px;
+        left: 15px;
+      }
+      .theme-switch {
+        top: 15px;
+        right: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+        margin-top: 70px;
+      }
+      .chatbot-wrapper {
+        padding: 10px;
+      }
+      .message {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+  <h1>🤖 ResuMate Chatbot</h1>
+  <label class="theme-switch">
+    <input type="checkbox" id="themeToggle">
+    <span class="slider">
+      <span class="icon sun">☀️</span>
+      <span class="icon moon">🌙</span>
+    </span>
+  </label>
+
+  <div class="chatbot-wrapper">
+    <div class="chatbox" id="chatbox"></div>
+    <div class="input-box">
+      <input type="text" id="userInput" placeholder="Type your answer here...">
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <div id="resumeOutput"></div>
+  <button id="downloadBtn">📥 Download Resume as PDF</button>
+
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    const userInput = document.getElementById('userInput');
+    const resumeOutput = document.getElementById('resumeOutput');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const sendBtn = document.getElementById('sendBtn');
+
+    let currentQuestion = 0;
+    let data = { education: [], experience: [], projects: [] };
+    let temp = {};
+
+    const questions = [
+      { key: 'name', text: "👋 Hi there! I'm ResuMate. Let's build your resume. What's your full name?" },
+      { key: 'email', text: "📧 What's your email?" },
+      { key: 'phone', text: "📱 What's your phone number?" },
+      { key: 'linkedin', text: "🔗 Your LinkedIn profile? (optional)" },
+      { key: 'goal', text: "🎯 What's your career goal?" },
+      { key: 'edu-deg', text: "🎓 Let's start with your education. Degree?" }
+    ];
+
+    function botReply(message, delay = 600) {
+      const msg = document.createElement('div');
+      msg.className = 'message bot';
+      msg.textContent = '🤖 Typing...';
+      chatbox.appendChild(msg);
+      chatbox.scrollTop = chatbox.scrollHeight;
+
+      setTimeout(() => {
+        msg.textContent = message;
+        msg.style.opacity = 1;
+      }, delay);
+    }
+
+    function userReply(message) {
+      const msg = document.createElement('div');
+      msg.className = 'message user';
+      msg.textContent = message;
+      chatbox.appendChild(msg);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function sendMessage() {
+      const msg = userInput.value.trim();
+      if (!msg) return;
+      userReply(msg);
+
+      const q = questions[currentQuestion];
+
+      if (q?.key === 'edu-deg') {
+        temp.degree = msg;
+        questions.splice(currentQuestion + 1, 0,
+          { key: 'edu-inst', text: '🏫 Institution?' },
+          { key: 'edu-year', text: '📅 Year?' }
+        );
+      } else if (q?.key === 'edu-inst') {
+        temp.institution = msg;
+      } else if (q?.key === 'edu-year') {
+        temp.year = msg;
+        data.education.push(temp);
+        temp = {};
+        questions.splice(currentQuestion + 1, 0,
+          { key: 'more-edu', text: '➕ Add more education? (yes/no)' });
+      } else if (q?.key === 'more-edu') {
+        if (msg.toLowerCase().startsWith('y')) {
+          questions.splice(currentQuestion + 1, 0, { key: 'edu-deg', text: '🎓 Degree?' });
+        } else {
+          questions.splice(currentQuestion + 1, 0, { key: 'exp-role', text: '💼 Let’s add experience. Role?' });
+        }
+      } else if (q?.key === 'exp-role') {
+        temp.role = msg;
+        questions.splice(currentQuestion + 1, 0,
+          { key: 'exp-comp', text: '🏢 Company?' },
+          { key: 'exp-year', text: '📅 Year?' },
+          { key: 'exp-desc', text: '📄 Description?' }
+        );
+      } else if (q?.key === 'exp-comp') {
+        temp.company = msg;
+      } else if (q?.key === 'exp-year') {
+        temp.year = msg;
+      } else if (q?.key === 'exp-desc') {
+        temp.description = msg;
+        data.experience.push(temp);
+        temp = {};
+        questions.splice(currentQuestion + 1, 0,
+          { key: 'more-exp', text: '➕ Add more experience? (yes/no)' });
+      } else if (q?.key === 'more-exp') {
+        if (msg.toLowerCase().startsWith('y')) {
+          questions.splice(currentQuestion + 1, 0, { key: 'exp-role', text: '💼 Role?' });
+        } else {
+          questions.splice(currentQuestion + 1, 0, { key: 'proj-title', text: '💡 Let’s add a project. Title?' });
+        }
+      } else if (q?.key === 'proj-title') {
+        temp.title = msg;
+        questions.splice(currentQuestion + 1, 0, { key: 'proj-desc', text: '📝 Description?' });
+      } else if (q?.key === 'proj-desc') {
+        temp.description = msg;
+        data.projects.push(temp);
+        temp = {};
+        questions.splice(currentQuestion + 1, 0,
+          { key: 'more-proj', text: '➕ Add more project? (yes/no)' });
+      } else if (q?.key === 'more-proj') {
+        if (msg.toLowerCase().startsWith('y')) {
+          questions.splice(currentQuestion + 1, 0, { key: 'proj-title', text: '💡 Project Title?' });
+        } else {
+          questions.splice(currentQuestion + 1, 0, { key: 'skills', text: '💡 Finally, list your skills (comma-separated)' });
+        }
+      } else if (q?.key === 'skills') {
+        data.skills = msg;
+        generateResume();
+        return;
+      } else if (q) {
+        data[q.key] = msg;
+      }
+
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        botReply(questions[currentQuestion].text);
+      }
+
+      userInput.value = '';
+    }
+
+    async function generateResume() {
+      botReply("🛠 Generating your resume...");
+
+      const response = await fetch('http://localhost:3000/api/generate-resume', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const html = await response.text();
+      resumeOutput.style.display = 'block';
+      resumeOutput.innerHTML = html;
+      window.generatedResumeHTML = html;
+      downloadBtn.style.display = 'block';
+      botReply("✅ Done! You can now download your resume.");
+    }
+
+    downloadBtn.addEventListener("click", async () => {
+      const response = await fetch("http://localhost:3000/api/download-resume-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html: window.generatedResumeHTML })
+      });
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Resume.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    window.onload = () => {
+      // Theme Toggle Logic - ONLY ADDED THIS SMALL JS FOR THEME TOGGLE
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+
+      // Function to apply theme
+      function applyTheme(isDark) {
+        if (isDark) {
+          body.classList.remove('light-theme');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          body.classList.add('light-theme');
+          localStorage.setItem('theme', 'light');
+        }
+      }
+
+      // Load saved theme on page load
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        themeToggle.checked = true;
+        applyTheme(false);
+      } else {
+        themeToggle.checked = false;
+        applyTheme(true);
+      }
+
+      // Event listener for theme toggle
+      themeToggle.addEventListener('change', function() {
+        applyTheme(!this.checked);
+      });
+
+      botReply(questions[0].text);
+    };
+  </script>
+</body>
+</html>

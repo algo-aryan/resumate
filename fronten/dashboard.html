@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | ResuMate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+  <style>
+    /* Default: Professional & Modern Bluish Dark Theme Palette */
+    :root {
+      --primary-bg: #0d1a26;
+      --secondary-bg: #1a2a3a;
+      --accent-main: #007bff;
+      --accent-light: #00c6ff;
+      --highlight-green: #00e676; /* Vibrant green for dark theme highlights */
+
+      --text-header: #ffffff;
+      --text-body: #e0e7ed;
+      --text-muted: #9fb3c8;
+
+      --border-color: rgba(255, 255, 255, 0.08);
+      --shadow-primary: rgba(0, 0, 0, 0.6);
+      --shadow-secondary: rgba(0, 0, 0, 0.3);
+      --glass-overlay: rgba(255, 255, 255, 0.05);
+      --glass-blur: 10px;
+
+      --gradient-button: linear-gradient(135deg, var(--accent-main) 0%, var(--accent-light) 100%);
+      --gradient-card-border: linear-gradient(90deg, var(--highlight-green), var(--accent-main));
+
+      /* RGB values for transparent colors */
+      --highlight-green-rgb: 0, 230, 118;
+      --accent-main-rgb: 0, 123, 255;
+    }
+
+    /* Light Theme Overrides (Now Bluish) */
+    body.light-theme {
+      --primary-bg: #f0f2f5;
+      --secondary-bg: #ffffff;
+      --accent-main: #1976d2; /* Primary Blue */
+      --accent-light: #2196f3; /* Lighter Blue */
+      --highlight-green: #4caf50; /* Green for light theme highlights - a more standard green */
+
+      --text-header: #212121;
+      --text-body: #424242;
+      --text-muted: #757575;
+
+      --border-color: rgba(0, 0, 0, 0.08);
+      --shadow-primary: rgba(0, 0, 0, 0.2);
+      --shadow-secondary: rgba(0, 0, 0, 0.1);
+      --glass-overlay: rgba(255, 255, 255, 0.5);
+
+      --gradient-button: linear-gradient(135deg, var(--accent-main) 0%, var(--accent-light) 100%);
+      --gradient-card-border: linear-gradient(90deg, var(--highlight-green), var(--accent-main));
+
+      /* RGB values for transparent colors */
+      --highlight-green-rgb: 76, 175, 80; /* RGB for the new light theme green */
+      --accent-main-rgb: 25, 118, 210; /* RGB for the new light theme primary blue */
+    }
+
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out, transform 0.4s ease-in-out,
+                  box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    }
+
+    body {
+      background: var(--primary-bg);
+      color: var(--text-body);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      font-size: 16px;
+      line-height: 1.6;
+      background-image: radial-gradient(circle at 10% 20%, var(--secondary-bg-rgb-alpha-low) 0%, transparent 10%),
+                        radial-gradient(circle at 90% 80%, var(--secondary-bg-rgb-alpha-low) 0%, transparent 10%);
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    body:not(.light-theme) {
+        --secondary-bg-rgb-alpha-low: rgba(26, 42, 58, 0.08);
+    }
+    body.light-theme {
+        --secondary-bg-rgb-alpha-low: rgba(0, 0, 0, 0.02);
+    }
+
+
+    /* Navbar Styling (Formerly Sidebar) */
+    .sidebar {
+      width: 100%;
+      height: 80px;
+      background: var(--secondary-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 2.5rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 6px 20px var(--shadow-primary);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2000;
+      animation: slideInDown 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .sidebar h2 {
+      font-size: 2.2rem;
+      color: var(--highlight-green); /* Default: vibrant green for dark theme */
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      text-shadow: 0 0 10px var(--highlight-green-shadow-color);
+      margin-bottom: 0;
+      margin-right: 30px;
+    }
+    body:not(.light-theme) .sidebar h2 {
+        --highlight-green-shadow-color: rgba(0, 230, 118, 0.3);
+    }
+    body.light-theme .sidebar h2 {
+        color: var(--accent-main); /* Changed to bluish for light theme logo */
+        --highlight-green-shadow-color: rgba(25, 118, 210, 0.3); /* Shadow adjusted for new blue */
+    }
+
+    .sidebar .nav-links {
+      display: flex;
+      gap: 25px;
+      flex-grow: 1;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: var(--text-body);
+      font-size: 1.05rem;
+      padding: 10px 15px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      font-weight: 500;
+      background: transparent;
+      border: 1px solid transparent;
+    }
+
+    .sidebar a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--highlight-green-rgb-alpha-low) 0%, transparent 80%);
+      transform: translateX(-100%);
+      transition: transform 0.4s ease;
+      z-index: 0;
+    }
+    body:not(.light-theme) .sidebar a::before {
+        --highlight-green-rgb-alpha-low: rgba(0, 230, 118, 0.1);
+    }
+    body.light-theme .sidebar a::before {
+        --highlight-green-rgb-alpha-low: rgba(76, 175, 80, 0.1);
+    }
+
+    .sidebar a:hover::before {
+      transform: translateX(0%);
+    }
+
+    .sidebar a:hover {
+      color: var(--highlight-green);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px var(--highlight-green-shadow);
+      border-color: var(--highlight-green-border);
+    }
+    body:not(.light-theme) .sidebar a:hover {
+        --highlight-green-shadow: rgba(0, 230, 118, 0.2);
+        --highlight-green-border: rgba(0, 230, 118, 0.3);
+    }
+    body.light-theme .sidebar a:hover {
+        --highlight-green-shadow: rgba(76, 175, 80, 0.2);
+        --highlight-green-border: rgba(76, 175, 80, 0.3);
+    }
+
+
+    .sidebar a.active {
+      background: var(--gradient-button);
+      color: var(--text-header);
+      box-shadow: 0 3px 15px var(--accent-main-shadow);
+      font-weight: 700;
+      transform: translateY(-2px);
+      border-color: var(--accent-main);
+    }
+    body:not(.light-theme) .sidebar a.active {
+        --accent-main-shadow: rgba(0, 123, 255, 0.4);
+    }
+    body.light-theme .sidebar a.active {
+        --accent-main-shadow: rgba(25, 118, 210, 0.4);
+    }
+
+
+    .sidebar a lord-icon {
+        transform: scale(1.05);
+        transition: transform 0.3s ease;
+        filter: var(--icon-filter);
+    }
+    .sidebar a:hover lord-icon {
+        transform: scale(1.2);
+    }
+    .sidebar a.active lord-icon {
+        filter: brightness(1.2);
+    }
+    body:not(.light-theme) .sidebar a {
+        --icon-filter: none;
+    }
+    body.light-theme .sidebar a {
+        --icon-filter: brightness(0.7);
+    }
+
+
+    /* Theme Toggle Switch */
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+      margin-left: 20px;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--secondary-bg);
+      transition: .4s;
+      border-radius: 28px;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 3px;
+      background-color: var(--accent-main);
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+      background-color: var(--secondary-bg);
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--accent-main);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+      background-color: var(--highlight-green);
+    }
+    .slider .icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+
+    .slider .icon.sun {
+        left: 8px;
+        color: #f7b237;
+        opacity: 1;
+    }
+    .slider .icon.moon {
+        right: 8px;
+        color: #c9d6ea;
+        opacity: 0;
+    }
+    input:checked + .slider .icon.sun {
+        opacity: 0;
+    }
+    input:checked + .slider .icon.moon {
+        opacity: 1;
+    }
+
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      padding: 3.5rem;
+      padding-top: 130px;
+      overflow-y: auto;
+      background: transparent;
+      animation: fadeIn 0.8s ease-out forwards;
+      position: relative;
+    }
+
+    /* Top Bar Styling (Now part of main-content, below navbar) */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3.5rem;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--border-color);
+      animation: fadeIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      animation-delay: 0.2s;
+    }
+
+    .topbar h1 {
+      font-size: 3.2rem;
+      color: var(--text-header);
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-shadow: 0 0 20px var(--text-header-shadow);
+    }
+    body:not(.light-theme) .topbar h1 {
+        --text-header-shadow: rgba(255, 255, 255, 0.05);
+    }
+    body.light-theme .topbar h1 {
+        --text-header-shadow: rgba(0, 0, 0, 0.05);
+    }
+
+    .topbar p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* Feature Cards Section */
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 35px;
+      margin-top: 60px;
+    }
+
+    .feature-card {
+      background: var(--secondary-bg);
+      border-radius: 20px;
+      padding: 45px;
+      box-shadow: 0 10px 40px var(--shadow-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+      animation: zoomIn 0.7s ease-out forwards;
+      animation-delay: var(--delay, 0s);
+      border: 1px solid var(--border-color);
+      justify-content: space-between;
+      height: auto;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--glass-overlay);
+        backdrop-filter: blur(var(--glass-blur));
+        border-radius: 20px;
+        z-index: 0;
+    }
+
+    .feature-card::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: var(--gradient-card-border);
+        border-radius: 22px;
+        z-index: -1;
+        opacity: 0;
+        transform: scale(0.98);
+        filter: blur(8px);
+        transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-12px) scale(1.04);
+      box-shadow: 0 15px 50px var(--shadow-primary), 0 0 30px var(--highlight-green-glow);
+    }
+    .feature-card:hover::after {
+        opacity: 1;
+        transform: scale(1);
+    }
+    body:not(.light-theme) .feature-card:hover {
+        --highlight-green-glow: rgba(0, 230, 118, 0.2); /* Slightly reduced opacity for dark theme glow */
+    }
+    body.light-theme .feature-card:hover {
+        --highlight-green-glow: rgba(25, 118, 210, 0.2);
+    }
+
+
+    .feature-card lord-icon {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 1;
+        filter: var(--icon-filter-card);
+    }
+    body:not(.light-theme) .feature-card lord-icon {
+        --icon-filter-card: none;
+    }
+    body.light-theme .feature-card lord-icon {
+        --icon-filter-card: brightness(0.8);
+    }
+
+    .feature-card h3 {
+      font-size: 2rem;
+      color: var(--text-header);
+      margin-bottom: 20px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card .cta-button {
+      display: inline-block;
+      padding: 14px 35px;
+      background: var(--gradient-button);
+      color: var(--text-header);
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 5px 20px var(--accent-main-shadow-button);
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.5px;
+      overflow: hidden;
+      border: 2px solid transparent;
+    }
+    body:not(.light-theme) .feature-card .cta-button {
+        --accent-main-shadow-button: rgba(0, 123, 255, 0.4);
+    }
+    body.light-theme .feature-card .cta-button {
+        --accent-main-shadow-button: rgba(25, 118, 210, 0.3);
+    }
+
+
+    .feature-card .cta-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--button-shine-color);
+        transform: skewX(-20deg);
+        transition: transform 0.6s ease-out;
+    }
+    body:not(.light-theme) .feature-card .cta-button::before {
+        --button-shine-color: rgba(255, 255, 255, 0.2);
+    }
+    body.light-theme .feature-card .cta-button::before {
+        --button-shine-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .feature-card .cta-button:hover::before {
+        transform: translateX(100%) skewX(-20deg);
+    }
+
+    .feature-card .cta-button:hover {
+      transform: translateY(-3px) scale(1.06);
+      box-shadow: 0 8px 30px var(--accent-main-glow-button);
+      border-color: var(--highlight-green);
+    }
+    body:not(.light-theme) .feature-card .cta-button:hover {
+        --accent-main-glow-button: rgba(0, 123, 255, 0.6);
+    }
+    body.light-theme .feature-card .cta-button:hover {
+        --accent-main-glow-button: rgba(25, 118, 210, 0.5);
+    }
+
+
+    /* Dynamic sections - (keeping structure for compatibility) */
+    .dynamic-section {
+      display: none;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    #dashboardCards {
+        display: grid;
+    }
+
+    /* Keyframe Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-80px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .sidebar {
+        height: 70px;
+        padding: 0 1.5rem;
+      }
+      .sidebar h2 {
+        font-size: 2rem;
+        margin-right: 20px;
+      }
+      .sidebar a {
+        font-size: 0.95rem;
+        padding: 8px 12px;
+      }
+      .sidebar a lord-icon {
+        width: 28px; height: 28px;
+      }
+      .main-content {
+        padding: 2.5rem;
+        padding-top: 110px;
+      }
+      .topbar h1 {
+        font-size: 2.8rem;
+      }
+      .feature-cards {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 25px;
+      }
+      .feature-card lord-icon {
+        width: 80px; height: 80px;
+      }
+      .feature-card h3 {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      .sidebar {
+        height: auto;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 15px var(--shadow-primary);
+        position: static;
+        border-bottom: none;
+        gap: 15px;
+      }
+      .sidebar h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        margin-right: 0;
+        text-align: center;
+      }
+      .sidebar .nav-links {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+      .sidebar a {
+        padding: 12px 20px;
+        font-size: 1rem;
+        width: 100%;
+        justify-content: center;
+        border-radius: 10px;
+      }
+      .sidebar a.active {
+          transform: translateY(0);
+      }
+      .sidebar a:hover {
+          transform: translateY(0);
+      }
+      .theme-switch {
+        margin-left: 0;
+        margin-top: 15px;
+      }
+
+      .main-content {
+        padding: 2rem 1.5rem;
+        padding-top: 2rem;
+      }
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      .topbar h1 {
+        font-size: 2.4rem;
+      }
+      .feature-cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .feature-card {
+        padding: 35px;
+      }
+      .feature-card lord-icon {
+        width: 70px; height: 70px;
+      }
+      .feature-card h3 {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+        .main-content {
+            padding: 1.5rem 1rem;
+        }
+        .topbar h1 {
+            font-size: 2rem;
+        }
+        .feature-card {
+            padding: 30px;
+        }
+        .feature-card h3 {
+            font-size: 1.6rem;
+        }
+        .feature-card p {
+            font-size: 0.95rem;
+        }
+        .feature-card .cta-button {
+            padding: 10px 25px;
+            font-size: 0.95rem;
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>ResuMate</h2>
+    <div class="nav-links">
+        <a href="dashboard.html" id="dashboardBtn" class="active">
+            <lord-icon
+                src="https://cdn.lordicon.com/wmwqvixz.json"
+                trigger="hover"
+                colors="primary:var(--text-header),secondary:var(--highlight-green)"
+                style="width:30px;height:30px">
+            </lord-icon>
+            Dashboard
+        </a>
+        <a href="upload.html" id="uploadBtn">
+            <lord-icon
+                src="https://cdn.lordicon.com/skhovrhj.json"
+                trigger="hover"
+                colors="primary:var(--text-header),secondary:var(--highlight-green)"
+                style="width:30px;height:30px">
+            </lord-icon>
+            Upload Resume
+        </a>
+        <a href="resume-builder.html" id="resumeBuilderBtn">
+            <lord-icon
+                src="https://cdn.lordicon.com/uvtflwfg.json"
+                trigger="hover"
+                colors="primary:var(--text-header),secondary:var(--highlight-green)"
+                style="width:30px;height:30px">
+            </lord-icon>
+            Resume Builder
+        </a>
+        <a href="#" id="logoutBtn">
+            <lord-icon
+                src="https://cdn.lordicon.com/gwclxpvb.json"
+                trigger="hover"
+                colors="primary:var(--text-header),secondary:var(--highlight-green)"
+                style="width:30px;height:30px">
+            </lord-icon>
+            Logout
+        </a>
+
+        <label class="theme-switch">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider">
+            <span class="icon sun">☀️</span>
+            <span class="icon moon">🌙</span>
+          </span>
+        </label>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="topbar">
+      <h1>Dashboard</h1>
+      <p>Welcome back to ResuMate! 👋</p>
+    </div>
+
+    <div class="feature-cards dynamic-section" id="dashboardCards">
+      <div class="feature-card" style="--delay: 0s;" onclick="window.location.href='upload.html'">
+        <lord-icon
+            src="https://cdn.lordicon.com/skhovrhj.json"
+            trigger="hover"
+            colors="primary:var(--accent-main),secondary:var(--highlight-green)"
+            style="width:90px;height:90px">
+        </lord-icon>
+        <h3>Upload Your Resume</h3>
+        <p>Analyze your existing resume, get insights, and find tailored job matches.</p>
+        <a href="upload.html" class="cta-button">Get Started</a>
+      </div>
+
+      <div class="feature-card" style="--delay: 0.1s;" onclick="window.location.href='resume-builder.html'">
+        <lord-icon
+            src="https://cdn.lordicon.com/uvtflwfg.json"
+            trigger="hover"
+            colors="primary:var(--accent-main),secondary:var(--highlight-green)"
+            style="width:90px;height:90px">
+        </lord-icon>
+        <h3>Build a New Resume</h3>
+        <p>Craft a professional, eye-catching resume from scratch with our intuitive builder.</p>
+        <a href="resume-builder.html" class="cta-button">Start Building</a>
+      </div>
+    </div>
+
+    <div class="dynamic-section" id="uploadSection" style="display:none;"></div>
+    <div class="dynamic-section" id="analyzeSection" style="display:none;"></div>
+    <div class="dynamic-section" id="profileSection" style="display:none;"></div>
+    <div class="dynamic-section" id="resumeBuilderSection" style="display:none;"></div>
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Theme Toggle Logic
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+
+      // Function to apply theme
+      function applyTheme(isDark) {
+        if (isDark) {
+          body.classList.remove('light-theme');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          body.classList.add('light-theme');
+          localStorage.setItem('theme', 'light');
+        }
+      }
+
+      // Load saved theme on page load
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        themeToggle.checked = true;
+        applyTheme(false);
+      } else {
+        themeToggle.checked = false;
+        applyTheme(true);
+      }
+
+      // Event listener for theme toggle
+      themeToggle.addEventListener('change', function() {
+        applyTheme(!this.checked);
+      });
+
+      // Logout functionality
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          localStorage.removeItem("token");
+          localStorage.removeItem("theme");
+          window.location.href = "index.html";
+        });
+      }
+
+      // Sidebar navigation logic - now directly navigates to separate pages
+      const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+      function setActiveLink() {
+        const currentPath = window.location.pathname.split('/').pop();
+        sidebarLinks.forEach(link => {
+          link.classList.remove('active');
+          const linkHref = link.getAttribute('href');
+          if (linkHref === currentPath || (currentPath === '' && linkHref === 'dashboard.html')) {
+            link.classList.add('active');
+          }
+        });
+      }
+      setActiveLink();
+
+      const sections = {
+        dashboardBtn: 'dashboardCards'
+      };
+
+      Object.entries(sections).forEach(([btnId, sectionId]) => {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+          btn.addEventListener('click', (event) => {
+            if (btnId === 'dashboardBtn') {
+              event.preventDefault();
+              document.querySelectorAll('.dynamic-section').forEach(sec => sec.style.display = 'none');
+              const section = document.getElementById(sectionId);
+              if (section) section.style.display = 'grid';
+            }
+          });
+        }
+      });
+    });
+  </script>
+
+  <script src="script1.js"></script>
+</body>
+</html>

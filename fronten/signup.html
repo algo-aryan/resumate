@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up - ResuMate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+  <style>
+    /* Default: Professional & Modern Bluish Dark Theme Palette */
+    :root {
+      --primary-bg: #0d1a26;
+      --secondary-bg: #1a2a3a;
+      --accent-main: #007bff;
+      --accent-light: #00c6ff;
+      --highlight-green: #00e676; /* Vibrant green for dark theme highlights */
+
+      --text-header: #ffffff;
+      --text-body: #e0e7ed;
+      --text-muted: #9fb3c8;
+
+      --border-color: rgba(255, 255, 255, 0.08);
+      --shadow-primary: rgba(0, 0, 0, 0.6);
+      --shadow-secondary: rgba(0, 0, 0, 0.3);
+      --glass-overlay: rgba(255, 255, 255, 0.05);
+      --glass-blur: 10px;
+
+      --gradient-button: linear-gradient(135deg, var(--accent-main) 0%, var(--accent-light) 100%);
+      --gradient-card-border: linear-gradient(90deg, var(--highlight-green), var(--accent-main));
+
+      /* RGB values for transparent colors */
+      --highlight-green-rgb: 0, 230, 118;
+      --accent-main-rgb: 0, 123, 255;
+    }
+
+    /* Light Theme Overrides (Now Bluish) */
+    body.light-theme {
+      --primary-bg: #f0f2f5;
+      --secondary-bg: #ffffff;
+      --accent-main: #1976d2; /* Primary Blue */
+      --accent-light: #2196f3; /* Lighter Blue */
+      --highlight-green: #4caf50; /* Green for light theme highlights - a more standard green */
+
+      --text-header: #212121;
+      --text-body: #424242;
+      --text-muted: #757575;
+
+      --border-color: rgba(0, 0, 0, 0.08);
+      --shadow-primary: rgba(0, 0, 0, 0.2);
+      --shadow-secondary: rgba(0, 0, 0, 0.1);
+      --glass-overlay: rgba(255, 255, 255, 0.5);
+
+      --gradient-button: linear-gradient(135deg, var(--accent-main) 0%, var(--accent-light) 100%);
+      --gradient-card-border: linear-gradient(90deg, var(--highlight-green), var(--accent-main));
+
+      /* RGB values for transparent colors */
+      --highlight-green-rgb: 76, 175, 80;
+      --accent-main-rgb: 25, 118, 210;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out, transform 0.4s ease-in-out,
+                  box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    }
+
+    body {
+      background: var(--primary-bg);
+      color: var(--text-body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow: hidden;
+      background-image: radial-gradient(circle at 10% 20%, var(--secondary-bg-rgb-alpha-low) 0%, transparent 10%),
+                        radial-gradient(circle at 90% 80%, var(--secondary-bg-rgb-alpha-low) 0%, transparent 10%);
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    body:not(.light-theme) {
+        --secondary-bg-rgb-alpha-low: rgba(26, 42, 58, 0.08);
+    }
+    body.light-theme {
+        --secondary-bg-rgb-alpha-low: rgba(0, 0, 0, 0.02);
+    }
+
+    .container {
+      background: var(--glass-overlay);
+      backdrop-filter: blur(var(--glass-blur));
+      border-radius: 16px;
+      padding: 40px 50px;
+      box-shadow: 0 8px 32px var(--shadow-primary);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      animation: fadeIn 1s ease-in-out;
+      border: 1px solid var(--border-color);
+      position: relative; /* For positioning theme toggle */
+    }
+
+    .title {
+      margin-bottom: 25px;
+      color: var(--text-header);
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .form input {
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background-color: var(--glass-overlay);
+      color: var(--text-body);
+      font-size: 1rem;
+    }
+    .form input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form button {
+      width: 100%;
+      padding: 14px;
+      background: var(--gradient-button);
+      color: var(--text-header);
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: 2px solid transparent; /* Added for hover effect */
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      margin-top: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .form button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--button-shine-color);
+        transform: skewX(-20deg);
+        transition: transform 0.6s ease-out;
+    }
+    body:not(.light-theme) .form button::before {
+        --button-shine-color: rgba(255, 255, 255, 0.2);
+    }
+    body.light-theme .form button::before {
+        --button-shine-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .form button:hover::before {
+        transform: translateX(100%) skewX(-20deg);
+    }
+
+    .form button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px var(--accent-main-shadow-button);
+      border-color: var(--highlight-green);
+    }
+    body:not(.light-theme) .form button:hover {
+        --accent-main-shadow-button: rgba(0, 123, 255, 0.4);
+    }
+    body.light-theme .form button:hover {
+        --accent-main-shadow-button: rgba(25, 118, 210, 0.3);
+    }
+
+    .text {
+      margin-top: 25px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .text a {
+      color: var(--accent-light);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .text a:hover {
+      text-decoration: underline;
+      color: var(--accent-main);
+    }
+
+    /* Theme Toggle Switch */
+    .theme-switch {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+      z-index: 10; /* Ensure it's above other elements */
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--secondary-bg);
+      transition: .4s;
+      border-radius: 28px;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 3px;
+      background-color: var(--accent-main);
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+      background-color: var(--secondary-bg);
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--accent-main);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+      background-color: var(--highlight-green);
+    }
+    .slider .icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+
+    .slider .icon.sun {
+        left: 8px;
+        color: #f7b237;
+        opacity: 1;
+    }
+    .slider .icon.moon {
+        right: 8px;
+        color: #c9d6ea;
+        opacity: 0;
+    }
+    input:checked + .slider .icon.sun {
+        opacity: 0;
+    }
+    input:checked + .slider .icon.moon {
+        opacity: 1;
+    }
+
+    /* Keyframe Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+      }
+      .title {
+        font-size: 1.8rem;
+      }
+      .form input {
+        padding: 12px;
+      }
+      .form button {
+        padding: 12px;
+        font-size: 1rem;
+      }
+      .theme-switch {
+        top: 15px;
+        right: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container fade">
+    <label class="theme-switch">
+      <input type="checkbox" id="themeToggle">
+      <span class="slider">
+        <span class="icon sun">☀️</span>
+        <span class="icon moon">🌙</span>
+      </span>
+    </label>
+
+    <h1 class="title">Create Your ResuMate Account</h1>
+    <form id="signupForm" class="form">
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+    <p class="text">Already have an account? <a href="login.html">Login</a></p>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Theme Toggle Logic
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+
+      // Function to apply theme
+      function applyTheme(isDark) {
+        if (isDark) {
+          body.classList.remove('light-theme');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          body.classList.add('light-theme');
+          localStorage.setItem('theme', 'light');
+        }
+      }
+
+      // Load saved theme on page load
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        themeToggle.checked = true;
+        applyTheme(false);
+      } else {
+        themeToggle.checked = false;
+        applyTheme(true);
+      }
+
+      // Event listener for theme toggle
+      themeToggle.addEventListener('change', function() {
+        applyTheme(!this.checked);
+      });
+    });
+  </script>
+</body>
+</html>

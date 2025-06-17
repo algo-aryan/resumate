@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ data.name }} - Resume</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; line-height: 1.6; }
+        h1, h2 { border-bottom: 1px solid #ccc; }
+        ul { list-style: none; padding: 0; }
+    </style>
+</head>
+<body>
+    <h1>{{ data.name }}</h1>
+    <p>Email: {{ data.email }} | Phone: {{ data.phone }}</p>
+    <p>LinkedIn: <a href="{{ data.linkedin }}">{{ data.linkedin }}</a></p>
+
+    <h2>Summary</h2>
+    <p>{{ data.summary[0] }}</p>
+
+    <h2>Education</h2>
+    <ul>
+        {% for edu in data.education %}
+        <li><strong>{{ edu.degree }}</strong>, {{ edu.institution }} ({{ edu.year }})</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Experience</h2>
+    <ul>
+        {% for exp in data.experience %}
+        <li><strong>{{ exp.role }}</strong> at {{ exp.company }} ({{ exp.year }})<br>{{ exp.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Projects</h2>
+    <ul>
+        {% for proj in data.projects %}
+        <li><strong>{{ proj.title }}</strong>: {{ proj.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Skills</h2>
+    <p>{{ data.skills | join(', ') }}</p>
+</body>
+</html>

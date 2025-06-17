@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | ResuMate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar h2 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 1rem;
+      padding: 12px 20px;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .topbar h1 {
+      font-size: 2rem;
+    }
+
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #dcdcdc;
+    }
+
+    .upload-section {
+    margin-top: 40px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 16px;
+    color: white;
+    text-align: center;
+    animation: fadeIn 0.7s ease-in-out;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  }
+
+  .upload-section h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
+
+  .upload-section p {
+    color: #ccc;
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+
+  .file-input {
+    padding: 35px 20px;
+    border: 2px dashed #00c6ff;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    display: block;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .file-input:hover {
+    border-color: #0072ff;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  .upload-btn {
+    margin-top: 25px;
+    padding: 12px 30px;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .upload-btn:hover {
+    transform: scale(1.05);
+  }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      .topbar h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>ResuMate</h2>
+    <a href="#">Dashboard</a>
+    <a href="#" id="uploadBtn">Upload Resume</a>
+    <a href="#">Analyze</a>
+    <a href="#">Profile</a>
+    <a href="#" id="logoutBtn">Logout</a>
+  </div>
+
+  <div class="main-content">
+    <div class="topbar">
+      <h1>Dashboard</h1>
+      <p>Welcome 👋</p>
+    </div>
+
+    <div class="dashboard-cards">
+      <div class="card">
+        <h3>Resumes Uploaded</h3>
+        <p>5 total uploads</p>
+      </div>
+      <div class="card">
+        <h3>Last Analysis</h3>
+        <p>2 days ago</p>
+      </div>
+      <div class="card">
+        <h3>Recommendations</h3>
+        <p>3 job matches found</p>
+      </div>
+    </div>
+  </div>
+
+  <section id="uploadSection" class="upload-section" style="display: none;">
+    <h2>Upload Your Resume</h2>
+    <p>Only .docx files are supported</p>
+  
+    <form id="uploadForm" onsubmit="return false;" enctype="multipart/form-data", method="POST" action="/api/upload">
+      <label for="resumeFile" class="file-input">
+        Click or Drag & Drop your .pdf file here
+        <input type="file" id="resumeFile" name="resume" accept=".pdf" required />
+      </label>
+      <br />
+      <button class="upload-btn" type="submit">Upload Resume</button>
+    </form>
+    
+    <!-- Container to show internship results -->
+    <div id="internshipResults" class="dynamic-section" style="margin-top: 30px;"></div>
+  </section>
+
+  <script>
+  const sections = {
+    uploadBtn: 'uploadSection',
+    analyzeBtn: 'analyzeSection',
+    profileBtn: 'profileSection',
+    dashboardBtn: 'dashboardCards'
+  };
+
+  // Sidebar click handlers
+  Object.entries(sections).forEach(([btnId, sectionId]) => {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      btn.addEventListener('click', () => {
+        // Hide all sections
+        document.querySelectorAll('.dynamic-section').forEach(sec => sec.style.display = 'none');
+
+        // Show the selected one
+        const section = document.getElementById(sectionId);
+        if (section) section.style.display = 'block';
+      });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", function (e) {
+        e.preventDefault(); // prevent link from navigating
+        localStorage.removeItem("token"); // remove token
+        window.location.href = "index.html"; // redirect to login
+      });
+    }
+  });
+</script>
+
+<!-- <script>
+  // Redirect to login if no token
+  document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "login.html"; // redirect to login
+    }
+  });
+</script> -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("📥 JS loaded and DOM ready");
+    const uploadForm = document.getElementById("uploadForm");
+    if (uploadForm) {
+      uploadForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        console.log("📤 Form submitted");
+  
+        const formData = new FormData();
+        formData.append("resume", document.getElementById("resumeFile").files[0]);
+  
+        try {
+          const response = await fetch("/api/upload", {
+            method: "POST",
+            body: formData
+          });
+  
+          const data = await response.json();
+          console.log("✅ Received data:", data);
+  
+          const resultsDiv = document.getElementById("internshipResults");
+          resultsDiv.innerHTML = "<h3>Top Internship Matches</h3>";
+  
+          if (!data.internships || data.internships.length === 0) {
+            resultsDiv.innerHTML += "<p>No internships found 😔</p>";
+            return;
+          }
+  
+          data.internships.forEach((job, idx) => {
+            resultsDiv.innerHTML += `
+              <div style="margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                <strong>${job.title}</strong><br/>
+                📍 ${job.location}<br/>
+                💰 ${job.stipend}<br/>
+                🔗 <a href="${job.link}" target="_blank">View</a> |
+                🚀 <a href="${job.apply}" target="_blank">Apply</a>
+              </div>
+            `;
+          });
+  
+        } catch (err) {
+          console.error("❌ Upload failed:", err);
+          alert("Something went wrong. Check the browser console.");
+        }
+      });
+    }
+  });
+  </script>
+</body>
+</html>
+</body>
+</html>
