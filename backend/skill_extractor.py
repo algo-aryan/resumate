@@ -24,7 +24,41 @@ pdf_path = sys.argv[1]
 top_n = 10
 
 # ... (SKILL_KEYWORDS unchanged – keep your full list here)
-SKILL_KEYWORDS = [ "ai", "ml", "dl", "react.js", "flutter", ... ]  # truncated here for brevity
+SKILL_KEYWORDS = [
+    "frontend developer", "backend developer", "fullstack developer", "data scientist",
+    "data analyst", "machine learning", "deep learning", "artificial intelligence",
+    "ai engineer", "nlp", "computer vision", "data science", "mle", "dl", "ai", "ml",
+    "devops", "mobile developer", "web3 developer", "game developer", "cloud engineer",
+    "qa engineer", "automation tester", "security analyst",
+    "react.js", "vue.js", "next.js", "svelte", "tailwind css", "bootstrap", "chakra ui",
+    "material ui", "vite", "framer motion", "styled components", "gsap",
+    "express.js", "nestjs", "hapi.js", "adonisjs", "laravel", "symfony", "fastapi",
+    "asp.net core", "rails", "gin gonic", "actix", "spring boot", "fiber",
+    "scikit-learn", "xgboost", "lightgbm", "catboost", "pytorch", "tensorflow",
+    "keras", "onnx", "mlflow", "huggingface transformers", "openvino", "deepspeed",
+    "fastai", "auto-sklearn", "tpot", "wandb", "optuna",
+    "nltk", "spacy", "textblob", "gensim", "polyglot", "stanford nlp", "flair nlp",
+    "huggingface", "transformers", "bert", "roberta", "gpt", "sentence-transformers",
+    "power bi", "tableau", "looker", "superset", "metabase", "seaborn", "matplotlib",
+    "plotly", "bokeh", "pandas profiling", "sweetviz", "datapane", "dvc",
+    "mongodb", "postgresql", "redis", "neo4j", "dynamodb", "elastic search", "supabase",
+    "influxdb", "cassandra", "firebase firestore", "clickhouse", "tidb",
+    "docker", "kubernetes", "ansible", "terraform", "jenkins", "prometheus", "grafana",
+    "pagerduty", "argocd", "helm", "azure pipelines", "aws lambda", "gcp cloud run",
+    "cloudflare", "netlify", "vercel",
+    "owasp zap", "burp suite", "metasploit", "nmap", "wireshark", "snort", "splunk", 
+    "suricata", "hashicorp vault", "fail2ban", "crowdstrike",
+    "flutter", "react native", "ionic", "xamarin", "kivy", "jetpack compose",
+    "nativebase", "codemagic",
+    "unity", "unreal engine", "godot", "three.js", "babylon.js", "blender",
+    "panda3d", "playcanvas",
+    "solidity", "ethers.js", "web3.js", "hardhat", "truffle", "alchemy", "moralis",
+    "polygon", "chainlink", "ipfs", "pinata", "foundry",
+    "cypress", "playwright", "jest", "mocha", "chai", "postman", "newman", "selenium",
+    "testcafe", "allure", "jmeter",
+    "ocr", "image segmentation", "object detection", "face recognition",
+    "pose estimation", "edge ai", "tinyml", "autonomous agents", "rasa", "langchain"
+]
 
 def extract_text_from_pdf(pdf_path):
     doc = fitz.open(pdf_path)
