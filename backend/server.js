@@ -40,7 +40,7 @@ app.post('/api/upload', upload.single('resume'), (req, res) => {
       return res.status(500).json({ error: stderr });
     }
 
-    const outputLines = stdout.split('\n').filter(l => l.trim() !== '');
+    const outputLines = stdout.split('\n').filter(l => l.trim() !== '' && !l.startsWith("Extracted Skills:"));
     const results = [];
 
     for (let i = 0; i < outputLines.length; i++) {
