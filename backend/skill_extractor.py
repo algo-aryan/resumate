@@ -25,37 +25,64 @@ top_n = 10
 
 # ... (SKILL_KEYWORDS unchanged – keep your full list here)
 SKILL_KEYWORDS = [
+    # 🧠 Broad Skill Domains / Roles
     "frontend developer", "backend developer", "fullstack developer", "data scientist",
     "data analyst", "machine learning", "deep learning", "artificial intelligence",
     "ai engineer", "nlp", "computer vision", "data science", "mle", "dl", "ai", "ml",
     "devops", "mobile developer", "web3 developer", "game developer", "cloud engineer",
-    "qa engineer", "automation tester", "security analyst",
+    "qa engineer", "automation tester", "security analyst", "c++", "python", "html", "css",
+
+    # 🌐 Frontend Frameworks & Tools
     "react.js", "vue.js", "next.js", "svelte", "tailwind css", "bootstrap", "chakra ui",
     "material ui", "vite", "framer motion", "styled components", "gsap",
+
+    # 🔧 Backend Frameworks & Tools
     "express.js", "nestjs", "hapi.js", "adonisjs", "laravel", "symfony", "fastapi",
     "asp.net core", "rails", "gin gonic", "actix", "spring boot", "fiber",
+
+    # 🤖 Machine Learning / AI
     "scikit-learn", "xgboost", "lightgbm", "catboost", "pytorch", "tensorflow",
     "keras", "onnx", "mlflow", "huggingface transformers", "openvino", "deepspeed",
     "fastai", "auto-sklearn", "tpot", "wandb", "optuna",
+
+    # 💬 NLP Tools & Libraries
     "nltk", "spacy", "textblob", "gensim", "polyglot", "stanford nlp", "flair nlp",
     "huggingface", "transformers", "bert", "roberta", "gpt", "sentence-transformers",
+
+    # 📊 Data Science & Analytics
     "power bi", "tableau", "looker", "superset", "metabase", "seaborn", "matplotlib",
     "plotly", "bokeh", "pandas profiling", "sweetviz", "datapane", "dvc",
+
+    # 🗃️ Databases & Storage
     "mongodb", "postgresql", "redis", "neo4j", "dynamodb", "elastic search", "supabase",
     "influxdb", "cassandra", "firebase firestore", "clickhouse", "tidb",
+
+    # ☁️ DevOps / Cloud
     "docker", "kubernetes", "ansible", "terraform", "jenkins", "prometheus", "grafana",
     "pagerduty", "argocd", "helm", "azure pipelines", "aws lambda", "gcp cloud run",
     "cloudflare", "netlify", "vercel",
+
+    # 🔐 Cybersecurity
     "owasp zap", "burp suite", "metasploit", "nmap", "wireshark", "snort", "splunk", 
     "suricata", "hashicorp vault", "fail2ban", "crowdstrike",
+
+    # 📱 Mobile App Development
     "flutter", "react native", "ionic", "xamarin", "kivy", "jetpack compose",
     "nativebase", "codemagic",
+
+    # 🎮 Game Development / Graphics
     "unity", "unreal engine", "godot", "three.js", "babylon.js", "blender",
     "panda3d", "playcanvas",
+
+    # 🌍 Web3 / Blockchain
     "solidity", "ethers.js", "web3.js", "hardhat", "truffle", "alchemy", "moralis",
     "polygon", "chainlink", "ipfs", "pinata", "foundry",
+
+    # 🧪 Testing / QA
     "cypress", "playwright", "jest", "mocha", "chai", "postman", "newman", "selenium",
     "testcafe", "allure", "jmeter",
+
+    # 🧠 Specialized AI Use Cases
     "ocr", "image segmentation", "object detection", "face recognition",
     "pose estimation", "edge ai", "tinyml", "autonomous agents", "rasa", "langchain"
 ]
@@ -65,21 +92,23 @@ def extract_text_from_pdf(pdf_path):
     return "".join([page.get_text() for page in doc])
 
 def extract_skills(text):
-    doc = nlp(text.lower())
-    tokens = [token.text for token in doc if token.text not in stop_words and not token.is_punct]
+    text_lower = text.lower()
     found_skills = set()
-
-    # Match exact single words
-    for token in tokens:
-        if token in SKILL_KEYWORDS:
-            found_skills.add(token)
-
-    # Match exact phrases (like "machine learning") using word-boundaries
-    text_clean = " ".join(tokens)
-    for skill in SKILL_KEYWORDS:
-        if re.search(rf'\b{re.escape(skill)}\b', text_clean):
+    
+    # Create a clean version of text without stopwords for better matching
+    doc = nlp(text_lower)
+    clean_tokens = [token.text for token in doc if token.text not in stop_words and not token.is_punct]
+    text_clean = " ".join(clean_tokens)
+    
+    # Process skills from longest to shortest to prioritize full phrases
+    for skill in sorted(SKILL_KEYWORDS, key=len, reverse=True):
+        # Only match standalone words using word boundaries
+        pattern = r'\b' + re.escape(skill) + r'\b'
+        if re.search(pattern, text_clean):
             found_skills.add(skill)
-
+            # Remove matched skill to prevent partial rematching
+            text_clean = re.sub(pattern, '', text_clean)
+    
     return list(found_skills)
 
 def check_eligible(link):
