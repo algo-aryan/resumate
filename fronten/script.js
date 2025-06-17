@@ -45,7 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // Only show results div if there's actual output
       if (output.trim() !== "") {
         resultsDiv.innerHTML = "<h3 style='margin-bottom: 20px;'>Internship Matches</h3>";
-        const blocks = output.split(/\n(?=\d+\.)/); // split on lines like '1. ...', '2. ...'
+        const blocks = output
+          .split(/\n(?=\d+\.)/)
+          .filter(block => /^\d+\./.test(block.trim())); // Only keep blocks that start with "1.", "2.", etc.
 
         blocks.forEach(block => {
           if (block.trim() === "") return;
