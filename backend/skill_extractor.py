@@ -5,31 +5,61 @@ import spacy
 import nltk
 from nltk.corpus import stopwords
 import re
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
-
 import csv
 import datetime
 import os
 import sys
 
-# 👇 Add this line to load bundled stopwords in cloud
-nltk.data.path.append(os.path.join(os.path.dirname(__file__), "nltk_data"))
-
 pdf_path = sys.argv[1]
 top_n = 10
 
+# ✅ Ensure NLTK stopwords are available (fallback for cloud)
+nltk.data.path.append(os.path.join(os.path.dirname(__file__), "nltk_data"))
+try:
+    stop_words = set(stopwords.words('english'))
+except LookupError:
+    nltk.download('stopwords')
+    stop_words = set(stopwords.words('english'))
+
 nlp = spacy.load("en_core_web_sm")
-stop_words = set(stopwords.words('english'))
 
 SKILL_KEYWORDS = [
-    # (Unchanged skill list...)
     "frontend developer", "backend developer", "fullstack developer", "data scientist",
     "data analyst", "machine learning", "deep learning", "artificial intelligence",
-    # ... [truncated for brevity]
-    "autonomous agents", "rasa", "langchain"
+    "ai engineer", "nlp", "computer vision", "data science", "mle", "dl", "ai", "ml",
+    "devops", "mobile developer", "web3 developer", "game developer", "cloud engineer",
+    "qa engineer", "automation tester", "security analyst",
+    "react.js", "vue.js", "next.js", "svelte", "tailwind css", "bootstrap", "chakra ui",
+    "material ui", "vite", "framer motion", "styled components", "gsap",
+    "express.js", "nestjs", "hapi.js", "adonisjs", "laravel", "symfony", "fastapi",
+    "asp.net core", "rails", "gin gonic", "actix", "spring boot", "fiber",
+    "scikit-learn", "xgboost", "lightgbm", "catboost", "pytorch", "tensorflow",
+    "keras", "onnx", "mlflow", "huggingface transformers", "openvino", "deepspeed",
+    "fastai", "auto-sklearn", "tpot", "wandb", "optuna",
+    "nltk", "spacy", "textblob", "gensim", "polyglot", "stanford nlp", "flair nlp",
+    "huggingface", "transformers", "bert", "roberta", "gpt", "sentence-transformers",
+    "power bi", "tableau", "looker", "superset", "metabase", "seaborn", "matplotlib",
+    "plotly", "bokeh", "pandas profiling", "sweetviz", "datapane", "dvc",
+    "mongodb", "postgresql", "redis", "neo4j", "dynamodb", "elastic search", "supabase",
+    "influxdb", "cassandra", "firebase firestore", "clickhouse", "tidb",
+    "docker", "kubernetes", "ansible", "terraform", "jenkins", "prometheus", "grafana",
+    "pagerduty", "argocd", "helm", "azure pipelines", "aws lambda", "gcp cloud run",
+    "cloudflare", "netlify", "vercel",
+    "owasp zap", "burp suite", "metasploit", "nmap", "wireshark", "snort", "splunk", 
+    "suricata", "hashicorp vault", "fail2ban", "crowdstrike",
+    "flutter", "react native", "ionic", "xamarin", "kivy", "jetpack compose",
+    "nativebase", "codemagic",
+    "unity", "unreal engine", "godot", "three.js", "babylon.js", "blender",
+    "panda3d", "playcanvas",
+    "solidity", "ethers.js", "web3.js", "hardhat", "truffle", "alchemy", "moralis",
+    "polygon", "chainlink", "ipfs", "pinata", "foundry",
+    "cypress", "playwright", "jest", "mocha", "chai", "postman", "newman", "selenium",
+    "testcafe", "allure", "jmeter",
+    "ocr", "image segmentation", "object detection", "face recognition",
+    "pose estimation", "edge ai", "tinyml", "autonomous agents", "rasa", "langchain"
 ]
 
 def extract_text_from_pdf(pdf_path):
@@ -44,6 +74,7 @@ def extract_skills(text):
     for token in tokens:
         if token in SKILL_KEYWORDS:
             found_skills.add(token)
+
     for skill in SKILL_KEYWORDS:
         if skill in text.lower():
             found_skills.add(skill)
@@ -100,8 +131,10 @@ def scrape_internshala(skills):
                     log_to_csv("Internship Found", f"{title} at {company}")
             except Exception as e:
                 log_to_csv("Parse Error", str(e))
+                continue
     except Exception as e:
         log_to_csv("Scraping Failed", str(e))
+
     return internships
 
 def save_links_to_txt(internships, filenames=["internship_links.txt", "internship_links_apply.txt"]):
@@ -110,7 +143,7 @@ def save_links_to_txt(internships, filenames=["internship_links.txt", "internshi
             f.write(job["link"] + "\n")
     with open(filenames[1], "w") as f:
         for job in internships:
-            f.write(convert_link(job['link']) + "\n")
+            f.write(convert_link(job["link"]) + "\n")
 
 def log_to_csv(event, details="", file_path="debug_log.csv"):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -126,7 +159,7 @@ def details_to_csv(lod, filename="Details_csv"):
         writer = csv.DictWriter(f, fieldnames=lod[0].keys())
         writer.writerows(lod)
 
-# Run the script
+# Run script
 text = extract_text_from_pdf(pdf_path)
 skills = extract_skills(text)
 print("Extracted Skills:", skills)
