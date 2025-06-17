@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     resultsDiv.style.display = "none"; // Hide the results div initially
 
     try {
-      const res = await fetch(`https://resumate-production-b567.up.railway.app/api/upload`, {
+      const res = await fetch(`https://resumate-production-a93f.up.railway.app/api/upload`, {
         method: "POST",
         body: formData
       });
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
     spinner.style.display = "block";
     loadingMessage.style.display = "block";
 
-    const res = await fetch("https://resumate-production-b567.up.railway.app/api/login", {
+    const res = await fetch("https://resumate-production-a93f.up.railway.app/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    const res = await fetch("https://resumate-production-b567.up.railway.app/api/signup", {
+    const res = await fetch("https://resumate-production-a93f.up.railway.app/api/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password })
