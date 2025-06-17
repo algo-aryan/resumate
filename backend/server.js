@@ -25,7 +25,7 @@ const upload = multer({ dest: 'uploads/' });
 // ✅ Python resume extractor route
 app.post('/api/upload', upload.single('resume'), (req, res) => {
   const uploadedPath = path.resolve(__dirname, req.file.path);
-  const pythonPath = 'python3';
+  const pythonPath = 'python';
   const scriptPath = path.resolve(__dirname, 'skill_extractor.py');
 
   exec(`"${pythonPath}" "${scriptPath}" "${uploadedPath}"`, {
@@ -89,7 +89,7 @@ app.post('/api/generate-resume', async (req, res) => {
       projects       // already structured
     };
 
-    const child = exec('python3 resume.py', { cwd: __dirname });
+    const child = exec('python resume.py', { cwd: __dirname });
     child.stderr.on('data', (data) => {
       console.error(`🔴 resume.py stderr: ${data}`);
     });
