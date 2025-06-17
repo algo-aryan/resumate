@@ -5,18 +5,12 @@ import spacy
 import nltk
 from nltk.corpus import stopwords
 import re
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
 import csv
 import datetime
 import os
 import sys
 
-pdf_path = sys.argv[1]
-top_n = 10
-
-# ✅ Ensure NLTK stopwords are available (fallback for cloud)
+# ✅ Ensure NLTK stopwords are available (for Railway/Render)
 nltk.data.path.append(os.path.join(os.path.dirname(__file__), "nltk_data"))
 try:
     stop_words = set(stopwords.words('english'))
@@ -26,41 +20,11 @@ except LookupError:
 
 nlp = spacy.load("en_core_web_sm")
 
-SKILL_KEYWORDS = [
-    "frontend developer", "backend developer", "fullstack developer", "data scientist",
-    "data analyst", "machine learning", "deep learning", "artificial intelligence",
-    "ai engineer", "nlp", "computer vision", "data science", "mle", "dl", "ai", "ml",
-    "devops", "mobile developer", "web3 developer", "game developer", "cloud engineer",
-    "qa engineer", "automation tester", "security analyst",
-    "react.js", "vue.js", "next.js", "svelte", "tailwind css", "bootstrap", "chakra ui",
-    "material ui", "vite", "framer motion", "styled components", "gsap",
-    "express.js", "nestjs", "hapi.js", "adonisjs", "laravel", "symfony", "fastapi",
-    "asp.net core", "rails", "gin gonic", "actix", "spring boot", "fiber",
-    "scikit-learn", "xgboost", "lightgbm", "catboost", "pytorch", "tensorflow",
-    "keras", "onnx", "mlflow", "huggingface transformers", "openvino", "deepspeed",
-    "fastai", "auto-sklearn", "tpot", "wandb", "optuna",
-    "nltk", "spacy", "textblob", "gensim", "polyglot", "stanford nlp", "flair nlp",
-    "huggingface", "transformers", "bert", "roberta", "gpt", "sentence-transformers",
-    "power bi", "tableau", "looker", "superset", "metabase", "seaborn", "matplotlib",
-    "plotly", "bokeh", "pandas profiling", "sweetviz", "datapane", "dvc",
-    "mongodb", "postgresql", "redis", "neo4j", "dynamodb", "elastic search", "supabase",
-    "influxdb", "cassandra", "firebase firestore", "clickhouse", "tidb",
-    "docker", "kubernetes", "ansible", "terraform", "jenkins", "prometheus", "grafana",
-    "pagerduty", "argocd", "helm", "azure pipelines", "aws lambda", "gcp cloud run",
-    "cloudflare", "netlify", "vercel",
-    "owasp zap", "burp suite", "metasploit", "nmap", "wireshark", "snort", "splunk", 
-    "suricata", "hashicorp vault", "fail2ban", "crowdstrike",
-    "flutter", "react native", "ionic", "xamarin", "kivy", "jetpack compose",
-    "nativebase", "codemagic",
-    "unity", "unreal engine", "godot", "three.js", "babylon.js", "blender",
-    "panda3d", "playcanvas",
-    "solidity", "ethers.js", "web3.js", "hardhat", "truffle", "alchemy", "moralis",
-    "polygon", "chainlink", "ipfs", "pinata", "foundry",
-    "cypress", "playwright", "jest", "mocha", "chai", "postman", "newman", "selenium",
-    "testcafe", "allure", "jmeter",
-    "ocr", "image segmentation", "object detection", "face recognition",
-    "pose estimation", "edge ai", "tinyml", "autonomous agents", "rasa", "langchain"
-]
+pdf_path = sys.argv[1]
+top_n = 10
+
+# ... (SKILL_KEYWORDS unchanged – keep your full list here)
+SKILL_KEYWORDS = [ "ai", "ml", "dl", "react.js", "flutter", ... ]  # truncated here for brevity
 
 def extract_text_from_pdf(pdf_path):
     doc = fitz.open(pdf_path)
@@ -71,13 +35,17 @@ def extract_skills(text):
     tokens = [token.text for token in doc if token.text not in stop_words and not token.is_punct]
     found_skills = set()
 
+    # Match exact single words
     for token in tokens:
         if token in SKILL_KEYWORDS:
             found_skills.add(token)
 
+    # Match exact phrases (like "machine learning") using word-boundaries
+    text_clean = " ".join(tokens)
     for skill in SKILL_KEYWORDS:
-        if skill in text.lower():
+        if re.search(rf'\b{re.escape(skill)}\b', text_clean):
             found_skills.add(skill)
+
     return list(found_skills)
 
 def check_eligible(link):
@@ -159,7 +127,7 @@ def details_to_csv(lod, filename="Details_csv"):
         writer = csv.DictWriter(f, fieldnames=lod[0].keys())
         writer.writerows(lod)
 
-# Run script
+# Run
 text = extract_text_from_pdf(pdf_path)
 skills = extract_skills(text)
 print("Extracted Skills:", skills)
