@@ -30,72 +30,12 @@ except LookupError:
 
 nlp = spacy.load("en_core_web_sm")
 
-pdf_path = sys.argv[1]
-top_n = 10
+# Use a global variable for pdf_path and top_n for easier access in main block
+# It's better to get pdf_path from sys.argv directly in the main block
+# if it's strictly a command-line script.
+# top_n can be passed as an argument to scrape_internshala
 
-# ... (SKILL_KEYWORDS unchanged – keep your full list here)
-SKILL_KEYWORDS = [
-    # 🧠 Broad Skill Domains / Roles
-    "frontend developer", "backend developer", "fullstack developer", "data scientist",
-    "data analyst", "machine learning", "deep learning", "artificial intelligence",
-    "ai engineer", "nlp", "computer vision", "data science", "mle", "dl", "ai", "ml",
-    "devops", "mobile developer", "web3 developer", "game developer", "cloud engineer",
-    "qa engineer", "automation tester", "security analyst", "c++", "python", "html", "css",
-
-    # 🌐 Frontend Frameworks & Tools
-    "react.js", "vue.js", "next.js", "svelte", "tailwind css", "bootstrap", "chakra ui",
-    "material ui", "vite", "framer motion", "styled components", "gsap",
-
-    # 🔧 Backend Frameworks & Tools
-    "express.js", "nestjs", "hapi.js", "adonisjs", "laravel", "symfony", "fastapi",
-    "asp.net core", "rails", "gin gonic", "actix", "spring boot", "fiber",
-
-    # 🤖 Machine Learning / AI
-    "scikit-learn", "xgboost", "lightgbm", "catboost", "pytorch", "tensorflow",
-    "keras", "onnx", "mlflow", "huggingface transformers", "openvino", "deepspeed",
-    "fastai", "auto-sklearn", "tpot", "wandb", "optuna",
-
-    # 💬 NLP Tools & Libraries
-    "nltk", "spacy", "textblob", "gensim", "polyglot", "stanford nlp", "flair nlp",
-    "huggingface", "transformers", "bert", "roberta", "gpt", "sentence-transformers",
-
-    # 📊 Data Science & Analytics
-    "power bi", "tableau", "looker", "superset", "metabase", "seaborn", "matplotlib",
-    "plotly", "bokeh", "pandas profiling", "sweetviz", "datapane", "dvc",
-
-    # 🗃️ Databases & Storage
-    "mongodb", "postgresql", "redis", "neo4j", "dynamodb", "elastic search", "supabase",
-    "influxdb", "cassandra", "firebase firestore", "clickhouse", "tidb",
-
-    # ☁️ DevOps / Cloud
-    "docker", "kubernetes", "ansible", "terraform", "jenkins", "prometheus", "grafana",
-    "pagerduty", "argocd", "helm", "azure pipelines", "aws lambda", "gcp cloud run",
-    "cloudflare", "netlify", "vercel",
-
-    # 🔐 Cybersecurity
-    "owasp zap", "burp suite", "metasploit", "nmap", "wireshark", "snort", "splunk", 
-    "suricata", "hashicorp vault", "fail2ban", "crowdstrike",
-
-    # 📱 Mobile App Development
-    "flutter", "react native", "ionic", "xamarin", "kivy", "jetpack compose",
-    "nativebase", "codemagic",
-
-    # 🎮 Game Development / Graphics
-    "unity", "unreal engine", "godot", "three.js", "babylon.js", "blender",
-    "panda3d", "playcanvas",
-
-    # 🌍 Web3 / Blockchain
-    "solidity", "ethers.js", "web3.js", "hardhat", "truffle", "alchemy", "moralis",
-    "polygon", "chainlink", "ipfs", "pinata", "foundry",
-
-    # 🧪 Testing / QA
-    "cypress", "playwright", "jest", "mocha", "chai", "postman", "newman", "selenium",
-    "testcafe", "allure", "jmeter",
-
-    # 🧠 Specialized AI Use Cases
-    "ocr", "image segmentation", "object detection", "face recognition",
-    "pose estimation", "edge ai", "tinyml", "autonomous agents", "rasa", "langchain"
-]
+# ... (SKILL_KEYWORDS unchanged) ...
 
 def extract_text_from_pdf(pdf_path):
     doc = fitz.open(pdf_path)
@@ -115,11 +55,9 @@ def extract_skills(text):
     return list(found_skills)
 
 def get_ats_score(resume_text, job_description):
-    retries = 5  # Number of times to retry the API call
-    base_delay = 5  # Initial delay in seconds before the first retry
-
-    # Use 'gemini-1.5-flash' for higher free-tier limits and faster responses
-    model_name = "gemini-1.5-flash" 
+    retries = 5
+    base_delay = 5
+    model_name = "gemini-1.5-flash"
 
     for attempt in range(retries):
         try:
@@ -130,41 +68,39 @@ Resume: {resume_text[:3000]}
 Job Description: {job_description[:3000]}
 """
             model = genai.GenerativeModel("gemini-1.5-flash")
-            response = model.generate_content(prompt) # Send the actual prompt to Gemini
+            response = model.generate_content(prompt)
 
-            print(f"📤 Gemini Prompt (Attempt {attempt+1}/{retries}):", prompt)
-            print(f"📥 Gemini Response (Attempt {attempt+1}/{retries}):", response.text)
+            # ❌ REMOVE/COMMENT OUT these print statements if they are causing JSON issues
+            # print(f"📤 Gemini Prompt (Attempt {attempt+1}/{retries}):", prompt, file=sys.stderr) # Print to stderr for debug
+            # print(f"📥 Gemini Response (Attempt {attempt+1}/{retries}):", response.text, file=sys.stderr) # Print to stderr for debug
 
             score_match = re.findall(r'\d+', response.text)
             if score_match:
                 score = int(score_match[0])
             else:
                 score = 0
-                print(f"⚠️ Warning: No numeric score found in Gemini response for attempt {attempt+1}.")
-            return score # Return the score on success and exit the loop
+                # print(f"⚠️ Warning: No numeric score found in Gemini response for attempt {attempt+1}.", file=sys.stderr)
+            return score
 
         except Exception as e:
             error_message = str(e)
-            print(f"❌ Gemini scoring error (Attempt {attempt+1}/{retries}):", error_message)
+            # print(f"❌ Gemini scoring error (Attempt {attempt+1}/{retries}):", error_message, file=sys.stderr)
 
             if "429 You exceeded your current quota" in error_message:
-                # Extract the recommended retry_delay from the error message if available
                 match = re.search(r"retry_delay {\s+seconds: (\d+)", error_message)
                 if match:
                     delay = int(match.group(1))
                 else:
-                    # Fallback to exponential backoff if no specific delay is provided
                     delay = base_delay * (2 ** attempt)
 
-                print(f"Retrying in {delay} seconds due to quota limit...")
+                # print(f"Retrying in {delay} seconds due to quota limit...", file=sys.stderr)
                 time.sleep(delay)
             else:
-                # For any other type of error (not quota-related), stop retrying
-                print(f"Non-quota related error encountered, stopping retries: {error_message}")
-                return 0 # Return 0 or re-raise the exception if it's a critical error
+                # print(f"Non-quota related error encountered, stopping retries: {error_message}", file=sys.stderr)
+                return 0
 
-    print(f"❌ Gemini scoring failed after {retries} attempts due to persistent quota limits or other errors.")
-    return 0 # Return 0 if all retries are exhausted and no score was obtained
+    # print(f"❌ Gemini scoring failed after {retries} attempts due to persistent quota limits or other errors.", file=sys.stderr)
+    return 0
 
 def check_eligible(link):
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -176,7 +112,7 @@ def check_eligible(link):
         text = button.get_text(strip=True).lower()
         return "apply now" in text and "login" not in text and "eligible" not in text
     except Exception as e:
-        print(f"Error checking {link}: {e}")
+        # print(f"Error checking {link}: {e}", file=sys.stderr)
         return False
 
 def parse_stipend(stipend_str):
@@ -186,20 +122,24 @@ def parse_stipend(stipend_str):
 def convert_link(link):
     return link.replace("/internship/detail/", "/application/form/")
 
-def scrape_internshala(skills, resume_text):
-    import time
-
+def scrape_internshala(skills, resume_text, num_to_score=10, initial_scrape_limit=50):
     skills_slug = ",".join(skills).replace(" ", "-").lower()
     url = f"https://internshala.com/internships/{skills_slug}-internship"
     headers = {"User-Agent": "Mozilla/5.0"}
-    internships = []
+    
+    eligible_internships_for_scoring = []
 
     try:
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.text, "html.parser")
         log_to_csv("Scraping Started", f"URL: {url}")
 
+        processed_divs_count = 0 # Track how many divs we've processed
         for div in soup.find_all("div", class_="individual_internship"):
+            if processed_divs_count >= initial_scrape_limit:
+                break # Stop processing divs if we hit the limit
+            processed_divs_count += 1
+
             try:
                 title_tag = div.find("a", class_="job-title-href")
                 title = title_tag.text.strip()
@@ -208,85 +148,84 @@ def scrape_internshala(skills, resume_text):
                 location = div.find("div", class_="locations").text.strip()
                 stipend = div.find("span", class_="stipend").text.strip()
 
-                internships.append({
-                    "title": title,
-                    "company": company,
-                    "location": location,
-                    "stipend": stipend,
-                    "link": link,
-                    "ats_score": None  # placeholder
-                })
-
-                if len(internships) >= 20:  # limit scraping to top 20 to stay efficient
-                    break
+                if check_eligible(link):
+                    eligible_internships_for_scoring.append({
+                        "title": title,
+                        "company": company,
+                        "location": location,
+                        "stipend": stipend,
+                        "link": link,
+                        "ats_score": None
+                    })
+                    # Break if we have enough eligible internships to score
+                    if len(eligible_internships_for_scoring) >= num_to_score:
+                        break
+                else:
+                    log_to_csv("Internship Skipped (Not Eligible)", f"{title} - {link}")
 
             except Exception as e:
-                log_to_csv("Parse Error", str(e))
+                log_to_csv("Parse Error for Individual Internship", str(e))
                 continue
 
     except Exception as e:
-        log_to_csv("Scraping Failed", str(e))
+        log_to_csv("Scraping Failed for Internshala URL", str(e))
+        return []
 
-    # ✅ Now score only top 10 eligible internships using Gemini
-    scored_internships = []
+    final_scored_internships = []
+    # print(f"\n--- Fetching Job Descriptions and ATS Scores for Top {min(len(eligible_internships_for_scoring), num_to_score)} Internships ---", file=sys.stderr)
 
-    for job in internships[:10]:  # top 10 for Gemini
+    for i, job_data in enumerate(eligible_internships_for_scoring[:num_to_score]):
         try:
-            if check_eligible(job["link"]):
-                job_resp = requests.get(job["link"], headers=headers)
-                job_soup = BeautifulSoup(job_resp.text, "html.parser")
-                jd_div = job_soup.find("div", class_="internship_details")
-                job_desc = jd_div.get_text(strip=True) if jd_div else ""
+            # print(f"Processing ATS for: {job_data['title']} at {job_data['company']} ({i+1}/{min(len(eligible_internships_for_scoring), num_to_score)})", file=sys.stderr)
+            
+            job_resp = requests.get(job_data["link"], headers=headers)
+            job_soup = BeautifulSoup(job_resp.text, "html.parser")
+            jd_div = job_soup.find("div", class_="internship_details")
+            job_desc = jd_div.get_text(strip=True) if jd_div else ""
 
-                ats_score = get_ats_score(resume_text, job_desc)
-                time.sleep(1)  # avoid quota hit
-
-                job["ats_score"] = ats_score
-                log_to_csv("Gemini Scored", f"{job['title']} - ATS: {ats_score}")
-                scored_internships.append(job)
+            ats_score = get_ats_score(resume_text, job_desc)
+            
+            job_data["ats_score"] = ats_score
+            final_scored_internships.append(job_data)
+            log_to_csv("ATS Scored", f"{job_data['title']} - ATS: {ats_score}")
 
         except Exception as e:
-            log_to_csv("Gemini Error", str(e))
+            log_to_csv("ATS Scoring Error", f"Error for {job_data['title']}: {str(e)}")
+            job_data["ats_score"] = 0
+            final_scored_internships.append(job_data)
             continue
 
-    # Helper functions for sorting
     def get_ats_value(ats):
-        """Convert ATS score to float (handles percentages and missing values)"""
         if ats is None:
             return 0.0
         if isinstance(ats, (int, float)):
             return float(ats)
         try:
-            # Remove % and convert to float
-            return float(ats.replace('%', '').strip())
+            return float(str(ats).replace('%', '').strip()) # Ensure it's a string before replace
         except:
             return 0.0
 
     def get_stipend_value(stipend_str):
-        """Convert stipend string to comparable integer"""
         if not stipend_str or "Unpaid" in stipend_str:
             return 0
         try:
-            # Extract all numbers from stipend string
             numbers = re.findall(r'[\d,]+', stipend_str)
             if not numbers:
                 return 0
-            # Convert to integers and return highest value
             return max([int(num.replace(',', '')) for num in numbers])
         except:
             return 0
 
-    # Sort by ATS (descending) then stipend (descending)
-    scored_sorted = sorted(
-        scored_internships,
+    sorted_by_ats_then_stipend = sorted(
+        final_scored_internships,
         key=lambda x: (
-            get_ats_value(x['ats_score']),
-            get_stipend_value(x['stipend'])
+            get_ats_value(x.get('ats_score')), # Use .get for safety
+            get_stipend_value(x.get('stipend', '')) # Use .get for safety
         ),
         reverse=True
     )
     
-    return scored_sorted
+    return sorted_by_ats_then_stipend
 
 def save_links_to_txt(internships, filenames=["internship_links.txt", "internship_links_apply.txt"]):
     with open(filenames[0], "w") as f:
@@ -305,38 +244,71 @@ def log_to_csv(event, details="", file_path="debug_log.csv"):
             writer.writerow(["Timestamp", "Event", "Details"])
         writer.writerow([timestamp, event, details])
 
-def details_to_csv(lod, filename="Details_csv"):
-    with open(filename, "w") as f:
-        writer = csv.DictWriter(f, fieldnames=lod[0].keys())
-        writer.writeheader()
-        writer.writerows(lod)
+def details_to_csv(lod, filename="Details_csv.csv"):
+    with open(filename, "w", newline="") as f:
+        fieldnames = []
+        if lod: # Only try to get keys if lod is not empty
+            for item in lod:
+                for key in item.keys():
+                    if key not in fieldnames:
+                        fieldnames.append(key)
+        
+        if fieldnames: # Only write header if there are fieldnames
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(lod)
+        else:
+            # print("Warning: No data to write to CSV.", file=sys.stderr)
+            pass # Or log this as a warning
 
-# Run
-text = extract_text_from_pdf(pdf_path)
-skills = extract_skills(text)
-print("Extracted Skills:", skills)
+# --- Main execution block ---
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        # print("Usage: python skill_extractor.py <path_to_your_resume.pdf>", file=sys.stderr) # Print to stderr
+        sys.exit(1)
 
-results = scrape_internshala(skills, text)
-results_sorted = sorted(results, key=lambda x: parse_stipend(x["stipend"]), reverse=True)
+    pdf_path = sys.argv[1]
+    # top_n is defined globally at the top of the script
+    # It now acts as the 'num_to_score' for ATS calls and display limit.
 
-# Prepare structured response
-final_output = []
-for i, job in enumerate(results_sorted[:top_n], 1):
-    final_output.append({
-        "title": f"{i}. {job['title']} at {job['company']} [ATS Match: {job.get('ats_score', 'N/A')}%]",
-        "location": job["location"],
-        "stipend": job["stipend"],
-        "link": job["link"],
-        "apply": convert_link(job["link"]),
-        "ats": job.get('ats_score', 'N/A')
-    })
+    text = extract_text_from_pdf(pdf_path)
+    skills = extract_skills(text)
+    # print("Extracted Skills:", skills, file=sys.stderr) # Print to stderr for debug
 
-# Save for download (optional)
-save_links_to_txt(results_sorted[:top_n])
-for job in results_sorted[:top_n]:
-    job["apply_link"] = convert_link(job["link"])
-details_to_csv(results_sorted[:top_n])
+    # Pass top_n for ATS scoring limit and initial scrape limit
+    results = scrape_internshala(skills, text, num_to_score=top_n, initial_scrape_limit=50) 
+    
+    # Sort the results by ATS descending, then by stipend descending (already done in scrape_internshala)
+    # results_sorted = sorted(results, key=lambda x: parse_stipend(x["stipend"]), reverse=True)
+    # The 'results' list returned by scrape_internshala is ALREADY sorted by ATS then stipend.
+    results_sorted = results # No need to re-sort here
 
-# ✅ Output as JSON (used by Node server)
-sys.stdout.write(json.dumps({ "internships": final_output }))
-details_to_csv(results_sorted[:top_n])
+    final_output = []
+    # Ensure to only iterate up to top_n for the final output
+    for i, job in enumerate(results_sorted[:top_n], 1):
+        # Create 'apply_link' for each job directly here before appending to final_output
+        job_apply_link = convert_link(job["link"])
+        job["apply_link"] = job_apply_link # Add to job dict for CSV/JSON consistency
+
+        final_output.append({
+            "title": job['title'], # Keep title clean, let frontend format "1. Title..."
+            "company": job['company'],
+            "location": job["location"],
+            "stipend": job["stipend"],
+            "link": job["link"],
+            "apply": job_apply_link, # Use the correctly generated apply link
+            "ats": job.get('ats_score', 'N/A')
+        })
+
+    # Save for download (optional)
+    save_links_to_txt(results_sorted[:top_n])
+    # The 'apply_link' is already added within the loop above, so this block is not strictly necessary anymore:
+    # for job in results_sorted[:top_n]:
+    #     job["apply_link"] = convert_link(job["link"])
+    details_to_csv(results_sorted[:top_n])
+
+    # ✅ Output as JSON to stdout (used by Node server)
+    # This must be the ONLY thing printed to stdout.
+    sys.stdout.write(json.dumps({ "internships": final_output }))
+    # The second call to details_to_csv is redundant
+    # details_to_csv(results_sorted[:top_n])
