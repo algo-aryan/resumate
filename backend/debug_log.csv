@@ -2116,3 +2116,773 @@ Timestamp,Event,Details
 2025-06-17 10:58:07,Internship Found,Manual Testing at Techvins Software Private Limited
 2025-06-17 10:58:07,Internship Found,Django Development at Techvins Software Private Limited
 2025-06-17 10:58:07,Internship Found,Programming at NDFM Business World Pvt. Ltd.
+2025-06-21 08:55:56,Scraping Started,"URL: https://internshala.com/internships/python,css,html-internship"
+2025-06-21 08:55:58,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:55:59,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:56:01,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:56:01,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 08:56:03,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:56:04,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 08:56:05,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:56:06,Internship Found,Software Development - ATS: 0
+2025-06-21 08:56:07,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:56:08,Internship Found,React Native - ATS: 0
+2025-06-21 08:56:08,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 08:56:09,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:56:10,Internship Found,Tech - ATS: 0
+2025-06-21 08:56:11,Internship Found,Web Development - ATS: 0
+2025-06-21 08:56:13,Internship Found,Software Developer - ATS: 0
+2025-06-21 08:56:14,Internship Found,Data Science - ATS: 0
+2025-06-21 08:56:15,Internship Found,Python Development - ATS: 0
+2025-06-21 08:56:16,Internship Found,Web Development - ATS: 0
+2025-06-21 08:56:17,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 08:56:18,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 08:56:19,Internship Found,Data Analytics - ATS: 0
+2025-06-21 08:56:20,Internship Found,Angular Developer - ATS: 0
+2025-06-21 08:56:21,Internship Found,Python Development - ATS: 0
+2025-06-21 08:56:22,Internship Found,Market Research - ATS: 0
+2025-06-21 08:56:23,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 08:56:24,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:56:25,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:56:27,Internship Found,Web Development - ATS: 0
+2025-06-21 08:56:28,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 08:56:29,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:56:30,Internship Found,Machine Learning - ATS: 0
+2025-06-21 08:56:31,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 08:56:32,Internship Found,Backend Development - ATS: 0
+2025-06-21 08:56:33,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 08:56:34,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:56:35,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:56:36,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:56:37,Internship Found,ReactJS Development - ATS: 0
+2025-06-21 08:56:38,Internship Found,AWS DevOps Engineer - ATS: 0
+2025-06-21 08:56:39,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:56:40,Internship Found,Internet Of Things (IoT) - ATS: 0
+2025-06-21 08:58:16,Scraping Started,"URL: https://internshala.com/internships/python,css,html-internship"
+2025-06-21 08:58:18,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:58:19,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:58:20,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:58:21,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 08:58:23,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:58:24,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 08:58:25,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:58:27,Internship Found,Software Development - ATS: 0
+2025-06-21 08:58:28,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:58:29,Internship Found,React Native - ATS: 0
+2025-06-21 08:58:29,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 08:58:30,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:58:31,Internship Found,Tech - ATS: 0
+2025-06-21 08:58:32,Internship Found,Web Development - ATS: 0
+2025-06-21 08:58:33,Internship Found,Software Developer - ATS: 0
+2025-06-21 08:58:34,Internship Found,Data Science - ATS: 0
+2025-06-21 08:58:35,Internship Found,Python Development - ATS: 0
+2025-06-21 08:58:36,Internship Found,Web Development - ATS: 0
+2025-06-21 08:58:37,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 08:58:38,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 08:58:39,Internship Found,Data Analytics - ATS: 0
+2025-06-21 08:58:40,Internship Found,Angular Developer - ATS: 0
+2025-06-21 08:58:41,Internship Found,Python Development - ATS: 0
+2025-06-21 08:58:42,Internship Found,Market Research - ATS: 0
+2025-06-21 08:58:44,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 08:58:45,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:58:46,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:58:47,Internship Found,Web Development - ATS: 0
+2025-06-21 08:58:48,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 08:58:49,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:58:50,Internship Found,Machine Learning - ATS: 0
+2025-06-21 08:58:51,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 08:58:52,Internship Found,Backend Development - ATS: 0
+2025-06-21 08:58:53,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 08:58:54,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:58:55,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:58:56,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:58:57,Internship Found,ReactJS Development - ATS: 0
+2025-06-21 08:58:58,Internship Found,AWS DevOps Engineer - ATS: 0
+2025-06-21 08:58:59,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:59:00,Internship Found,Internet Of Things (IoT) - ATS: 0
+2025-06-21 08:59:17,Scraping Started,"URL: https://internshala.com/internships/html,css,python-internship"
+2025-06-21 08:59:19,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:59:19,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:59:21,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:59:22,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 08:59:23,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:59:24,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 08:59:25,Internship Found,Front End Development - ATS: 0
+2025-06-21 08:59:26,Internship Found,Software Development - ATS: 0
+2025-06-21 08:59:27,Internship Found,WordPress Development - ATS: 0
+2025-06-21 08:59:28,Internship Found,React Native - ATS: 0
+2025-06-21 08:59:28,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 08:59:29,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:59:30,Internship Found,Tech - ATS: 0
+2025-06-21 08:59:31,Internship Found,Web Development - ATS: 0
+2025-06-21 08:59:32,Internship Found,Software Developer - ATS: 0
+2025-06-21 08:59:33,Internship Found,Data Science - ATS: 0
+2025-06-21 08:59:34,Internship Found,Python Development - ATS: 0
+2025-06-21 08:59:35,Internship Found,Web Development - ATS: 0
+2025-06-21 08:59:36,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 08:59:37,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 08:59:38,Internship Found,Data Analytics - ATS: 0
+2025-06-21 08:59:39,Internship Found,Angular Developer - ATS: 0
+2025-06-21 08:59:40,Internship Found,Python Development - ATS: 0
+2025-06-21 08:59:41,Internship Found,Market Research - ATS: 0
+2025-06-21 08:59:43,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 08:59:43,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:59:45,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:59:45,Internship Found,Web Development - ATS: 0
+2025-06-21 08:59:47,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 08:59:47,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 08:59:49,Internship Found,Machine Learning - ATS: 0
+2025-06-21 08:59:49,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 08:59:51,Internship Found,Backend Development - ATS: 0
+2025-06-21 09:01:40,Scraping Started,"URL: https://internshala.com/internships/python,html,css-internship"
+2025-06-21 09:01:48,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:01:50,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:01:52,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:01:54,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 09:01:55,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:01:56,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 09:01:58,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:01:59,Internship Found,Software Development - ATS: 0
+2025-06-21 09:02:00,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:02:01,Internship Found,React Native - ATS: 0
+2025-06-21 09:02:01,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:02:02,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:02:03,Internship Found,Tech - ATS: 0
+2025-06-21 09:02:04,Internship Found,Web Development - ATS: 0
+2025-06-21 09:02:06,Internship Found,Software Developer - ATS: 0
+2025-06-21 09:02:07,Internship Found,Data Science - ATS: 0
+2025-06-21 09:02:08,Internship Found,Python Development - ATS: 0
+2025-06-21 09:02:09,Internship Found,Web Development - ATS: 0
+2025-06-21 09:02:10,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:02:12,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:02:13,Internship Found,Data Analytics - ATS: 0
+2025-06-21 09:02:14,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:02:15,Internship Found,Python Development - ATS: 0
+2025-06-21 09:02:16,Internship Found,Market Research - ATS: 0
+2025-06-21 09:02:17,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:02:18,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:02:19,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:02:20,Internship Found,Web Development - ATS: 0
+2025-06-21 09:02:21,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 09:02:22,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:02:23,Internship Found,Machine Learning - ATS: 0
+2025-06-21 09:02:24,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 09:02:25,Internship Found,Backend Development - ATS: 0
+2025-06-21 09:02:26,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 09:02:28,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:02:28,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:05:48,Scraping Started,"URL: https://internshala.com/internships/python,html,css-internship"
+2025-06-21 09:05:51,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:05:52,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:05:53,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:05:54,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 09:05:55,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:05:56,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 09:05:57,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:05:58,Internship Found,Software Development - ATS: 0
+2025-06-21 09:05:59,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:06:00,Internship Found,React Native - ATS: 0
+2025-06-21 09:06:00,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:06:01,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:06:03,Internship Found,Tech - ATS: 0
+2025-06-21 09:06:03,Internship Found,Web Development - ATS: 0
+2025-06-21 09:06:06,Internship Found,Software Developer - ATS: 0
+2025-06-21 09:06:07,Internship Found,Data Science - ATS: 0
+2025-06-21 09:06:08,Internship Found,Python Development - ATS: 0
+2025-06-21 09:06:09,Internship Found,Web Development - ATS: 0
+2025-06-21 09:06:11,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:06:12,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:06:13,Internship Found,Data Analytics - ATS: 0
+2025-06-21 09:06:14,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:06:15,Internship Found,Python Development - ATS: 0
+2025-06-21 09:06:16,Internship Found,Market Research - ATS: 0
+2025-06-21 09:06:17,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:06:18,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:06:19,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:06:20,Internship Found,Web Development - ATS: 0
+2025-06-21 09:06:21,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 09:06:22,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:06:23,Internship Found,Machine Learning - ATS: 0
+2025-06-21 09:06:24,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 09:06:25,Internship Found,Backend Development - ATS: 0
+2025-06-21 09:06:27,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 09:06:27,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:06:29,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:06:29,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:06:31,Internship Found,ReactJS Development - ATS: 0
+2025-06-21 09:06:32,Internship Found,AWS DevOps Engineer - ATS: 0
+2025-06-21 09:06:33,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:06:34,Internship Found,Internet Of Things (IoT) - ATS: 0
+2025-06-21 09:07:26,Scraping Started,"URL: https://internshala.com/internships/python,css,html-internship"
+2025-06-21 09:07:27,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:07:28,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:07:29,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:07:30,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 09:07:31,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:07:32,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 09:07:33,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:07:34,Internship Found,Software Development - ATS: 0
+2025-06-21 09:07:35,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:07:36,Internship Found,React Native - ATS: 0
+2025-06-21 09:07:36,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:07:37,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:07:38,Internship Found,Tech - ATS: 0
+2025-06-21 09:07:39,Internship Found,Web Development - ATS: 0
+2025-06-21 09:07:40,Internship Found,Software Developer - ATS: 0
+2025-06-21 09:07:41,Internship Found,Data Science - ATS: 0
+2025-06-21 09:07:42,Internship Found,Python Development - ATS: 0
+2025-06-21 09:07:43,Internship Found,Web Development - ATS: 0
+2025-06-21 09:07:44,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:07:45,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:07:46,Internship Found,Data Analytics - ATS: 0
+2025-06-21 09:07:47,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:07:48,Internship Found,Python Development - ATS: 0
+2025-06-21 09:07:49,Internship Found,Market Research - ATS: 0
+2025-06-21 09:07:50,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:07:51,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:07:52,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:07:53,Internship Found,Web Development - ATS: 0
+2025-06-21 09:07:55,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 09:07:55,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:07:57,Internship Found,Machine Learning - ATS: 0
+2025-06-21 09:07:57,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 09:07:59,Internship Found,Backend Development - ATS: 0
+2025-06-21 09:07:59,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 09:08:01,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:08:02,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:08:03,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:08:04,Internship Found,ReactJS Development - ATS: 0
+2025-06-21 09:08:05,Internship Found,AWS DevOps Engineer - ATS: 0
+2025-06-21 09:08:06,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:08:07,Internship Found,Internet Of Things (IoT) - ATS: 0
+2025-06-21 09:08:18,Scraping Started,"URL: https://internshala.com/internships/html,python,css-internship"
+2025-06-21 09:08:20,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:08:21,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:08:22,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:08:23,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 09:08:24,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:08:25,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 09:08:26,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:08:27,Internship Found,Software Development - ATS: 0
+2025-06-21 09:08:28,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:08:29,Internship Found,React Native - ATS: 0
+2025-06-21 09:08:29,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:08:30,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:08:31,Internship Found,Tech - ATS: 0
+2025-06-21 09:08:32,Internship Found,Web Development - ATS: 0
+2025-06-21 09:08:33,Internship Found,Software Developer - ATS: 0
+2025-06-21 09:08:34,Internship Found,Data Science - ATS: 0
+2025-06-21 09:08:35,Internship Found,Python Development - ATS: 0
+2025-06-21 09:08:36,Internship Found,Web Development - ATS: 0
+2025-06-21 09:08:37,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:08:39,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:08:40,Internship Found,Data Analytics - ATS: 0
+2025-06-21 09:08:41,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:08:42,Internship Found,Python Development - ATS: 0
+2025-06-21 09:08:43,Internship Found,Market Research - ATS: 0
+2025-06-21 09:08:44,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:08:45,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:08:46,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:09:04,Scraping Started,"URL: https://internshala.com/internships/html,css,python-internship"
+2025-06-21 09:09:06,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:09:07,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:09:08,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:09:09,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 09:09:10,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:09:11,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 09:09:12,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:09:14,Internship Found,Software Development - ATS: 0
+2025-06-21 09:09:15,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:09:16,Internship Found,React Native - ATS: 0
+2025-06-21 09:09:16,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:09:17,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:09:18,Internship Found,Tech - ATS: 0
+2025-06-21 09:09:19,Internship Found,Web Development - ATS: 0
+2025-06-21 09:09:20,Internship Found,Software Developer - ATS: 0
+2025-06-21 09:09:21,Internship Found,Data Science - ATS: 0
+2025-06-21 09:09:22,Internship Found,Python Development - ATS: 0
+2025-06-21 09:09:23,Internship Found,Web Development - ATS: 0
+2025-06-21 09:09:24,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:09:25,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:09:26,Internship Found,Data Analytics - ATS: 0
+2025-06-21 09:09:27,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:09:28,Internship Found,Python Development - ATS: 0
+2025-06-21 09:09:29,Internship Found,Market Research - ATS: 0
+2025-06-21 09:09:31,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:09:31,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:09:33,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:09:33,Internship Found,Web Development - ATS: 0
+2025-06-21 09:09:35,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 09:09:35,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:09:37,Internship Found,Machine Learning - ATS: 0
+2025-06-21 09:11:05,Scraping Started,"URL: https://internshala.com/internships/html,css,python-internship"
+2025-06-21 09:11:08,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:11:09,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:11:10,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:11:11,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 09:11:12,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:11:13,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 09:11:14,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:11:15,Internship Found,Software Development - ATS: 0
+2025-06-21 09:11:16,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:11:17,Internship Found,React Native - ATS: 0
+2025-06-21 09:11:17,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:11:18,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:11:19,Internship Found,Tech - ATS: 0
+2025-06-21 09:11:20,Internship Found,Web Development - ATS: 0
+2025-06-21 09:11:21,Internship Found,Software Developer - ATS: 0
+2025-06-21 09:11:22,Internship Found,Data Science - ATS: 0
+2025-06-21 09:11:23,Internship Found,Python Development - ATS: 0
+2025-06-21 09:11:24,Internship Found,Web Development - ATS: 0
+2025-06-21 09:11:25,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:11:26,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:11:27,Internship Found,Data Analytics - ATS: 0
+2025-06-21 09:11:28,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:11:29,Internship Found,Python Development - ATS: 0
+2025-06-21 09:11:30,Internship Found,Market Research - ATS: 0
+2025-06-21 09:11:31,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:11:32,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:11:33,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:11:34,Internship Found,Web Development - ATS: 0
+2025-06-21 09:11:35,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 09:11:36,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:11:37,Internship Found,Machine Learning - ATS: 0
+2025-06-21 09:11:38,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 09:11:39,Internship Found,Backend Development - ATS: 0
+2025-06-21 09:11:40,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 09:11:41,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:11:42,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:11:43,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:11:44,Internship Found,ReactJS Development - ATS: 0
+2025-06-21 09:11:45,Internship Found,AWS DevOps Engineer - ATS: 0
+2025-06-21 09:11:46,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:11:47,Internship Found,Internet Of Things (IoT) - ATS: 0
+2025-06-21 09:12:46,Scraping Started,"URL: https://internshala.com/internships/python,css,html-internship"
+2025-06-21 09:12:47,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:12:49,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:12:49,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:12:51,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 09:12:52,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:12:53,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 09:12:54,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:12:55,Internship Found,Software Development - ATS: 0
+2025-06-21 09:12:56,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:12:58,Internship Found,React Native - ATS: 0
+2025-06-21 09:12:58,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:12:58,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:13:00,Internship Found,Tech - ATS: 0
+2025-06-21 09:13:00,Internship Found,Web Development - ATS: 0
+2025-06-21 09:13:02,Internship Found,Software Developer - ATS: 0
+2025-06-21 09:13:02,Internship Found,Data Science - ATS: 0
+2025-06-21 09:13:04,Internship Found,Python Development - ATS: 0
+2025-06-21 09:13:05,Internship Found,Web Development - ATS: 0
+2025-06-21 09:13:07,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:13:08,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:13:09,Internship Found,Data Analytics - ATS: 0
+2025-06-21 09:13:10,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:13:11,Internship Found,Python Development - ATS: 0
+2025-06-21 09:13:12,Internship Found,Market Research - ATS: 0
+2025-06-21 09:13:13,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:13:14,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:13:15,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:13:16,Internship Found,Web Development - ATS: 0
+2025-06-21 09:13:18,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 09:13:18,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:13:20,Internship Found,Machine Learning - ATS: 0
+2025-06-21 09:13:20,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 09:13:22,Internship Found,Backend Development - ATS: 0
+2025-06-21 09:13:23,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 09:13:24,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:13:25,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:13:26,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:13:27,Internship Found,ReactJS Development - ATS: 0
+2025-06-21 09:13:28,Internship Found,AWS DevOps Engineer - ATS: 0
+2025-06-21 09:13:29,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:13:30,Internship Found,Internet Of Things (IoT) - ATS: 0
+2025-06-21 09:15:11,Scraping Started,"URL: https://internshala.com/internships/css,html,python-internship"
+2025-06-21 09:15:14,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:15:14,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:15:16,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:15:16,Internship Found,Laravel Framework Engineer - ATS: 0
+2025-06-21 09:15:18,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:15:19,Internship Found,Artificial Intelligence (AI) - ATS: 0
+2025-06-21 09:15:20,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:15:21,Internship Found,Software Development - ATS: 0
+2025-06-21 09:15:22,Internship Found,WordPress Development - ATS: 0
+2025-06-21 09:15:23,Internship Found,React Native - ATS: 0
+2025-06-21 09:15:23,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:15:24,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:15:25,Internship Found,Tech - ATS: 0
+2025-06-21 09:15:26,Internship Found,Web Development - ATS: 0
+2025-06-21 09:15:27,Internship Found,Software Developer - ATS: 0
+2025-06-21 09:15:28,Internship Found,Data Science - ATS: 0
+2025-06-21 09:15:29,Internship Found,Python Development - ATS: 0
+2025-06-21 09:15:30,Internship Found,Web Development - ATS: 0
+2025-06-21 09:15:31,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:15:32,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:15:33,Internship Found,Data Analytics - ATS: 0
+2025-06-21 09:15:34,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:15:35,Internship Found,Python Development - ATS: 0
+2025-06-21 09:15:36,Internship Found,Market Research - ATS: 0
+2025-06-21 09:15:38,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:15:39,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:15:40,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:15:41,Internship Found,Web Development - ATS: 0
+2025-06-21 09:15:42,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 09:15:43,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:15:44,Internship Found,Machine Learning - ATS: 0
+2025-06-21 09:15:45,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 09:15:46,Internship Found,Backend Development - ATS: 0
+2025-06-21 09:15:47,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 09:15:48,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:15:49,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:15:50,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:15:51,Internship Found,ReactJS Development - ATS: 0
+2025-06-21 09:15:52,Internship Found,AWS DevOps Engineer - ATS: 0
+2025-06-21 09:15:53,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:15:54,Internship Found,Internet Of Things (IoT) - ATS: 0
+2025-06-21 09:17:04,Scraping Started,"URL: https://internshala.com/internships/html,css,python-internship"
+2025-06-21 09:17:08,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:17:09,Internship Found,Front End Development - ATS: 45
+2025-06-21 09:17:11,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:17:12,Internship Found,Laravel Framework Engineer - ATS: 40
+2025-06-21 09:17:13,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:17:14,Internship Found,Artificial Intelligence (AI) - ATS: 45
+2025-06-21 09:17:15,Internship Found,Front End Development - ATS: 40
+2025-06-21 09:17:16,Internship Found,Software Development - ATS: 20
+2025-06-21 09:17:18,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:17:19,Internship Found,React Native - ATS: 25
+2025-06-21 09:17:19,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:17:20,Internship Found,Full Stack Development - ATS: 75
+2025-06-21 09:17:21,Internship Found,Tech - ATS: 65
+2025-06-21 09:17:22,Internship Found,Web Development - ATS: 45
+2025-06-21 09:17:23,Internship Found,Software Developer - ATS: 75
+2025-06-21 09:17:25,Internship Found,Data Science - ATS: 40
+2025-06-21 09:17:26,Internship Found,Python Development - ATS: 65
+2025-06-21 09:17:27,Internship Found,Web Development - ATS: 0
+2025-06-21 09:17:28,Internship Found,SQL Analyst - ATS: 0
+2025-06-21 09:17:29,Internship Found,Full Stack Developer - ATS: 0
+2025-06-21 09:17:30,Internship Found,Data Analytics - ATS: 45
+2025-06-21 09:17:31,Internship Found,Angular Developer - ATS: 0
+2025-06-21 09:17:32,Internship Found,Python Development - ATS: 0
+2025-06-21 09:17:33,Internship Found,Market Research - ATS: 0
+2025-06-21 09:17:34,Internship Found,STEM Trainer - ATS: 0
+2025-06-21 09:17:35,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:17:36,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:17:37,Internship Found,Web Development - ATS: 0
+2025-06-21 09:17:38,Internship Found,Web Developer (React) - ATS: 0
+2025-06-21 09:17:39,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:17:40,Internship Found,Machine Learning - ATS: 0
+2025-06-21 09:17:41,Internship Found,Email Marketing Manager - ATS: 0
+2025-06-21 09:17:42,Internship Found,Backend Development - ATS: 0
+2025-06-21 09:17:43,Internship Found,Industrial Automation & Robotics - ATS: 0
+2025-06-21 09:17:44,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:17:45,Internship Found,Front End Development - ATS: 0
+2025-06-21 09:17:46,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:17:47,Internship Found,ReactJS Development - ATS: 0
+2025-06-21 09:17:48,Internship Found,AWS DevOps Engineer - ATS: 0
+2025-06-21 09:17:49,Internship Found,Full Stack Development - ATS: 0
+2025-06-21 09:17:50,Internship Found,Internet Of Things (IoT) - ATS: 0
+2025-06-21 09:21:45,Scraping Started,"URL: https://internshala.com/internships/html,css,python-internship"
+2025-06-21 09:21:48,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:21:49,Internship Found,Front End Development - ATS: 45
+2025-06-21 09:21:50,Internship Found,Full Stack Development - ATS: 60
+2025-06-21 09:21:52,Internship Found,Laravel Framework Engineer - ATS: 40
+2025-06-21 09:21:53,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:21:55,Internship Found,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 09:21:56,Internship Found,Front End Development - ATS: 40
+2025-06-21 09:21:57,Internship Found,Software Development - ATS: 40
+2025-06-21 09:21:58,Internship Found,WordPress Development - ATS: 40
+2025-06-21 09:22:00,Internship Found,React Native - ATS: 40
+2025-06-21 09:22:00,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:22:01,Internship Found,Full Stack Development - ATS: 65
+2025-06-21 09:22:02,Internship Found,Tech - ATS: 65
+2025-06-21 09:22:03,Internship Found,Web Development - ATS: 45
+2025-06-21 09:22:06,Internship Found,Software Developer - ATS: 65
+2025-06-21 09:22:08,Internship Found,Data Science - ATS: 45
+2025-06-21 09:23:00,Internship Found,Python Development - ATS: 75
+2025-06-21 09:23:02,Internship Found,Web Development - ATS: 65
+2025-06-21 09:23:03,Internship Found,SQL Analyst - ATS: 65
+2025-06-21 09:23:04,Internship Found,Full Stack Developer - ATS: 40
+2025-06-21 09:23:07,Internship Found,Data Analytics - ATS: 45
+2025-06-21 09:23:08,Internship Found,Angular Developer - ATS: 20
+2025-06-21 09:23:09,Internship Found,Python Development - ATS: 65
+2025-06-21 09:23:10,Internship Found,Market Research - ATS: 20
+2025-06-21 09:23:11,Internship Found,STEM Trainer - ATS: 65
+2025-06-21 09:23:13,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:23:14,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:23:15,Internship Found,Web Development - ATS: 40
+2025-06-21 09:23:16,Internship Found,Web Developer (React) - ATS: 20
+2025-06-21 09:23:17,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:23:19,Internship Found,Machine Learning - ATS: 25
+2025-06-21 09:23:20,Internship Found,Email Marketing Manager - ATS: 20
+2025-06-21 09:23:21,Internship Found,Backend Development - ATS: 65
+2025-06-21 09:23:55,Scraping Started,"URL: https://internshala.com/internships/css,python,html-internship"
+2025-06-21 09:23:56,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:23:58,Internship Found,Front End Development - ATS: 65
+2025-06-21 09:23:59,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:24:00,Internship Found,Laravel Framework Engineer - ATS: 40
+2025-06-21 09:24:01,Internship Found,WordPress Development - ATS: 60
+2025-06-21 09:24:02,Internship Found,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 09:24:03,Internship Found,Front End Development - ATS: 40
+2025-06-21 09:24:05,Internship Found,Software Development - ATS: 30
+2025-06-21 09:24:07,Internship Found,WordPress Development - ATS: 40
+2025-06-21 09:24:09,Internship Found,React Native - ATS: 40
+2025-06-21 09:24:09,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:24:10,Internship Found,Full Stack Development - ATS: 75
+2025-06-21 09:24:11,Internship Found,Tech - ATS: 65
+2025-06-21 09:24:12,Internship Found,Web Development - ATS: 40
+2025-06-21 09:24:13,Internship Found,Software Developer - ATS: 65
+2025-06-21 09:24:15,Internship Found,Data Science - ATS: 45
+2025-06-21 09:25:00,Internship Found,Python Development - ATS: 65
+2025-06-21 09:25:02,Internship Found,Web Development - ATS: 65
+2025-06-21 09:25:03,Internship Found,SQL Analyst - ATS: 65
+2025-06-21 09:25:04,Internship Found,Full Stack Developer - ATS: 60
+2025-06-21 09:25:06,Internship Found,Data Analytics - ATS: 40
+2025-06-21 09:25:07,Internship Found,Angular Developer - ATS: 20
+2025-06-21 09:25:09,Internship Found,Python Development - ATS: 65
+2025-06-21 09:25:10,Internship Found,Market Research - ATS: 30
+2025-06-21 09:25:11,Internship Found,STEM Trainer - ATS: 45
+2025-06-21 09:25:13,Internship Found,Full Stack Development - ATS: 45
+2025-06-21 09:25:14,Internship Found,Full Stack Development - ATS: 45
+2025-06-21 09:25:15,Internship Found,Web Development - ATS: 40
+2025-06-21 09:25:16,Internship Found,Web Developer (React) - ATS: 40
+2025-06-21 09:25:17,Internship Found,Full Stack Development - ATS: 60
+2025-06-21 09:25:18,Internship Found,Machine Learning - ATS: 40
+2025-06-21 09:25:20,Internship Found,Email Marketing Manager - ATS: 20
+2025-06-21 09:26:00,Internship Found,Backend Development - ATS: 65
+2025-06-21 09:26:01,Internship Found,Industrial Automation & Robotics - ATS: 45
+2025-06-21 09:26:03,Internship Found,Front End Development - ATS: 30
+2025-06-21 09:26:04,Internship Found,Front End Development - ATS: 40
+2025-06-21 09:26:06,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:26:07,Internship Found,ReactJS Development - ATS: 40
+2025-06-21 09:26:08,Internship Found,AWS DevOps Engineer - ATS: 40
+2025-06-21 09:26:09,Internship Found,Full Stack Development - ATS: 45
+2025-06-21 09:26:10,Internship Found,Internet Of Things (IoT) - ATS: 20
+2025-06-21 09:27:56,Scraping Started,"URL: https://internshala.com/internships/html,css,python-internship"
+2025-06-21 09:28:02,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:28:08,Internship Found,Front End Development - ATS: 45
+2025-06-21 09:28:14,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:28:20,Internship Found,Laravel Framework Engineer - ATS: 30
+2025-06-21 09:28:26,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:28:32,Internship Found,Artificial Intelligence (AI) - ATS: 45
+2025-06-21 09:28:38,Internship Found,Front End Development - ATS: 40
+2025-06-21 09:28:44,Internship Found,Software Development - ATS: 40
+2025-06-21 09:28:50,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:28:57,Internship Found,React Native - ATS: 40
+2025-06-21 09:28:57,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:29:03,Internship Found,Full Stack Development - ATS: 65
+2025-06-21 09:29:09,Internship Found,Tech - ATS: 65
+2025-06-21 09:29:15,Internship Found,Web Development - ATS: 40
+2025-06-21 09:29:21,Internship Found,Software Developer - ATS: 65
+2025-06-21 09:29:27,Internship Found,Data Science - ATS: 45
+2025-06-21 09:29:34,Internship Found,Python Development - ATS: 75
+2025-06-21 09:29:40,Internship Found,Web Development - ATS: 65
+2025-06-21 09:29:46,Internship Found,SQL Analyst - ATS: 65
+2025-06-21 09:29:52,Internship Found,Full Stack Developer - ATS: 40
+2025-06-21 09:29:58,Internship Found,Data Analytics - ATS: 40
+2025-06-21 09:30:04,Internship Found,Angular Developer - ATS: 20
+2025-06-21 09:30:11,Internship Found,Python Development - ATS: 65
+2025-06-21 09:30:17,Internship Found,Market Research - ATS: 20
+2025-06-21 09:30:23,Internship Found,STEM Trainer - ATS: 45
+2025-06-21 09:30:29,Internship Found,Full Stack Development - ATS: 45
+2025-06-21 09:30:35,Internship Found,Full Stack Development - ATS: 45
+2025-06-21 09:30:42,Internship Found,Web Development - ATS: 40
+2025-06-21 09:30:48,Internship Found,Web Developer (React) - ATS: 40
+2025-06-21 09:30:55,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:31:01,Internship Found,Machine Learning - ATS: 20
+2025-06-21 09:31:07,Internship Found,Email Marketing Manager - ATS: 20
+2025-06-21 09:31:13,Internship Found,Backend Development - ATS: 65
+2025-06-21 09:31:19,Internship Found,Industrial Automation & Robotics - ATS: 45
+2025-06-21 09:31:25,Internship Found,Front End Development - ATS: 25
+2025-06-21 09:31:32,Internship Found,Front End Development - ATS: 45
+2025-06-21 09:31:38,Internship Found,Full Stack Development - ATS: 45
+2025-06-21 09:31:44,Internship Found,ReactJS Development - ATS: 30
+2025-06-21 09:31:50,Internship Found,AWS DevOps Engineer - ATS: 40
+2025-06-21 09:31:56,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:32:02,Internship Found,Internet Of Things (IoT) - ATS: 20
+2025-06-21 09:34:07,Scraping Started,"URL: https://internshala.com/internships/css,html,python-internship"
+2025-06-21 09:34:10,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:36:24,Scraping Started,"URL: https://internshala.com/internships/python,html,css-internship"
+2025-06-21 09:36:26,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:40:49,Scraping Started,"URL: https://internshala.com/internships/python,css,html-internship"
+2025-06-21 09:40:56,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:41:02,Internship Found,Front End Development - ATS: 45
+2025-06-21 09:41:08,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:41:14,Internship Found,Laravel Framework Engineer - ATS: 20
+2025-06-21 09:41:20,Internship Found,Full Stack Developer - ATS: 40
+2025-06-21 09:41:27,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:41:33,Internship Found,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 09:41:39,Internship Found,Front End Development - ATS: 40
+2025-06-21 09:41:45,Internship Found,Software Development - ATS: 40
+2025-06-21 09:41:51,Internship Found,WordPress Development - ATS: 45
+2025-06-21 09:41:51,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:41:57,Internship Found,React Native - ATS: 40
+2025-06-21 09:42:03,Internship Found,Full Stack Development - ATS: 65
+2025-06-21 09:42:09,Internship Found,Tech - ATS: 65
+2025-06-21 09:42:16,Internship Found,Web Development - ATS: 40
+2025-06-21 09:42:22,Internship Found,Software Developer - ATS: 65
+2025-06-21 09:42:28,Internship Found,Data Science - ATS: 40
+2025-06-21 09:42:34,Internship Found,Python Development - ATS: 65
+2025-06-21 09:42:40,Internship Found,Web Development - ATS: 65
+2025-06-21 09:42:46,Internship Found,SQL Analyst - ATS: 65
+2025-06-21 09:42:52,Internship Found,Full Stack Developer - ATS: 60
+2025-06-21 09:42:58,Internship Found,Data Analytics - ATS: 25
+2025-06-21 09:43:05,Internship Found,Angular Developer - ATS: 20
+2025-06-21 09:43:11,Internship Found,Python Development - ATS: 65
+2025-06-21 09:43:17,Internship Found,Market Research - ATS: 20
+2025-06-21 09:43:23,Internship Found,STEM Trainer - ATS: 45
+2025-06-21 09:43:29,Internship Found,Full Stack Development - ATS: 65
+2025-06-21 09:43:35,Internship Found,Full Stack Development - ATS: 45
+2025-06-21 09:43:42,Internship Found,Web Development - ATS: 40
+2025-06-21 09:43:48,Internship Found,Web Developer (React) - ATS: 20
+2025-06-21 09:43:54,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:44:00,Internship Found,Machine Learning - ATS: 20
+2025-06-21 09:44:06,Internship Found,Email Marketing Manager - ATS: 20
+2025-06-21 09:44:12,Internship Found,Backend Development - ATS: 65
+2025-06-21 09:44:19,Internship Found,Industrial Automation & Robotics - ATS: 45
+2025-06-21 09:44:25,Internship Found,Front End Development - ATS: 30
+2025-06-21 09:44:31,Internship Found,Front End Development - ATS: 40
+2025-06-21 09:44:38,Internship Found,Full Stack Development - ATS: 40
+2025-06-21 09:44:44,Internship Found,ReactJS Development - ATS: 25
+2025-06-21 09:44:50,Internship Found,AWS DevOps Engineer - ATS: 40
+2025-06-21 09:44:56,Internship Found,Full Stack Development - ATS: 45
+2025-06-21 09:48:37,Scraping Started,"URL: https://internshala.com/internships/css,html,python-internship"
+2025-06-21 09:48:37,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:48:43,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 09:48:50,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 09:48:56,Gemini Scored,Full Stack Development - ATS: 60
+2025-06-21 09:49:02,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 09:49:08,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 09:49:14,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 09:49:20,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 09:49:27,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 09:49:33,Gemini Scored,Software Development - ATS: 40
+2025-06-21 09:49:39,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 09:50:49,Scraping Started,"URL: https://internshala.com/internships/python,css,html-internship"
+2025-06-21 09:50:49,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:50:56,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 09:51:02,Gemini Scored,Front End Development - ATS: 65
+2025-06-21 09:51:08,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 09:51:15,Gemini Scored,Laravel Framework Engineer - ATS: 30
+2025-06-21 09:51:21,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 09:51:27,Gemini Scored,WordPress Development - ATS: 65
+2025-06-21 09:51:33,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 09:51:39,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 09:51:45,Gemini Scored,Software Development - ATS: 40
+2025-06-21 09:51:52,Gemini Scored,WordPress Development - ATS: 65
+2025-06-21 09:53:52,Scraping Started,"URL: https://internshala.com/internships/python,css,html-internship"
+2025-06-21 09:53:52,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:53:59,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 09:54:05,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 09:54:13,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 09:54:19,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 09:54:25,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 09:54:31,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 09:54:37,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 09:54:43,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 09:54:49,Gemini Scored,Software Development - ATS: 30
+2025-06-21 09:54:55,Gemini Scored,WordPress Development - ATS: 65
+2025-06-21 09:55:55,Scraping Started,"URL: https://internshala.com/internships/css,html,python-internship"
+2025-06-21 09:55:55,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:56:01,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 09:56:07,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 09:56:14,Gemini Scored,Full Stack Development - ATS: 25
+2025-06-21 09:56:20,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 09:56:26,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 09:56:32,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 09:56:38,Gemini Scored,Artificial Intelligence (AI) - ATS: 45
+2025-06-21 09:56:44,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 09:56:50,Gemini Scored,Software Development - ATS: 40
+2025-06-21 09:56:57,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 09:57:03,Gemini Scored,React Native - ATS: 40
+2025-06-21 09:57:09,Gemini Scored,Full Stack Development - ATS: 65
+2025-06-21 09:57:15,Gemini Scored,Tech - ATS: 65
+2025-06-21 09:57:22,Scraping Started,"URL: https://internshala.com/internships/html,python,css-internship"
+2025-06-21 09:57:22,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:57:28,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 09:57:34,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 09:57:41,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 09:57:47,Gemini Scored,Laravel Framework Engineer - ATS: 30
+2025-06-21 09:58:13,Scraping Started,"URL: https://internshala.com/internships/css,html,python-internship"
+2025-06-21 09:58:13,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:58:21,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 09:58:27,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 09:58:33,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 09:58:39,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 09:58:45,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 09:58:51,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 09:58:57,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 09:59:04,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 09:59:10,Gemini Scored,Software Development - ATS: 40
+2025-06-21 09:59:37,Scraping Started,"URL: https://internshala.com/internships/html,python,css-internship"
+2025-06-21 09:59:37,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 09:59:44,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 09:59:50,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 09:59:57,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 10:00:03,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 10:00:09,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:00:16,Gemini Scored,WordPress Development - ATS: 60
+2025-06-21 10:00:22,Gemini Scored,Artificial Intelligence (AI) - ATS: 45
+2025-06-21 10:00:28,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:00:34,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:01:06,Scraping Started,"URL: https://internshala.com/internships/html,python,css-internship"
+2025-06-21 10:01:06,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 10:01:11,Gemini Scored,WordPress Development - ATS: 60
+2025-06-21 10:01:14,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:01:17,Gemini Scored,Data Science - ATS: 20
+2025-06-21 10:01:21,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 10:01:24,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 10:01:27,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:01:31,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:01:34,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 10:01:37,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 10:01:40,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:01:52,Scraping Started,"URL: https://internshala.com/internships/css,python,html-internship"
+2025-06-21 10:01:52,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 10:01:54,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:01:56,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:01:59,Gemini Scored,Data Science - ATS: 20
+2025-06-21 10:02:01,Gemini Scored,Full Stack Development - ATS: 20
+2025-06-21 10:02:03,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 10:02:07,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:02:09,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:02:11,Gemini Scored,Artificial Intelligence (AI) - ATS: 45
+2025-06-21 10:02:13,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:02:16,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:04:32,Scraping Started,"URL: https://internshala.com/internships/html,css,python-internship"
+2025-06-21 10:04:32,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 10:04:34,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 10:04:36,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 10:04:38,Gemini Scored,Data Science - ATS: 20
+2025-06-21 10:04:40,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 10:04:42,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 10:04:45,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:04:47,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:04:49,Gemini Scored,Artificial Intelligence (AI) - ATS: 45
+2025-06-21 10:04:51,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:04:53,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:08:02,Scraping Started,"URL: https://internshala.com/internships/css,python,html-internship"
+2025-06-21 10:08:02,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 10:08:05,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 10:08:08,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 10:08:10,Gemini Scored,Data Science - ATS: 20
+2025-06-21 10:08:12,Gemini Scored,Full Stack Development - ATS: 20
+2025-06-21 10:08:14,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 10:08:16,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:08:18,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:08:20,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 10:08:22,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:08:24,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:12:37,Scraping Started,"URL: https://internshala.com/internships/css,html,python-internship"
+2025-06-21 10:12:37,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 10:12:41,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:12:43,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:12:45,Gemini Scored,Data Science - ATS: 20
+2025-06-21 10:12:47,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 10:12:49,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 10:12:52,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:12:54,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:12:56,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 10:12:58,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:13:00,Gemini Scored,Software Development - ATS: 40

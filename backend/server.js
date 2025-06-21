@@ -56,7 +56,7 @@ app.post('/api/upload', upload.single('resume'), (req, res) => {
       }
     }
 
-    return res.status(200).json({ raw_output: stdout });
+    return res.status(200).json({ internships: results });
   });
 });
 

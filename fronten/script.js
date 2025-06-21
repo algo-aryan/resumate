@@ -64,15 +64,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const link = lines[3].replace("Link: ", "").trim();
             const apply = lines[4].replace("Apply: ", "").trim();
 
-            matchDiv.innerHTML = `
-              <h4>${title}</h4>
-              <p><strong>📍 Location:</strong> ${location}</p>
-              <p><strong>💰 Stipend:</strong> ${stipend}</p>
-              <p><strong>ATS Match:</strong> ${job.ats}%</p>
-              <p><strong>🔗 <a href="${link}" target="_blank">View Internship</a></strong></p>
-              <p><strong>🚀 <a href="${apply}" target="_blank">Apply Now</a></strong></p>
-            `;
-            resultsDiv.appendChild(matchDiv);
+            data.internships.forEach(job => {
+              const matchDiv = document.createElement("div");
+              matchDiv.className = "card";
+              matchDiv.innerHTML = `
+                <h4>${job.title}</h4>
+                <p><strong>📍 Location:</strong> ${job.location}</p>
+                <p><strong>💰 Stipend:</strong> ${job.stipend}</p>
+                <p><strong>📊 ATS Match:</strong> ${job.ats}%</p>
+                <p><strong>🔗 <a href="${job.link}" target="_blank">View Internship</a></strong></p>
+                <p><strong>🚀 <a href="${job.apply}" target="_blank">Apply Now</a></strong></p>
+              `;
+              resultsDiv.appendChild(matchDiv);
+            });
           } else {
             // Fallback for unexpected block format (if it doesn't have 5 specific lines)
             // You might want to handle this more robustly or log a warning

@@ -11,10 +11,13 @@ import os
 import sys
 from dotenv import load_dotenv
 import google.generativeai as genai
+import time
 
 # ✅ Load environment and configure Gemini
 load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+genai.configure(
+    api_key=os.getenv("GOOGLE_API_KEY")
+)
 
 # ✅ Ensure NLTK stopwords are available
 nltk.data.path.append(os.path.join(os.path.dirname(__file__), "nltk_data"))
@@ -27,7 +30,7 @@ except LookupError:
 nlp = spacy.load("en_core_web_sm")
 
 pdf_path = sys.argv[1]
-top_n = 50
+top_n = 10
 
 # ... (SKILL_KEYWORDS unchanged – keep your full list here)
 SKILL_KEYWORDS = [
@@ -111,19 +114,56 @@ def extract_skills(text):
     return list(found_skills)
 
 def get_ats_score(resume_text, job_description):
-    try:
-        prompt = f"""
-You are an ATS (Applicant Tracking System). Given the following resume and job description, rate how well the resume matches the job from 0 to 100. Return only a number.
+    retries = 5  # Number of times to retry the API call
+    base_delay = 5  # Initial delay in seconds before the first retry
+
+    # Use 'gemini-1.5-flash' for higher free-tier limits and faster responses
+    model_name = "gemini-1.5-flash" 
+
+    for attempt in range(retries):
+        try:
+            prompt = f"""
+You are an ATS. Rate the resume for the job from 0–100. Return only a number.
 
 Resume: {resume_text[:3000]}
 Job Description: {job_description[:3000]}
 """
-        model = genai.GenerativeModel('gemini-pro')
-        response = model.generate_content(prompt)
-        score = int(re.findall(r'\d+', response.text)[0])
-        return score
-    except:
-        return 0
+            model = genai.GenerativeModel("gemini-1.5-flash")
+            response = model.generate_content(prompt) # Send the actual prompt to Gemini
+
+            print(f"📤 Gemini Prompt (Attempt {attempt+1}/{retries}):", prompt)
+            print(f"📥 Gemini Response (Attempt {attempt+1}/{retries}):", response.text)
+
+            score_match = re.findall(r'\d+', response.text)
+            if score_match:
+                score = int(score_match[0])
+            else:
+                score = 0
+                print(f"⚠️ Warning: No numeric score found in Gemini response for attempt {attempt+1}.")
+            return score # Return the score on success and exit the loop
+
+        except Exception as e:
+            error_message = str(e)
+            print(f"❌ Gemini scoring error (Attempt {attempt+1}/{retries}):", error_message)
+
+            if "429 You exceeded your current quota" in error_message:
+                # Extract the recommended retry_delay from the error message if available
+                match = re.search(r"retry_delay {\s+seconds: (\d+)", error_message)
+                if match:
+                    delay = int(match.group(1))
+                else:
+                    # Fallback to exponential backoff if no specific delay is provided
+                    delay = base_delay * (2 ** attempt)
+
+                print(f"Retrying in {delay} seconds due to quota limit...")
+                time.sleep(delay)
+            else:
+                # For any other type of error (not quota-related), stop retrying
+                print(f"Non-quota related error encountered, stopping retries: {error_message}")
+                return 0 # Return 0 or re-raise the exception if it's a critical error
+
+    print(f"❌ Gemini scoring failed after {retries} attempts due to persistent quota limits or other errors.")
+    return 0 # Return 0 if all retries are exhausted and no score was obtained
 
 def check_eligible(link):
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -146,6 +186,8 @@ def convert_link(link):
     return link.replace("/internship/detail/", "/application/form/")
 
 def scrape_internshala(skills, resume_text):
+    import time
+
     skills_slug = ",".join(skills).replace(" ", "-").lower()
     url = f"https://internshala.com/internships/{skills_slug}-internship"
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -165,29 +207,85 @@ def scrape_internshala(skills, resume_text):
                 location = div.find("div", class_="locations").text.strip()
                 stipend = div.find("span", class_="stipend").text.strip()
 
-                if check_eligible(link):
-                    job_resp = requests.get(link, headers=headers)
-                    job_soup = BeautifulSoup(job_resp.text, "html.parser")
-                    jd_div = job_soup.find("div", class_="internship_details")
-                    job_desc = jd_div.get_text(strip=True) if jd_div else ""
-                    ats_score = get_ats_score(resume_text, job_desc)
+                internships.append({
+                    "title": title,
+                    "company": company,
+                    "location": location,
+                    "stipend": stipend,
+                    "link": link,
+                    "ats_score": None  # placeholder
+                })
 
-                    internships.append({
-                        "title": title,
-                        "company": company,
-                        "location": location,
-                        "stipend": stipend,
-                        "link": link,
-                        "ats_score": ats_score
-                    })
-                    log_to_csv("Internship Found", f"{title} - ATS: {ats_score}")
+                if len(internships) >= 20:  # limit scraping to top 20 to stay efficient
+                    break
+
             except Exception as e:
                 log_to_csv("Parse Error", str(e))
                 continue
+
     except Exception as e:
         log_to_csv("Scraping Failed", str(e))
 
-    return internships
+    # ✅ Now score only top 10 eligible internships using Gemini
+    scored_internships = []
+
+    for job in internships[:10]:  # top 10 for Gemini
+        try:
+            if check_eligible(job["link"]):
+                job_resp = requests.get(job["link"], headers=headers)
+                job_soup = BeautifulSoup(job_resp.text, "html.parser")
+                jd_div = job_soup.find("div", class_="internship_details")
+                job_desc = jd_div.get_text(strip=True) if jd_div else ""
+
+                ats_score = get_ats_score(resume_text, job_desc)
+                time.sleep(1)  # avoid quota hit
+
+                job["ats_score"] = ats_score
+                log_to_csv("Gemini Scored", f"{job['title']} - ATS: {ats_score}")
+                scored_internships.append(job)
+
+        except Exception as e:
+            log_to_csv("Gemini Error", str(e))
+            continue
+
+    # Helper functions for sorting
+    def get_ats_value(ats):
+        """Convert ATS score to float (handles percentages and missing values)"""
+        if ats is None:
+            return 0.0
+        if isinstance(ats, (int, float)):
+            return float(ats)
+        try:
+            # Remove % and convert to float
+            return float(ats.replace('%', '').strip())
+        except:
+            return 0.0
+
+    def get_stipend_value(stipend_str):
+        """Convert stipend string to comparable integer"""
+        if not stipend_str or "Unpaid" in stipend_str:
+            return 0
+        try:
+            # Extract all numbers from stipend string
+            numbers = re.findall(r'[\d,]+', stipend_str)
+            if not numbers:
+                return 0
+            # Convert to integers and return highest value
+            return max([int(num.replace(',', '')) for num in numbers])
+        except:
+            return 0
+
+    # Sort by ATS (descending) then stipend (descending)
+    scored_sorted = sorted(
+        scored_internships,
+        key=lambda x: (
+            get_ats_value(x['ats_score']),
+            get_stipend_value(x['stipend'])
+        ),
+        reverse=True
+    )
+    
+    return scored_sorted
 
 def save_links_to_txt(internships, filenames=["internship_links.txt", "internship_links_apply.txt"]):
     with open(filenames[0], "w") as f:
