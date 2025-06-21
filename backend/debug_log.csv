@@ -2886,3 +2886,27 @@ Timestamp,Event,Details
 2025-06-21 10:12:56,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
 2025-06-21 10:12:58,Gemini Scored,Front End Development - ATS: 40
 2025-06-21 10:13:00,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:27:22,Scraping Started,"URL: https://internshala.com/internships/css,html,python-internship"
+2025-06-21 10:27:22,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 10:27:26,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:27:28,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:27:30,Gemini Scored,Data Science - ATS: 20
+2025-06-21 10:27:32,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 10:27:34,Gemini Scored,Laravel Framework Engineer - ATS: 30
+2025-06-21 10:27:36,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:27:38,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 10:27:40,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 10:27:43,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:27:45,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:29:24,Scraping Started,"URL: https://internshala.com/internships/css,python,html-internship"
+2025-06-21 10:29:24,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 10:29:26,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:29:28,Gemini Scored,Front End Development - ATS: 45
+2025-06-21 10:29:30,Gemini Scored,Data Science - ATS: 20
+2025-06-21 10:29:32,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 10:29:35,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 10:29:37,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:29:39,Gemini Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 10:29:41,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:29:43,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:29:45,Gemini Scored,WordPress Development - ATS: 40
