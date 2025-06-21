@@ -9,8 +9,14 @@ import csv
 import datetime
 import os
 import sys
+from dotenv import load_dotenv
+import google.generativeai as genai
 
-# ✅ Ensure NLTK stopwords are available (for Railway/Render)
+# ✅ Load environment and configure Gemini
+load_dotenv()
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# ✅ Ensure NLTK stopwords are available
 nltk.data.path.append(os.path.join(os.path.dirname(__file__), "nltk_data"))
 try:
     stop_words = set(stopwords.words('english'))
@@ -21,7 +27,7 @@ except LookupError:
 nlp = spacy.load("en_core_web_sm")
 
 pdf_path = sys.argv[1]
-top_n = 10
+top_n = 50
 
 # ... (SKILL_KEYWORDS unchanged – keep your full list here)
 SKILL_KEYWORDS = [
@@ -94,22 +100,30 @@ def extract_text_from_pdf(pdf_path):
 def extract_skills(text):
     text_lower = text.lower()
     found_skills = set()
-    
-    # Create a clean version of text without stopwords for better matching
     doc = nlp(text_lower)
     clean_tokens = [token.text for token in doc if token.text not in stop_words and not token.is_punct]
     text_clean = " ".join(clean_tokens)
-    
-    # Process skills from longest to shortest to prioritize full phrases
     for skill in sorted(SKILL_KEYWORDS, key=len, reverse=True):
-        # Only match standalone words using word boundaries
         pattern = r'\b' + re.escape(skill) + r'\b'
         if re.search(pattern, text_clean):
             found_skills.add(skill)
-            # Remove matched skill to prevent partial rematching
             text_clean = re.sub(pattern, '', text_clean)
-    
     return list(found_skills)
+
+def get_ats_score(resume_text, job_description):
+    try:
+        prompt = f"""
+You are an ATS (Applicant Tracking System). Given the following resume and job description, rate how well the resume matches the job from 0 to 100. Return only a number.
+
+Resume: {resume_text[:3000]}
+Job Description: {job_description[:3000]}
+"""
+        model = genai.GenerativeModel('gemini-pro')
+        response = model.generate_content(prompt)
+        score = int(re.findall(r'\d+', response.text)[0])
+        return score
+    except:
+        return 0
 
 def check_eligible(link):
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -131,7 +145,7 @@ def parse_stipend(stipend_str):
 def convert_link(link):
     return link.replace("/internship/detail/", "/application/form/")
 
-def scrape_internshala(skills):
+def scrape_internshala(skills, resume_text):
     skills_slug = ",".join(skills).replace(" ", "-").lower()
     url = f"https://internshala.com/internships/{skills_slug}-internship"
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -152,14 +166,21 @@ def scrape_internshala(skills):
                 stipend = div.find("span", class_="stipend").text.strip()
 
                 if check_eligible(link):
+                    job_resp = requests.get(link, headers=headers)
+                    job_soup = BeautifulSoup(job_resp.text, "html.parser")
+                    jd_div = job_soup.find("div", class_="internship_details")
+                    job_desc = jd_div.get_text(strip=True) if jd_div else ""
+                    ats_score = get_ats_score(resume_text, job_desc)
+
                     internships.append({
                         "title": title,
                         "company": company,
                         "location": location,
                         "stipend": stipend,
-                        "link": link
+                        "link": link,
+                        "ats_score": ats_score
                     })
-                    log_to_csv("Internship Found", f"{title} at {company}")
+                    log_to_csv("Internship Found", f"{title} - ATS: {ats_score}")
             except Exception as e:
                 log_to_csv("Parse Error", str(e))
                 continue
@@ -188,6 +209,7 @@ def log_to_csv(event, details="", file_path="debug_log.csv"):
 def details_to_csv(lod, filename="Details_csv"):
     with open(filename, "w") as f:
         writer = csv.DictWriter(f, fieldnames=lod[0].keys())
+        writer.writeheader()
         writer.writerows(lod)
 
 # Run
@@ -195,11 +217,11 @@ text = extract_text_from_pdf(pdf_path)
 skills = extract_skills(text)
 print("Extracted Skills:", skills)
 
-results = scrape_internshala(skills)
+results = scrape_internshala(skills, text)
 results_sorted = sorted(results, key=lambda x: parse_stipend(x["stipend"]), reverse=True)
 
 for i, job in enumerate(results_sorted[:top_n], 1):
-    print(f"{i}. {job['title']} at {job['company']}")
+    print(f"{i}. {job['title']} at {job['company']} [ATS Match: {job.get('ats_score', 'N/A')}%]")
     print(f"   Location: {job['location']}")
     print(f"   Stipend: {job['stipend']}")
     print(f"   Link: {job['link']}")

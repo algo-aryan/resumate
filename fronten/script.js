@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <h4>${title}</h4>
               <p><strong>📍 Location:</strong> ${location}</p>
               <p><strong>💰 Stipend:</strong> ${stipend}</p>
+              <p><strong>ATS Match:</strong> ${job.ats}%</p>
               <p><strong>🔗 <a href="${link}" target="_blank">View Internship</a></strong></p>
               <p><strong>🚀 <a href="${apply}" target="_blank">Apply Now</a></strong></p>
             `;

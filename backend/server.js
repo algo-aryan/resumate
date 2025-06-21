@@ -50,7 +50,8 @@ app.post('/api/upload', upload.single('resume'), (req, res) => {
           location: outputLines[i + 1]?.split(': ')[1] || '',
           stipend: outputLines[i + 2]?.split(': ')[1] || '',
           link: outputLines[i + 3]?.split(': ')[1] || '',
-          apply: outputLines[i + 4]?.split(': ')[1] || ''
+          apply: outputLines[i + 4]?.split(': ')[1] || '',
+          ats: outputLines[i]?.match(/\[ATS Match: (\d+)%\]/)?.[1] || 'N/A'
         });
       }
     }
