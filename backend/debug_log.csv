@@ -2933,3 +2933,45 @@ Timestamp,Event,Details
 2025-06-21 10:41:16,ATS Scored,Front End Development - ATS: 40
 2025-06-21 10:41:18,ATS Scored,Software Development - ATS: 40
 2025-06-21 10:41:19,ATS Scored,WordPress Development - ATS: 40
+2025-06-21 11:12:49,Scraping Started,"URL: https://internshala.com/internships/python,css,html-internship"
+2025-06-21 11:12:51,Parse Error for Individual Internship,'NoneType' object has no attribute 'text'
+2025-06-21 11:13:00,ATS Scored,WordPress Development - ATS: 45
+2025-06-21 11:13:01,ATS Scored,Front End Development - ATS: 45
+2025-06-21 11:13:03,ATS Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 11:13:04,ATS Scored,Data Science - ATS: 20
+2025-06-21 11:13:05,ATS Scored,Full Stack Developer - ATS: 40
+2025-06-21 11:13:06,ATS Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 11:13:08,ATS Scored,Front End Development - ATS: 40
+2025-06-21 11:13:09,ATS Scored,Software Development - ATS: 20
+2025-06-21 11:13:10,ATS Scored,WordPress Development - ATS: 45
+2025-06-21 11:13:11,ATS Scored,React Native - ATS: 40
+2025-06-21 11:13:12,ATS Scored,Full Stack Development - ATS: 65
+2025-06-21 11:13:13,ATS Scored,Full Stack Development - ATS: 25
+2025-06-21 11:13:14,ATS Scored,Tech - ATS: 65
+2025-06-21 11:13:15,ATS Scored,Web Development - ATS: 40
+2025-06-21 11:13:16,ATS Scored,Software Developer - ATS: 75
+2025-06-21 11:13:18,ATS Scored,Data Science - ATS: 45
+2025-06-21 11:13:19,ATS Scored,Python Development - ATS: 65
+2025-06-21 11:14:00,ATS Scored,Web Development - ATS: 65
+2025-06-21 11:14:02,ATS Scored,SQL Analyst - ATS: 75
+2025-06-21 11:14:03,ATS Scored,Full Stack Developer - ATS: 60
+2025-06-21 11:14:04,ATS Scored,Data Analytics - ATS: 45
+2025-06-21 11:14:06,ATS Scored,Angular Developer - ATS: 20
+2025-06-21 11:14:07,ATS Scored,Python Development - ATS: 65
+2025-06-21 11:14:08,ATS Scored,Market Research - ATS: 30
+2025-06-21 11:14:09,ATS Scored,STEM Trainer - ATS: 45
+2025-06-21 11:14:10,ATS Scored,Full Stack Development - ATS: 45
+2025-06-21 11:14:11,ATS Scored,Full Stack Development - ATS: 45
+2025-06-21 11:14:13,ATS Scored,Web Development - ATS: 40
+2025-06-21 11:14:14,ATS Scored,Web Developer (React) - ATS: 20
+2025-06-21 11:14:35,Scraping Started,"URL: https://internshala.com/internships/css,html,python-internship"
+2025-06-21 11:14:38,Parse Error for Individual Internship,'NoneType' object has no attribute 'text'
+2025-06-21 11:14:41,ATS Scored,WordPress Development - ATS: 45
+2025-06-21 11:14:42,ATS Scored,Front End Development - ATS: 45
+2025-06-21 11:15:00,ATS Scored,Laravel Framework Engineer - ATS: 25
+2025-06-21 11:15:01,ATS Scored,Data Science - ATS: 25
+2025-06-21 11:15:37,Scraping Started,"URL: https://internshala.com/internships/html,css,python-internship"
+2025-06-21 11:15:39,Parse Error for Individual Internship,'NoneType' object has no attribute 'text'
+2025-06-21 11:16:13,Scraping Started,"URL: https://internshala.com/internships/css,python,html-internship"
+2025-06-21 11:16:55,Scraping Started,"URL: https://internshala.com/internships/python,html,css-internship"
+2025-06-21 11:20:39,Scraping Started,"URL: https://internshala.com/internships/css,python,html-internship"

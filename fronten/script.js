@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const fileInput = document.getElementById("resumeFile");
   const customLabel = document.getElementById("customFileLabel");
 
-  if (fileInput) { // Check if fileInput exists, as it's not present on login/signup pages
+  if (fileInput) {
     fileInput.addEventListener("change", () => {
       const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "📄 Choose PDF Resume";
       customLabel.textContent = `📎 ${fileName}`;
@@ -36,33 +36,52 @@ document.addEventListener("DOMContentLoaded", function () {
         body: formData
       });
 
-      const data = await res.json(); // data will be { internships: [...] }
+      const data = await res.json();
 
       spinner.style.display = "none";
       uploadingMessage.style.display = "none";
 
-      // Access the internships array directly
       const internships = data.internships;
 
       if (internships && internships.length > 0) {
         resultsDiv.innerHTML = "<h3 style='margin-bottom: 20px;'>Internship Matches</h3>";
-        
-        internships.forEach(job => { // Loop directly through the 'internships' array
+
+        internships.forEach(job => {
           const matchDiv = document.createElement("div");
           matchDiv.className = "card";
+
+          // --- NEW: Determine color based on ATS score ---
+          const atsScore = parseInt(job.ats); // Convert ATS score to an integer
+          let atsColorClass = ''; // For CSS class approach
+          let atsInlineStyle = ''; // For inline style approach
+
+          if (atsScore >= 80) {
+            atsColorClass = 'ats-high'; // Green for high match
+            atsInlineStyle = 'color: #28a745; font-weight: bold;'; // Tailwind-like green
+          } else if (atsScore >= 45) {
+            atsColorClass = 'ats-medium'; // Orange/Yellow for medium match
+            atsInlineStyle = 'color: #ffc107;'; // Tailwind-like yellow
+          } else if (atsScore > 0) { // Anything above 0 but below 50
+            atsColorClass = 'ats-low'; // Red/Grey for low match
+            atsInlineStyle = 'color: #dc3545;'; // Tailwind-like red
+          } else { // ATS score is 0 or N/A
+            atsColorClass = 'ats-none'; // Grey for no match/N/A
+            atsInlineStyle = 'color: #6c757d;'; // Tailwind-like grey
+          }
+          // --- END NEW ---
+
           matchDiv.innerHTML = `
             <h4>${job.title}</h4>
             <p><strong>📍 Location:</strong> ${job.location}</p>
             <p><strong>💰 Stipend:</strong> ${job.stipend}</p>
-            <p><strong>📊 ATS Match:</strong> ${job.ats}%</p>
+            <p><strong>📊 ATS Match:</strong> <span class="${atsColorClass}" style="${atsInlineStyle}">${job.ats}%</span></p>
             <p><strong>🔗 <a href="${job.link}" target="_blank">View Internship</a></strong></p>
             <p><strong>🚀 <a href="${job.apply}" target="_blank">Apply Now</a></strong></p>
           `;
           resultsDiv.appendChild(matchDiv);
         });
-        resultsDiv.style.display = "block"; // Show the results div after populating
+        resultsDiv.style.display = "block";
       } else {
-          // If internships array is empty or null
           resultsDiv.innerHTML = "<p>No internship matches found.</p>";
           resultsDiv.style.display = "block";
       }
@@ -70,9 +89,8 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (err) {
       spinner.style.display = "none";
       uploadingMessage.style.display = "none";
-      resultsDiv.style.display = "none"; // Keep results hidden on error
+      resultsDiv.style.display = "none";
       console.error("❌ Upload failed:", err);
-      // It's good to show the error message from the backend if available
       if (err.message && err.message.includes("Invalid output from Python script")) {
           alert("Upload failed. The server received invalid data from the processing script. Check server logs for Python errors.");
       } else {
@@ -80,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   });
-
 
 
   document.getElementById("loginForm")?.addEventListener("submit", async function (e) {
