@@ -338,5 +338,5 @@ for job in results_sorted[:top_n]:
 details_to_csv(results_sorted[:top_n])
 
 # ✅ Output as JSON (used by Node server)
-print(json.dumps({ "internships": final_output }))
+sys.stdout.write(json.dumps({ "internships": final_output }))
 details_to_csv(results_sorted[:top_n])

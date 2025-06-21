@@ -2910,3 +2910,15 @@ Timestamp,Event,Details
 2025-06-21 10:29:41,Gemini Scored,Front End Development - ATS: 40
 2025-06-21 10:29:43,Gemini Scored,Software Development - ATS: 40
 2025-06-21 10:29:45,Gemini Scored,WordPress Development - ATS: 40
+2025-06-21 10:34:23,Scraping Started,"URL: https://internshala.com/internships/python,html,css-internship"
+2025-06-21 10:34:23,Parse Error,'NoneType' object has no attribute 'text'
+2025-06-21 10:34:26,Gemini Scored,WordPress Development - ATS: 45
+2025-06-21 10:34:28,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:34:31,Gemini Scored,Data Science - ATS: 25
+2025-06-21 10:34:33,Gemini Scored,Full Stack Development - ATS: 40
+2025-06-21 10:34:35,Gemini Scored,Laravel Framework Engineer - ATS: 40
+2025-06-21 10:34:37,Gemini Scored,Full Stack Developer - ATS: 40
+2025-06-21 10:34:39,Gemini Scored,Artificial Intelligence (AI) - ATS: 45
+2025-06-21 10:34:41,Gemini Scored,Front End Development - ATS: 40
+2025-06-21 10:34:43,Gemini Scored,Software Development - ATS: 40
+2025-06-21 10:34:45,Gemini Scored,WordPress Development - ATS: 45
