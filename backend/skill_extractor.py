@@ -35,7 +35,7 @@ nlp = spacy.load("en_core_web_sm")
 # if it's strictly a command-line script.
 # top_n can be passed as an argument to scrape_internshala
 
-
+top_n = 10
 # ... (SKILL_KEYWORDS unchanged – keep your full list here)
 SKILL_KEYWORDS = [
     # 🧠 Broad Skill Domains / Roles
