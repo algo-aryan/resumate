@@ -10,6 +10,9 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { readFile } from 'fs/promises';
 import puppeteer from 'puppeteer';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from './models/User.js'; // adjust the path if it's different
 
 dotenv.config();
 
@@ -40,13 +43,22 @@ app.post('/api/upload', upload.single('resume'), (req, res) => {
       return res.status(500).json({ error: stderr });
     }
 
-    try {
-      const parsed = JSON.parse(stdout);
-      return res.status(200).json(parsed); // { internships: [...] }
-    } catch (jsonErr) {
-      console.error("❌ JSON parse error:", jsonErr);
-      return res.status(500).json({ error: "Invalid output from Python script." });
+    const outputLines = stdout.split('\n').filter(l => l.trim() !== '' && !l.startsWith("Extracted Skills:"));
+    const results = [];
+
+    for (let i = 0; i < outputLines.length; i++) {
+      if (/^\d+\./.test(outputLines[i])) {
+        results.push({
+          title: outputLines[i],
+          location: outputLines[i + 1]?.split(': ')[1] || '',
+          stipend: outputLines[i + 2]?.split(': ')[1] || '',
+          link: outputLines[i + 3]?.split(': ')[1] || '',
+          apply: outputLines[i + 4]?.split(': ')[1] || ''
+        });
+      }
     }
+
+    return res.status(200).json({ raw_output: stdout });
   });
 });
 
@@ -165,6 +177,47 @@ app.post('/api/download-resume-pdf', async (req, res) => {
 // ✅ Connect DB and Auth
 connectDB();
 app.use('/api', authRoutes);
+
+// ✅ Signup Route
+app.post('/api/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ name, email, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({ message: 'User created successfully' });
+  } catch (err) {
+    console.error('Signup error:', err);
+    res.status(500).json({ message: 'Server error during signup' });
+  }
+});
+
+// ✅ Login Route
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+
+    res.json({ token });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error during login' });
+  }
+});
 
 // ✅ Start server
 const PORT = process.env.PORT || 3000;
