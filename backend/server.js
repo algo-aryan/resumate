@@ -28,39 +28,51 @@ const upload = multer({ dest: 'uploads/' });
 // ✅ Python resume extractor route
 app.post('/api/upload', upload.single('resume'), (req, res) => {
   const uploadedPath = path.resolve(__dirname, req.file.path);
-  const pythonPath = 'python3';
+  const pythonPath = 'python3'; // or 'python'
   const scriptPath = path.resolve(__dirname, 'skill_extractor.py');
 
   exec(`"${pythonPath}" "${scriptPath}" "${uploadedPath}"`, {
-    env: {
-      ...process.env,
-      PATH: `${path.join(__dirname, 'venv/bin')}:${process.env.PATH}`,
-      VIRTUAL_ENV: path.resolve(__dirname, 'venv')
-    }
-  }, (err, stdout, stderr) => {
-    if (err) {
-      console.error("❌ Python Error:", stderr);
-      return res.status(500).json({ error: stderr });
-    }
-
-    const outputLines = stdout.split('\n').filter(l => l.trim() !== '' && !l.startsWith("Extracted Skills:"));
-    const results = [];
-
-    for (let i = 0; i < outputLines.length; i++) {
-      if (/^\d+\./.test(outputLines[i])) {
-        results.push({
-          title: outputLines[i],
-          location: outputLines[i + 1]?.split(': ')[1] || '',
-          stipend: outputLines[i + 2]?.split(': ')[1] || '',
-          link: outputLines[i + 3]?.split(': ')[1] || '',
-          apply: outputLines[i + 4]?.split(': ')[1] || ''
-        });
+      env: {
+          ...process.env,
+          PATH: `${path.join(__dirname, 'venv/bin')}:${process.env.PATH}`,
+          VIRTUAL_ENV: path.resolve(__dirname, 'venv')
       }
-    }
+  }, (err, stdout, stderr) => {
+      // IMPORTANT: Ensure the uploaded file is cleaned up
+      fs.unlink(uploadedPath, (unlinkErr) => {
+          if (unlinkErr) console.error("Error deleting uploaded file:", unlinkErr);
+      });
 
-    return res.status(200).json({ raw_output: stdout });
+      if (err) {
+          console.error("❌ Python Execution Error (stderr):", stderr);
+          console.error("❌ Python Execution Error (stdout):", stdout); // Log stdout as well for debugging
+          return res.status(500).json({ error: `Python script execution failed: ${stderr || err.message}` });
+      }
+
+      // Log raw stdout to see what Python printed (should be JSON)
+      console.log("Python script raw stdout:\n", stdout);
+
+      try {
+          // Attempt to parse stdout as JSON
+          const pythonOutput = JSON.parse(stdout);
+
+          if (pythonOutput && Array.isArray(pythonOutput.internships)) {
+              // Successfully parsed and found the 'internships' array
+              return res.status(200).json({ internships: pythonOutput.internships });
+          } else {
+              // stdout was valid JSON, but didn't contain the expected 'internships' array
+              console.error("❌ Python script output did not contain 'internships' array:", pythonOutput);
+              return res.status(500).json({ error: "Invalid output format from Python script." });
+          }
+      } catch (jsonParseError) {
+          // stdout was not valid JSON
+          console.error("❌ Failed to parse Python script stdout as JSON:", jsonParseError);
+          console.error("Raw stdout causing parse error:", stdout);
+          return res.status(500).json({ error: "Invalid or malformed JSON output from Python script." });
+      }
   });
 });
+
 
 // ✅ Resume Builder Route (Gemini + modern.html)
 function parseSection(raw, count) {
