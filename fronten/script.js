@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     const spinner = document.getElementById("loadingSpinner");
     const resultsDiv = document.getElementById("internshipResults");
-    const uploadingMessage = document.getElementById("uploadingMessage"); // Get uploading message element
+    const uploadingMessage = document.getElementById("uploadingMessage");
 
     const file = document.getElementById("resumeFile").files[0];
     if (!file) {
@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const formData = new FormData();
     formData.append("resume", file);
 
-    spinner.style.display = "block"; // Show the spinner
-    uploadingMessage.style.display = "block"; // Show the uploading message
-    resultsDiv.innerHTML = ""; // Clear previous results
-    resultsDiv.style.display = "none"; // Hide the results div initially
+    spinner.style.display = "block";
+    uploadingMessage.style.display = "block";
+    resultsDiv.innerHTML = "";
+    resultsDiv.style.display = "none";
 
     try {
       const res = await fetch(`https://resumate-production-a93f.up.railway.app/api/upload`, {
@@ -36,69 +36,52 @@ document.addEventListener("DOMContentLoaded", function () {
         body: formData
       });
 
-      const data = await res.json();
-      spinner.style.display = "none"; // Hide the spinner
-      uploadingMessage.style.display = "none"; // Hide the uploading message
+      const data = await res.json(); // data will be { internships: [...] }
 
-      const output = data.raw_output || "";
+      spinner.style.display = "none";
+      uploadingMessage.style.display = "none";
 
-      // Only show results div if there's actual output
-      if (output.trim() !== "") {
+      // Access the internships array directly
+      const internships = data.internships;
+
+      if (internships && internships.length > 0) {
         resultsDiv.innerHTML = "<h3 style='margin-bottom: 20px;'>Internship Matches</h3>";
-        const blocks = output
-          .split(/\n(?=\d+\.)/)
-          .filter(block => /^\d+\./.test(block.trim())); // Only keep blocks that start with "1.", "2.", etc.
-
-        blocks.forEach(block => {
-          if (block.trim() === "") return;
-
+        
+        internships.forEach(job => { // Loop directly through the 'internships' array
           const matchDiv = document.createElement("div");
-          matchDiv.className = "card"; // Using 'card' class for styling consistency
-
-          // Adjusting parsing for new block format (title, location, stipend, link, apply)
-          const lines = block.trim().split("\n");
-          if (lines.length >= 5) { // Ensure there are enough lines for all fields
-            const title = lines[0].trim();
-            const location = lines[1].replace("Location: ", "").trim();
-            const stipend = lines[2].replace("Stipend: ", "").trim();
-            const link = lines[3].replace("Link: ", "").trim();
-            const apply = lines[4].replace("Apply: ", "").trim();
-
-            data.internships.forEach(job => {
-              const matchDiv = document.createElement("div");
-              matchDiv.className = "card";
-              matchDiv.innerHTML = `
-                <h4>${job.title}</h4>
-                <p><strong>📍 Location:</strong> ${job.location}</p>
-                <p><strong>💰 Stipend:</strong> ${job.stipend}</p>
-                <p><strong>📊 ATS Match:</strong> ${job.ats}%</p>
-                <p><strong>🔗 <a href="${job.link}" target="_blank">View Internship</a></strong></p>
-                <p><strong>🚀 <a href="${job.apply}" target="_blank">Apply Now</a></strong></p>
-              `;
-              resultsDiv.appendChild(matchDiv);
-            });
-          } else {
-            // Fallback for unexpected block format (if it doesn't have 5 specific lines)
-            // You might want to handle this more robustly or log a warning
-            matchDiv.innerHTML = `<h4>Error parsing internship:</h4><p>${block}</p>`;
-            resultsDiv.appendChild(matchDiv);
-          }
+          matchDiv.className = "card";
+          matchDiv.innerHTML = `
+            <h4>${job.title}</h4>
+            <p><strong>📍 Location:</strong> ${job.location}</p>
+            <p><strong>💰 Stipend:</strong> ${job.stipend}</p>
+            <p><strong>📊 ATS Match:</strong> ${job.ats}%</p>
+            <p><strong>🔗 <a href="${job.link}" target="_blank">View Internship</a></strong></p>
+            <p><strong>🚀 <a href="${job.apply}" target="_blank">Apply Now</a></strong></p>
+          `;
+          resultsDiv.appendChild(matchDiv);
         });
         resultsDiv.style.display = "block"; // Show the results div after populating
       } else {
-          resultsDiv.innerHTML = "<p>No internship matches found.</p>"; // Message for no results
-          resultsDiv.style.display = "block"; // Still show the box to display "No matches"
+          // If internships array is empty or null
+          resultsDiv.innerHTML = "<p>No internship matches found.</p>";
+          resultsDiv.style.display = "block";
       }
 
-
     } catch (err) {
-      spinner.style.display = "none"; // Hide the spinner
-      uploadingMessage.style.display = "none"; // Hide the uploading message
+      spinner.style.display = "none";
+      uploadingMessage.style.display = "none";
       resultsDiv.style.display = "none"; // Keep results hidden on error
       console.error("❌ Upload failed:", err);
-      alert("Upload failed. Check console.");
+      // It's good to show the error message from the backend if available
+      if (err.message && err.message.includes("Invalid output from Python script")) {
+          alert("Upload failed. The server received invalid data from the processing script. Check server logs for Python errors.");
+      } else {
+          alert("Upload failed. Check console for details.");
+      }
     }
   });
+
+
 
   document.getElementById("loginForm")?.addEventListener("submit", async function (e) {
     e.preventDefault();
