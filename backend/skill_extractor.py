@@ -12,6 +12,7 @@ import sys
 from dotenv import load_dotenv
 import google.generativeai as genai
 import time
+import json
 
 # ✅ Load environment and configure Gemini
 load_dotenv()
@@ -318,14 +319,24 @@ print("Extracted Skills:", skills)
 results = scrape_internshala(skills, text)
 results_sorted = sorted(results, key=lambda x: parse_stipend(x["stipend"]), reverse=True)
 
+# Prepare structured response
+final_output = []
 for i, job in enumerate(results_sorted[:top_n], 1):
-    print(f"{i}. {job['title']} at {job['company']} [ATS Match: {job.get('ats_score', 'N/A')}%]")
-    print(f"   Location: {job['location']}")
-    print(f"   Stipend: {job['stipend']}")
-    print(f"   Link: {job['link']}")
-    print(f"   Apply here: {convert_link(job['link'])}\n")
+    final_output.append({
+        "title": f"{i}. {job['title']} at {job['company']} [ATS Match: {job.get('ats_score', 'N/A')}%]",
+        "location": job["location"],
+        "stipend": job["stipend"],
+        "link": job["link"],
+        "apply": convert_link(job["link"]),
+        "ats": job.get('ats_score', 'N/A')
+    })
 
+# Save for download (optional)
 save_links_to_txt(results_sorted[:top_n])
 for job in results_sorted[:top_n]:
     job["apply_link"] = convert_link(job["link"])
+details_to_csv(results_sorted[:top_n])
+
+# ✅ Output as JSON (used by Node server)
+print(json.dumps({ "internships": final_output }))["link"])
 details_to_csv(results_sorted[:top_n])

@@ -40,23 +40,13 @@ app.post('/api/upload', upload.single('resume'), (req, res) => {
       return res.status(500).json({ error: stderr });
     }
 
-    const outputLines = stdout.split('\n').filter(l => l.trim() !== '' && !l.startsWith("Extracted Skills:"));
-    const results = [];
-
-    for (let i = 0; i < outputLines.length; i++) {
-      if (/^\d+\./.test(outputLines[i])) {
-        results.push({
-          title: outputLines[i],
-          location: outputLines[i + 1]?.split(': ')[1] || '',
-          stipend: outputLines[i + 2]?.split(': ')[1] || '',
-          link: outputLines[i + 3]?.split(': ')[1] || '',
-          apply: outputLines[i + 4]?.split(': ')[1] || '',
-          ats: outputLines[i]?.match(/\[ATS Match: (\d+)%\]/)?.[1] || 'N/A'
-        });
-      }
+    try {
+      const parsed = JSON.parse(stdout);
+      return res.status(200).json(parsed); // { internships: [...] }
+    } catch (jsonErr) {
+      console.error("❌ JSON parse error:", jsonErr);
+      return res.status(500).json({ error: "Invalid output from Python script." });
     }
-
-    return res.status(200).json({ internships: results });
   });
 });
 
