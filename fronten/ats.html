@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ATS Resume Scorer</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            background: white;
+            max-width: 600px;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="file"] {
+            margin-bottom: 1rem;
+        }
+
+        .score-box {
+            background: #eef;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Upload Your Resume (PDF)</h2>
+        <input type="file" id="resumeFile" accept="application/pdf" />
+        <button onclick="uploadResume()">Get ATS Score</button>
+
+        <div id="result" class="score-box" style="display:none;">
+            <h3>ATS Score: <span id="scoreVal"></span></h3>
+            <p><strong>Summary:</strong> <span id="summaryText"></span></p>
+            <p><strong>Strengths:</strong></p>
+            <ul id="strengthsList"></ul>
+            <p><strong>Suggestions:</strong></p>
+            <ul id="suggestionsList"></ul>
+        </div>
+    </div>
+
+    <script>
+        async function uploadResume() {
+            const fileInput = document.getElementById("resumeFile");
+            const file = fileInput.files[0];
+            if (!file) return alert("Please upload a PDF resume");
+
+            const formData = new FormData();
+            formData.append("resume", file);
+
+            document.getElementById("result").style.display = "none";
+
+            try {
+                const res = await fetch("http://resumate-production-a93f.up.railway.app/api/ats-score", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await res.json();
+                console.log("Score response:", data);
+
+                document.getElementById("scoreVal").textContent = data.score || "N/A";
+                document.getElementById("summaryText").textContent = data.summary || data.raw || "No summary available";
+
+                const strengths = data.strengths || [];
+                const suggestions = data.suggestions || [];
+
+                const strengthsList = document.getElementById("strengthsList");
+                strengthsList.innerHTML = strengths.map(s => `<li>${s}</li>`).join("");
+
+                const suggestionsList = document.getElementById("suggestionsList");
+                suggestionsList.innerHTML = suggestions.map(s => `<li>${s}</li>`).join("");
+
+                document.getElementById("result").style.display = "block";
+
+            } catch (err) {
+                alert("Error uploading resume or parsing ATS score");
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+
+</html>
