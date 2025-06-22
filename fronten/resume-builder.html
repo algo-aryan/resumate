@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -399,6 +400,72 @@
         opacity: 1;
     }
 
+    /* GitHub Import Section */
+    .github-import {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 550px;
+      align-items: center;
+    }
+
+    .github-import input[type="text"] {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px; /* Rounded corners for input */
+      outline: none;
+      background: var(--secondary-bg);
+      color: var(--text-body);
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .github-import input[type="text"]:focus {
+      background: rgba(var(--text-header-rgb), 0.1);
+      border-color: var(--accent-light);
+      box-shadow: 0 0 0 3px rgba(var(--accent-light-rgb), 0.2);
+    }
+
+    .github-import button {
+      padding: 14px 24px;
+      font-size: 16px;
+      background: var(--gradient-button);
+      color: var(--text-header);
+      border: 2px solid transparent;
+      border-radius: 12px; /* Rounded corners for button */
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-weight: 600;
+      /* Override input-box button styles */
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+
+    .github-import button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: skewX(-20deg);
+      transition: transform 0.6s ease-out;
+    }
+    .github-import button:hover::before {
+      transform: translateX(100%) skewX(-20deg);
+    }
+    .github-import button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(var(--accent-main-rgb), 0.4);
+      border-color: var(--highlight-green);
+    }
+
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
       h1 {
@@ -429,6 +496,18 @@
       .theme-switch {
         top: 15px;
         right: 15px;
+      }
+      .github-import {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .github-import input[type="text"] {
+        width: 100%;
+        border-radius: 12px;
+      }
+      .github-import button {
+        width: 100%;
+        border-radius: 12px;
       }
     }
 
@@ -465,11 +544,6 @@
     </div>
   </div>
 
-  <div class="github-import">
-    <input type="text" id="githubUsername" placeholder="Enter GitHub username">
-    <button onclick="importFromGitHub()">Import from GitHub</button>
-  </div>
-
   <div id="resumeOutput"></div>
   <button id="downloadBtn">📥 Download Resume as PDF</button>
 
@@ -482,7 +556,7 @@
 
     let currentQuestion = 0;
     let data = { education: [], experience: [], projects: [] };
-    let temp = {};
+    let temp = {}; // Temporary object to store multi-part answers (e.g., for education, experience, projects)
 
     const questions = [
       { key: 'name', text: "👋 Hi there! I'm ResuMate. Let's build your resume. What's your full name?" },
@@ -491,18 +565,20 @@
       { key: 'linkedin', text: "🔗 Your LinkedIn profile? (optional)" },
       { key: 'goal', text: "🎯 What's your career goal?" },
       { key: 'edu-deg', text: "🎓 Let's start with your education. Degree?" }
+      // Other questions will be dynamically inserted
     ];
 
     function botReply(message, delay = 600) {
       const msg = document.createElement('div');
       msg.className = 'message bot';
-      msg.textContent = '🤖 Typing...';
+      msg.textContent = '🤖 Typing...'; // Show typing indicator
       chatbox.appendChild(msg);
       chatbox.scrollTop = chatbox.scrollHeight;
 
       setTimeout(() => {
         msg.textContent = message;
-        msg.style.opacity = 1;
+        msg.style.opacity = 1; // Fade in effect
+        chatbox.scrollTop = chatbox.scrollHeight; // Scroll to bottom again after message appears
       }, delay);
     }
 
@@ -514,13 +590,14 @@
       chatbox.scrollTop = chatbox.scrollHeight;
     }
 
-    function sendMessage() {
+    async function sendMessage() {
       const msg = userInput.value.trim();
       if (!msg) return;
       userReply(msg);
 
       const q = questions[currentQuestion];
 
+      // Handle multi-part questions for Education, Experience, Projects
       if (q?.key === 'edu-deg') {
         temp.degree = msg;
         questions.splice(currentQuestion + 1, 0,
@@ -532,21 +609,22 @@
       } else if (q?.key === 'edu-year') {
         temp.year = msg;
         data.education.push(temp);
-        temp = {};
+        temp = {}; // Reset temp for next item
         questions.splice(currentQuestion + 1, 0,
           { key: 'more-edu', text: '➕ Add more education? (yes/no)' });
       } else if (q?.key === 'more-edu') {
         if (msg.toLowerCase().startsWith('y')) {
           questions.splice(currentQuestion + 1, 0, { key: 'edu-deg', text: '🎓 Degree?' });
         } else {
-          questions.splice(currentQuestion + 1, 0, { key: 'exp-role', text: '💼 Let’s add experience. Role?' });
+          // Transition to experience
+          questions.splice(currentQuestion + 1, 0, { key: 'exp-role', text: '💼 Let’s add your work experience. Role?' });
         }
       } else if (q?.key === 'exp-role') {
         temp.role = msg;
         questions.splice(currentQuestion + 1, 0,
           { key: 'exp-comp', text: '🏢 Company?' },
           { key: 'exp-year', text: '📅 Year?' },
-          { key: 'exp-desc', text: '📄 Description?' }
+          { key: 'exp-desc', text: '📄 Describe your responsibilities/achievements for this role.' }
         );
       } else if (q?.key === 'exp-comp') {
         temp.company = msg;
@@ -560,88 +638,193 @@
           { key: 'more-exp', text: '➕ Add more experience? (yes/no)' });
       } else if (q?.key === 'more-exp') {
         if (msg.toLowerCase().startsWith('y')) {
-          questions.splice(currentQuestion + 1, 0, { key: 'exp-role', text: '💼 Role?' });
+          questions.splice(currentQuestion + 1, 0, { key: 'exp-role', text: '💼 Another Role?' });
         } else {
-          questions.splice(currentQuestion + 1, 0, { key: 'proj-title', text: '💡 Let’s add a project. Title?' });
+          // Transition to projects
+          questions.splice(currentQuestion + 1, 0, { key: 'proj-import-or-add', text: '💡 Now for projects. Would you like to **import from GitHub** or **manually add**? (type "github" or "add")' });
+        }
+      } else if (q?.key === 'proj-import-or-add') {
+        if (msg.toLowerCase().includes('github')) {
+          botReply("Please enter your **GitHub username** below. I will fetch your projects automatically.");
+          // Dynamically add GitHub input and button
+          const githubImportDiv = document.createElement('div');
+          githubImportDiv.className = 'github-import';
+          githubImportDiv.innerHTML = `
+            <input type="text" id="githubUsername" placeholder="Enter GitHub username">
+            <button id="importGithubBtn">Import from GitHub</button>
+          `;
+          chatbox.appendChild(githubImportDiv);
+          chatbox.scrollTop = chatbox.scrollHeight;
+
+          document.getElementById('importGithubBtn').addEventListener('click', async () => {
+            const username = document.getElementById('githubUsername').value;
+            if (!username) {
+              alert("Please enter a GitHub username.");
+              return;
+            }
+            botReply("Fetching projects from GitHub...");
+            await importFromGitHub(username); // Call the import function
+            githubImportDiv.remove(); // Remove the input field after import attempt
+
+            // After GitHub import, proceed to skills or ask to add more manually if desired
+            questions.splice(currentQuestion + 1, 0, { key: 'skills', text: '💡 Finally, list your key skills (comma-separated).' });
+            currentQuestion++; // Move past the proj-import-or-add question
+            botReply(questions[currentQuestion].text);
+          });
+          // Do not increment currentQuestion yet, wait for GitHub input/button interaction
+          return;
+
+        } else if (msg.toLowerCase().includes('add')) {
+          questions.splice(currentQuestion + 1, 0, { key: 'proj-title', text: '💡 Great! What is the title of your project?' });
+        } else {
+          botReply('Please type "github" to import or "add" to manually add projects.');
+          return; // Stay on the same question
         }
       } else if (q?.key === 'proj-title') {
         temp.title = msg;
-        questions.splice(currentQuestion + 1, 0, { key: 'proj-desc', text: '📝 Description?' });
+        questions.splice(currentQuestion + 1, 0, { key: 'proj-desc', text: '📝 Briefly describe this project.' });
       } else if (q?.key === 'proj-desc') {
         temp.description = msg;
         data.projects.push(temp);
         temp = {};
         questions.splice(currentQuestion + 1, 0,
-          { key: 'more-proj', text: '➕ Add more project? (yes/no)' });
+          { key: 'more-proj', text: '➕ Add another project manually? (yes/no)' });
       } else if (q?.key === 'more-proj') {
         if (msg.toLowerCase().startsWith('y')) {
           questions.splice(currentQuestion + 1, 0, { key: 'proj-title', text: '💡 Project Title?' });
         } else {
-          questions.splice(currentQuestion + 1, 0, { key: 'skills', text: '💡 Finally, list your skills (comma-separated)' });
+          questions.splice(currentQuestion + 1, 0, { key: 'skills', text: '💡 Finally, list your key skills (comma-separated).' });
         }
       } else if (q?.key === 'skills') {
         data.skills = msg;
-        generateResume();
-        return;
+        generateResume(); // This is the last step before generation
+        return; // Exit to prevent further question processing
       } else if (q) {
+        // For simple key-value pairs (name, email, phone, linkedin, goal)
         data[q.key] = msg;
       }
 
+      // Move to the next question
       currentQuestion++;
       if (currentQuestion < questions.length) {
         botReply(questions[currentQuestion].text);
+      } else if (currentQuestion === questions.length) {
+        // If all questions are exhausted (e.g., if skills was the last dynamic question added)
+        // Ensure resume generation is triggered if not already
+        if (!data.hasOwnProperty('skills')) { // Check if skills were just gathered
+             botReply("All information gathered! Generating your resume now...");
+             generateResume();
+        }
       }
 
-      userInput.value = '';
+      userInput.value = ''; // Clear user input field
     }
 
     async function generateResume() {
       botReply("🛠 Generating your resume...");
+      sendBtn.disabled = true; // Disable input during generation
 
-      const response = await fetch('https://resumate-production-a93f.up.railway.app/api/generate-resume', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
+      try {
+        const response = await fetch('https://resumate-production-a93f.up.railway.app/api/generate-resume', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
 
-      const html = await response.text();
-      resumeOutput.style.display = 'block';
-      resumeOutput.innerHTML = html;
-      window.generatedResumeHTML = html;
-      downloadBtn.style.display = 'block';
-      botReply("✅ Done! You can now download your resume.");
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server responded with status ${response.status}: ${errorText}`);
+        }
+
+        const html = await response.text();
+        resumeOutput.style.display = 'block';
+        resumeOutput.innerHTML = html;
+        window.generatedResumeHTML = html; // Store HTML for PDF download
+        downloadBtn.style.display = 'block';
+        botReply("✅ Done! You can now review and download your resume.");
+      } catch (error) {
+        console.error("Error generating resume:", error);
+        botReply("❌ Oh no! There was an error generating your resume. Please check the console for details or try again.");
+      } finally {
+        sendBtn.disabled = false; // Re-enable input
+      }
     }
 
-    downloadBtn.addEventListener("click", async () => {
-      const response = await fetch("https://resumate-production-a93f.up.railway.app/api/download-resume-pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ html: window.generatedResumeHTML })
-      });
+    async function importFromGitHub(username) {
+      try {
+        const res = await fetch(`https://resumate-production-a93f.up.railway.app/api/import/github/${username}`);
+        const result = await res.json();
 
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "Resume.pdf";
-      a.click();
-      URL.revokeObjectURL(url);
+        if (res.ok && result.projects && result.projects.length > 0) {
+          if (!Array.isArray(data.projects)) data.projects = []; // Ensure it's an array
+
+          result.projects.forEach(p => {
+            // Basic validation for title and description
+            if (p.title && p.description) {
+              data.projects.push({
+                title: p.title,
+                description: p.description
+              });
+            }
+          });
+          botReply(`✅ Successfully imported ${result.projects.length} projects from GitHub!`);
+        } else {
+          botReply(result.error || "❌ Failed to import projects from GitHub. No public repositories found or an error occurred.");
+        }
+      } catch (error) {
+        console.error("GitHub import error:", error);
+        botReply("❌ A network error occurred while trying to import from GitHub. Please try again.");
+      }
+    }
+
+
+    downloadBtn.addEventListener("click", async () => {
+      botReply("📥 Preparing your PDF for download...");
+      downloadBtn.disabled = true; // Prevent multiple clicks
+
+      try {
+        const response = await fetch("https://resumate-production-a93f.up.railway.app/api/download-resume-pdf", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ html: window.generatedResumeHTML })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`PDF generation failed: Server responded with status ${response.status}: ${errorText}`);
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ResuMate_Resume.pdf"; // Improved filename
+        document.body.appendChild(a); // Append to body to make it clickable in all browsers
+        a.click();
+        document.body.removeChild(a); // Clean up
+        URL.revokeObjectURL(url); // Free up memory
+        botReply("Your PDF download should start shortly! 🎉");
+      } catch (error) {
+        console.error("Error downloading PDF:", error);
+        botReply("❌ Something went wrong while creating the PDF. Please try again.");
+      } finally {
+        downloadBtn.disabled = false; // Re-enable download button
+      }
     });
 
     sendBtn.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", e => {
       if (e.key === "Enter") {
-        e.preventDefault();
+        e.preventDefault(); // Prevent new line in input field
         sendMessage();
       }
     });
 
+    // Initial bot message on page load and theme setup
     window.onload = () => {
-      // Theme Toggle Logic - ONLY ADDED THIS SMALL JS FOR THEME TOGGLE
       const themeToggle = document.getElementById('themeToggle');
       const body = document.body;
 
-      // Function to apply theme
       function applyTheme(isDark) {
         if (isDark) {
           body.classList.remove('light-theme');
@@ -652,48 +835,23 @@
         }
       }
 
-      // Load saved theme on page load
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'light') {
         themeToggle.checked = true;
-        applyTheme(false);
+        applyTheme(false); // Apply light theme
       } else {
         themeToggle.checked = false;
-        applyTheme(true);
+        applyTheme(true); // Apply dark theme (default)
       }
 
-      // Event listener for theme toggle
       themeToggle.addEventListener('change', function() {
         applyTheme(!this.checked);
       });
 
+      // Start the conversation
       botReply(questions[0].text);
     };
   </script>
-  <script>
-    async function importFromGitHub() {
-      const username = document.getElementById('githubUsername').value;
-      if (!username) return alert("Enter GitHub username");
-    
-      const res = await fetch(`/api/import/github/${username}`);
-      const data = await res.json();
-    
-      if (data.error) {
-        alert("GitHub fetch failed.");
-        return;
-      }
-    
-      // Autofill your resume form
-      document.querySelector('input[name="name"]').value = data.name || '';
-      document.querySelector('textarea[name="goal"]').value = data.bio || '';
-      document.querySelector('input[name="email"]').value = data.email || '';
-      document.querySelector('input[name="location"]').value = data.location || '';
-    
-      document.querySelector('textarea[name="skills"]').value = data.skills.join(', ');
-    
-      const projectsBox = document.querySelector('textarea[name="projects"]');
-      projectsBox.value = data.projects.map(p => `${p.title}, ${p.description}`).join('\n');
-    }
-    </script>
 </body>
 </html>
+```
