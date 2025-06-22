@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
         if (res.ok) {
           localStorage.setItem("token", data.token);
+          localStorage.setItem("userId", data.user._id);
           window.location.href = "dashboard.html";
         } else {
           alert(data.message || "Login failed!");
