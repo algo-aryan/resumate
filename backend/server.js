@@ -250,6 +250,23 @@ app.post('/api/signup', async (req, res) => {
     res.status(500).json({ message: 'Server error during signup' });
   }
 });
+
+// ❌ Untrack internship by ID
+app.delete('/api/untrack-internship/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await TrackedInternship.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Internship not found' });
+    }
+
+    res.status(200).json({ message: 'Internship untracked successfully' });
+  } catch (err) {
+    console.error("Untrack error:", err);
+    res.status(500).json({ message: "Server error during untracking" });
+  }
+});
   
 
 // ✅ Start server
