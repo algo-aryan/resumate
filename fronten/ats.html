@@ -1,95 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>ATS Resume Scorer</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: sans-serif;
-            padding: 2rem;
-            background-color: #f7f7f7;
-        }
-
-        .container {
-            background: white;
-            max-width: 600px;
-            margin: auto;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        input[type="file"] {
-            margin-bottom: 1rem;
-        }
-
-        .score-box {
-            background: #eef;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 1.5rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Resume Score</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="ats.css">
 </head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h2 class="text-center mb-4">ATS Resume Scoring</h2>
 
-<body>
-    <div class="container">
-        <h2>Upload Your Resume (PDF)</h2>
-        <input type="file" id="resumeFile" accept="application/pdf" />
-        <button onclick="uploadResume()">Get ATS Score</button>
+    <form id="resume-form" class="card shadow p-4">
+      <div class="mb-3">
+        <label for="resume" class="form-label">Upload Your Resume (PDF):</label>
+        <input class="form-control" type="file" id="resume" name="resume" accept="application/pdf" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Get ATS Score</button>
+    </form>
 
-        <div id="result" class="score-box" style="display:none;">
-            <h3>ATS Score: <span id="scoreVal"></span></h3>
-            <p><strong>Summary:</strong> <span id="summaryText"></span></p>
-            <p><strong>Strengths:</strong></p>
-            <ul id="strengthsList"></ul>
-            <p><strong>Suggestions:</strong></p>
-            <ul id="suggestionsList"></ul>
-        </div>
+    <div id="result-container" class="mt-5 d-none">
+      <h4 class="mb-3">📊 ATS Score: <span id="score" class="badge bg-success fs-5"></span></h4>
+      <p id="summary" class="fst-italic text-muted"></p>
+
+      <div class="mt-4">
+        <h5>✅ Strengths</h5>
+        <ul id="strengths" class="list-group list-group-flush"></ul>
+      </div>
+
+      <div class="mt-4">
+        <h5>🛠 Suggestions for Improvement</h5>
+        <ul id="suggestions" class="list-group list-group-flush"></ul>
+      </div>
     </div>
+  </div>
 
-    <script>
-        async function uploadResume() {
-            const fileInput = document.getElementById("resumeFile");
-            const file = fileInput.files[0];
-            if (!file) return alert("Please upload a PDF resume");
+  <script>
+    document.getElementById('resume-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-            const formData = new FormData();
-            formData.append("resume", file);
+      const form = e.target;
+      const fileInput = form.querySelector('#resume');
+      const file = fileInput.files[0];
 
-            document.getElementById("result").style.display = "none";
+      const formData = new FormData();
+      formData.append('resume', file);
 
-            try {
-                const res = await fetch("http://resumate-production-a93f.up.railway.app/api/ats-score", {
-                    method: "POST",
-                    body: formData,
-                });
+      const resultContainer = document.getElementById('result-container');
+      const scoreEl = document.getElementById('score');
+      const summaryEl = document.getElementById('summary');
+      const strengthsEl = document.getElementById('strengths');
+      const suggestionsEl = document.getElementById('suggestions');
 
-                const data = await res.json();
-                console.log("Score response:", data);
+      try {
+        const res = await fetch('http://resumate-production-a93f.up.railway.app/api/ats-score', {
+          method: 'POST',
+          body: formData
+        });
 
-                document.getElementById("scoreVal").textContent = data.score || "N/A";
-                document.getElementById("summaryText").textContent = data.summary || data.raw || "No summary available";
+        const data = await res.json();
 
-                const strengths = data.strengths || [];
-                const suggestions = data.suggestions || [];
-
-                const strengthsList = document.getElementById("strengthsList");
-                strengthsList.innerHTML = strengths.map(s => `<li>${s}</li>`).join("");
-
-                const suggestionsList = document.getElementById("suggestionsList");
-                suggestionsList.innerHTML = suggestions.map(s => `<li>${s}</li>`).join("");
-
-                document.getElementById("result").style.display = "block";
-
-            } catch (err) {
-                alert("Error uploading resume or parsing ATS score");
-                console.error(err);
-            }
+        if (data.error) {
+          alert('❌ ' + (data.reason || data.error));
+          return;
         }
-    </script>
-</body>
 
+        const { score, summary, raw } = data;
+        scoreEl.textContent = score;
+        summaryEl.textContent = summary;
+
+        const parsed = JSON.parse(raw.match(/```json\n([\s\S]+?)\n```/)[1]);
+
+        strengthsEl.innerHTML = '';
+        parsed.strengths.forEach(strength => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item';
+          li.textContent = strength;
+          strengthsEl.appendChild(li);
+        });
+
+        suggestionsEl.innerHTML = '';
+        parsed.suggestions.forEach(suggestion => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item';
+          li.textContent = suggestion;
+          suggestionsEl.appendChild(li);
+        });
+
+        resultContainer.classList.remove('d-none');
+      } catch (err) {
+        console.error(err);
+        alert('Something went wrong while scoring the resume.');
+      }
+    });
+  </script>
+</body>
 </html>

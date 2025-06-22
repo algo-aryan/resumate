@@ -1,85 +1,117 @@
-import express from "express";
-import multer from "multer";
-import fs from "fs";
-import { readFile } from "fs/promises";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.js";
+import express from 'express';
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
+const { GlobalWorkerOptions } = pdfjsLib;
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const router = express.Router();
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+dotenv.config();
 
-// Create uploads folder if not exists
-const storage = multer.diskStorage({
-  destination: (_, __, cb) => {
-    const dir = "./backend/uploads";
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (_, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-async function extractTextFromPDF(filePath) {
-  const data = new Uint8Array(await readFile(filePath));
+// ✅ Add this exact line
+GlobalWorkerOptions.standardFontDataUrl = path.resolve(
+    __dirname,
+    '../../node_modules/pdfjs-dist/standard_fonts/'
+  );
+
+
+const upload = multer({ dest: 'backend/uploads/' });
+
+// ✅ Text extraction function
+async function extractTextFromPDF(pdfPath) {
+  const data = new Uint8Array(fs.readFileSync(pdfPath));
   const pdf = await pdfjsLib.getDocument({ data }).promise;
 
-  let fullText = "";
+  let fullText = '';
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const strings = content.items.map(item => item.str).join(" ");
-    fullText += strings + "\n";
+    const strings = content.items.map(item => item.str);
+    fullText += strings.join(' ') + '\n';
   }
-  return fullText;
+
+  return fullText.trim();
 }
 
-router.post("/ats-score", upload.single("resume"), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No resume uploaded" });
-    }
+// ✅ Gemini ATS evaluation function
+async function getATSScore(resumeText) {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: 'models/gemini-1.5-flash' });
 
-    const filePath = req.file.path;
-    console.log("📄 Uploaded file:", filePath);
+  const prompt = `
+You are an ATS bot. Given a resume, provide:
+1. A numeric ATS score (0–100)
+2. A brief summary
+3. A list of strengths
+4. A list of suggestions for improvement
 
-    const resumeText = await extractTextFromPDF(filePath);
+Return response strictly in JSON format like this:
 
-    const prompt = `
-You are an AI-powered ATS resume evaluator. Analyze the following resume and give:
-- score (0-100)
-- summary (1-line)
-- strengths (list)
-- suggestions (list)
-
-Respond in JSON format.
+{
+  "score": 85,
+  "summary": "Brief summary of the candidate...",
+  "strengths": ["Point 1", "Point 2"],
+  "suggestions": ["Point 1", "Point 2"]
+}
 
 Resume:
-"""${resumeText}"""
+"""${resumeText.slice(0, 12000)}"""
 `;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+  const result = await model.generateContent(prompt);
+  return result.response.text();
+}
 
-    // Delete the uploaded file after processing
-    fs.unlinkSync(filePath);
+// ✅ Main ATS score route
+router.post('/ats-score', upload.single('resume'), async (req, res) => {
+  try {
+    const resumePath = req.file.path;
+    console.log("📥 Received ATS score request");
+    console.log("📄 Uploaded file path:", resumePath);
+
+    const resumeText = await extractTextFromPDF(resumePath);
+
+    const geminiResponse = await getATSScore(resumeText);
+
+    // Try to extract JSON block safely even if Gemini adds markdown
+    const match = geminiResponse.match(/```json([\s\S]*?)```/);
+    const rawJSON = match ? match[1].trim() : geminiResponse;
 
     try {
-      const parsed = JSON.parse(responseText);
-      return res.json(parsed);
-    } catch (err) {
-      console.warn("⚠️ Failed to parse Gemini response as JSON.");
-      return res.json({
+      const parsed = JSON.parse(rawJSON);
+      fs.unlinkSync(resumePath); // Clean up
+
+      return res.status(200).json({
+        score: parsed.score || 0,
+        summary: parsed.summary || 'No summary.',
+        strengths: parsed.strengths || [],
+        suggestions: parsed.suggestions || [],
+        raw: geminiResponse // for debugging
+      });
+    } catch (jsonErr) {
+      console.warn("⚠️ Could not parse JSON response from Gemini.");
+      fs.unlinkSync(resumePath);
+      return res.status(200).json({
         score: 60,
         summary: "Basic resume",
-        raw: responseText
+        strengths: [],
+        suggestions: [],
+        raw: geminiResponse
       });
     }
+
   } catch (err) {
     console.error("❌ ATS error:", err);
-    return res.status(500).json({ error: "Resume processing failed" });
+    return res.status(500).json({
+      error: "Resume processing failed",
+      reason: err.message
+    });
   }
 });
 
