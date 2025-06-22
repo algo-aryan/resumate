@@ -538,6 +538,7 @@
     }
 
     /* Responsive Design */
+    /* Responsive Design */
     @media (max-width: 1024px) {
       .sidebar {
         height: 70px;
@@ -547,12 +548,16 @@
         font-size: 2rem;
         margin-right: 20px;
       }
+      .sidebar .nav-links { /* Added this for targeting nav-links specifically */
+        gap: 15px; /* Reduced gap for smaller screens to prevent wrapping */
+      }
       .sidebar a {
-        font-size: 0.95rem;
+        font-size: 0.9rem; /* Slightly reduced font size for nav links */
         padding: 8px 12px;
       }
       .sidebar a lord-icon {
-        width: 28px; height: 28px;
+        width: 24px; /* Reduced icon size slightly */
+        height: 24px;
       }
       .main-content {
         padding: 2.5rem;
@@ -594,7 +599,7 @@
         text-align: center;
       }
       .sidebar .nav-links {
-        flex-direction: column;
+        flex-direction: column; /* This already forces them to stack */
         gap: 10px;
         width: 100%;
         justify-content: center;
@@ -699,6 +704,15 @@
             </lord-icon>
             Resume Builder
         </a>
+        <a href="ats.html" id="atsScoreBtn">
+            <lord-icon
+                src="https://cdn.lordicon.com/puvvovzn.json"
+                trigger="hover"
+                colors="primary:var(--text-header),secondary:var(--highlight-green)"
+                style="width:30px;height:30px">
+            </lord-icon>
+            ATS Score
+        </a>
         <a href="tracked.html" id="trackedBtn">
           <lord-icon
               src="https://cdn.lordicon.com/pbczpwae.json"
@@ -758,7 +772,31 @@
         <p>Craft a professional, eye-catching resume from scratch with our intuitive builder.</p>
         <a href="resume-builder.html" class="cta-button">Start Building</a>
       </div>
-    </div>
+
+      <div class="feature-card" style="--delay: 0.2s;" onclick="window.location.href='ats.html'">
+        <lord-icon
+            src="https://cdn.lordicon.com/puvvovzn.json"
+            trigger="hover"
+            colors="primary:var(--accent-main),secondary:var(--highlight-green)"
+            style="width:90px;height:90px">
+        </lord-icon>
+        <h3>ATS Score & Suggestions</h3>
+        <p>Optimize your resume for Applicant Tracking Systems and get personalized feedback.</p>
+        <a href="ats.html" class="cta-button">View Suggestions</a>
+      </div>
+
+      <div class="feature-card" style="--delay: 0.3s;" onclick="window.location.href='tracked.html'">
+        <lord-icon
+            src="https://cdn.lordicon.com/pbczpwae.json"
+            trigger="hover"
+            colors="primary:var(--accent-main),secondary:var(--highlight-green)"
+            style="width:90px;height:90px">
+        </lord-icon>
+        <h3>Tracked Internships</h3>
+        <p>Keep a clear overview of all the internships you've applied to and their status.</p>
+        <a href="tracked.html" class="cta-button">View Tracker</a>
+      </div>
+      </div>
 
     <div class="dynamic-section" id="uploadSection" style="display:none;"></div>
     <div class="dynamic-section" id="analyzeSection" style="display:none;"></div>
@@ -820,34 +858,26 @@
       const sidebarLinks = document.querySelectorAll('.sidebar a');
 
       function setActiveLink() {
+        // Get the current page filename (e.g., "dashboard.html")
         const currentPath = window.location.pathname.split('/').pop();
         sidebarLinks.forEach(link => {
           link.classList.remove('active');
-          const linkHref = link.getAttribute('href');
+          const linkHref = link.getAttribute('href'); // Get the href attribute (e.g., "dashboard.html")
+
+          // Check if the link's href matches the current page, or if it's the dashboard and currentPath is empty
           if (linkHref === currentPath || (currentPath === '' && linkHref === 'dashboard.html')) {
             link.classList.add('active');
           }
         });
       }
-      setActiveLink();
+      setActiveLink(); // Call once on DOMContentLoaded
 
-      const sections = {
-        dashboardBtn: 'dashboardCards'
-      };
-
-      Object.entries(sections).forEach(([btnId, sectionId]) => {
-        const btn = document.getElementById(btnId);
-        if (btn) {
-          btn.addEventListener('click', (event) => {
-            if (btnId === 'dashboardBtn') {
-              event.preventDefault();
-              document.querySelectorAll('.dynamic-section').forEach(sec => sec.style.display = 'none');
-              const section = document.getElementById(sectionId);
-              if (section) section.style.display = 'grid';
-            }
-          });
-        }
-      });
+      // The `sections` and `Object.entries` loop were for dynamic content loading.
+      // Since you are now using separate HTML files for each navigation item,
+      // this part of the script is no longer necessary for displaying content,
+      // but I'll leave `dashboardCards` as `display: grid;` by default.
+      // The `dynamic-section` elements will remain hidden by default, as they
+      // are not intended to be shown on the dashboard page itself.
     });
   </script>
 

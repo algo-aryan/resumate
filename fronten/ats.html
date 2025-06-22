@@ -5,18 +5,517 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATS Resume Score</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="ats.css">
-</head>
-<body class="bg-light">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+  <style>
+    /* Global Variables - Directly from your provided CSS */
+    :root {
+      --primary-bg: #0d1a26;
+      --secondary-bg: #1a2a3a;
+      --accent-main: #007bff;
+      --accent-light: #00c6ff;
+      --highlight-green: #00e676; /* Vibrant green for dark theme highlights */
+
+      --text-header: #ffffff;
+      --text-body: #e0e7ed;
+      --text-muted: #9fb3c8;
+
+      --border-color: rgba(255, 255, 255, 0.08);
+      --shadow-primary: rgba(0, 0, 0, 0.6);
+      --shadow-secondary: rgba(0, 0, 0, 0.3);
+      --glass-overlay: rgba(255, 255, 255, 0.05);
+      --glass-blur: 10px;
+
+      --gradient-button: linear-gradient(135deg, var(--accent-main) 0%, var(--accent-light) 100%);
+      --gradient-card-border: linear-gradient(90deg, var(--highlight-green), var(--accent-main));
+
+      /* RGB values for transparent colors */
+      --highlight-green-rgb: 0, 230, 118;
+      --accent-main-rgb: 0, 123, 255;
+      --accent-light-rgb: 0, 198, 255;
+      --text-header-rgb: 255, 255, 255;
+      --text-body-rgb: 224, 231, 237;
+    }
+
+    /* Light Theme Overrides (using your provided Light Theme variables) */
+    body.light-theme {
+      --primary-bg: #f0f2f5;
+      --secondary-bg: #ffffff;
+      --accent-main: #1976d2;
+      --accent-light: #2196f3;
+      --highlight-green: #4caf50;
+
+      --text-header: #212121;
+      --text-body: #424242;
+      --text-muted: #757575;
+
+      --border-color: rgba(0, 0, 0, 0.08);
+      --shadow-primary: rgba(0, 0, 0, 0.2);
+      --shadow-secondary: rgba(0, 0, 0, 0.1);
+      --glass-overlay: rgba(255, 255, 255, 0.5);
+
+      --gradient-button: linear-gradient(135deg, var(--accent-main) 0%, var(--accent-light) 100%);
+      --gradient-card-border: linear-gradient(90deg, var(--highlight-green), var(--accent-main));
+
+      /* RGB values for transparent colors */
+      --highlight-green-rgb: 76, 175, 80;
+      --accent-main-rgb: 25, 118, 210;
+      --accent-light-rgb: 33, 150, 243;
+      --text-header-rgb: 33, 33, 33;
+      --text-body-rgb: 66, 66, 66;
+    }
+
+    /* General Body Styling - Adopted from your provided CSS */
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out, transform 0.4s ease-in-out,
+        box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out, opacity 0.4s ease-in-out;
+      background: var(--primary-bg);
+      color: var(--text-body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-y: auto; /* Allow scrolling if content is long */
+      background-image: radial-gradient(circle at 10% 20%, var(--secondary-bg-rgb-alpha-low) 0%, transparent 10%),
+        radial-gradient(circle at 90% 80%, var(--secondary-bg-rgb-alpha-low) 0%, transparent 10%);
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    body:not(.light-theme) {
+      --secondary-bg-rgb-alpha-low: rgba(26, 42, 58, 0.08);
+    }
+
+    body.light-theme {
+      --secondary-bg-rgb-alpha-low: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Container Styling - Adopted from your provided CSS */
+    .container {
+      background: var(--glass-overlay);
+      backdrop-filter: blur(var(--glass-blur));
+      border-radius: 16px;
+      padding: 40px 50px; /* Adjusted padding slightly for ATS content */
+      box-shadow: 0 8px 32px var(--shadow-primary);
+      text-align: center;
+      width: 100%;
+      max-width: 800px; /* Set specific max-width for ATS page content */
+      margin: 0 auto;
+      animation: fadeIn 1s ease-in-out;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    /* Main Heading */
+    .h2.text-center.mb-4 { /* Target the existing specific Bootstrap classes */
+      margin-bottom: 30px !important; /* Adjust margin */
+      color: var(--text-header); /* Use header text color */
+      font-size: 2.2rem; /* Make it larger */
+      font-weight: 800; /* Bolder font weight */
+      padding-bottom: 0; /* Remove previous padding for underline */
+    }
+    .h2.text-center.mb-4::after {
+      content: none; /* Remove the old underline effect */
+    }
+
+    /* Card Styling (for form and results) - Combining your general card styles */
+    .card.shadow.p-4 {
+      background: var(--secondary-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 30px !important; /* Adjust padding */
+      box-shadow: 0 6px 20px var(--shadow-primary);
+      text-align: left; /* Align text within card */
+      animation: fadeIn 0.5s ease-in-out;
+      line-height: 1.5;
+      border-top: 3px solid transparent; /* Mimic the card border gradient */
+      border-image: var(--gradient-card-border);
+      border-image-slice: 1;
+      margin-bottom: 2rem !important; /* Add bottom margin to form card */
+    }
+
+    /* Form Label */
+    .form-label {
+      font-weight: 500; /* Slightly lighter than 600 from your original */
+      color: var(--text-body); /* Use body text color */
+      margin-bottom: 10px !important; /* Adjust margin */
+      font-size: 1rem; /* Adjust font size */
+      display: block; /* Ensure label is block for consistent spacing */
+      text-align: left;
+    }
+
+    /* File Input - Corrected Styling */
+    .file-input-wrapper {
+        position: relative;
+        display: block; /* Ensures it takes full width */
+        width: 100%;
+        margin-bottom: 1rem; /* Adjust margin as needed */
+    }
+
+    .file-input-display {
+        background-color: var(--glass-overlay);
+        color: var(--text-muted); /* Placeholder text color */
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 14px 15px;
+        width: 100%;
+        min-height: 48px; /* Standard height for form controls */
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden; /* Hide overflowing text */
+        white-space: nowrap; /* Prevent text wrapping */
+        text-overflow: ellipsis; /* Add ellipsis for long file names */
+    }
+
+    .file-input-display.has-file {
+        color: var(--text-body); /* Color when a file is selected */
+    }
+
+    .file-input-display:hover {
+        border-color: var(--accent-light);
+    }
+
+    .file-input-display:focus-within { /* Apply focus style when children are focused */
+      border-color: var(--accent-light);
+      box-shadow: 0 0 0 3px rgba(var(--accent-main-rgb), 0.2);
+    }
+
+    .form-control[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0; /* Hide the actual input */
+        cursor: pointer;
+    }
+
+
+    /* Submit Button */
+    .btn.btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--gradient-button); /* Use the button gradient */
+      color: var(--text-header);
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      margin-top: 20px !important; /* Adjust margin */
+      position: relative;
+      overflow: hidden;
+      display: flex; /* Use flexbox to center content and spinner */
+      justify-content: center;
+      align-items: center;
+      gap: 10px; /* Space between text and spinner */
+    }
+    .btn.btn-primary::before { /* Shine effect for button */
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--button-shine-color);
+      transform: skewX(-20deg);
+      transition: transform 0.6s ease-out;
+    }
+    body:not(.light-theme) .btn.btn-primary::before {
+      --button-shine-color: rgba(255, 255, 255, 0.2);
+    }
+    body.light-theme .btn.btn-primary::before {
+      --button-shine-color: rgba(255, 255, 255, 0.4);
+    }
+    .btn.btn-primary:hover::before {
+      transform: translateX(100%) skewX(-20deg);
+    }
+    .btn.btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px var(--accent-main-shadow-button);
+      border-color: var(--highlight-green); /* Green border on hover */
+    }
+    body:not(.light-theme) .btn.btn-primary:hover {
+      --accent-main-shadow-button: rgba(0, 123, 255, 0.4);
+    }
+    body.light-theme .btn.btn-primary:hover {
+      --accent-main-shadow-button: rgba(25, 118, 210, 0.3);
+    }
+    .btn.btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* Loading Spinner */
+    .spinner-border {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-width: 0.2em; /* Thinner spinner */
+        color: var(--text-header); /* Spinner color */
+        vertical-align: middle;
+        margin-left: 0.5rem; /* Space from text */
+    }
+    .btn.btn-primary .spinner-border {
+        display: none; /* Hidden by default */
+    }
+    .btn.btn-primary.loading .spinner-border {
+        display: inline-block; /* Show when loading class is active */
+    }
+    .btn.btn-primary.loading .button-text {
+        visibility: hidden; /* Hide text when loading */
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+    }
+    .btn.btn-primary.loading {
+        pointer-events: none; /* Disable button clicks while loading */
+        background: var(--secondary-bg); /* Change background when loading, no gradient */
+        border-color: var(--border-color);
+        box-shadow: none;
+        transform: none; /* Remove hover transform */
+    }
+    .btn.btn-primary.loading::before {
+        content: none; /* Remove shine effect when loading */
+    }
+
+
+    /* Result Container & Card - Overriding Bootstrap's d-none */
+    #result-container {
+      animation: fadeIn 0.6s ease-out forwards; /* Fade-in animation */
+      /* No direct display:block here as it's handled by your JS */
+    }
+    /* This rule ensures the card inside result-container looks right when visible */
+    #result-container > .mt-5.d-none {
+        /* When JS removes d-none, this will apply the card styles */
+        display: block !important; /* Ensure it overrides d-none */
+        background: var(--secondary-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 30px !important; /* Adjust padding */
+        box-shadow: 0 6px 20px var(--shadow-primary);
+        text-align: left; /* Align text within card */
+        animation: fadeIn 0.5s ease-in-out;
+        line-height: 1.5;
+        border-top: 3px solid transparent; /* Mimic the card border gradient */
+        border-image: var(--gradient-card-border);
+        border-image-slice: 1;
+        margin-top: 2rem !important; /* Adjust margin */
+    }
+
+
+    /* ATS Score Title and Badge */
+    #result-container h4.mb-3 {
+      font-weight: 700;
+      color: var(--text-header); /* Use header text color */
+      margin-bottom: 20px !important; /* Adjust margin */
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center score and text */
+      font-size: 1.8rem; /* Make score heading larger */
+      padding-top: 10px; /* Add some padding for visual balance */
+    }
+    #result-container h4.mb-3 span#score {
+      background-color: var(--highlight-green) !important; /* Use highlight green for score badge */
+      color: var(--text-header); /* White text on badge */
+      padding: 0.8em 1.2em; /* Larger padding for a more prominent badge */
+      border-radius: 30px; /* Pill shape */
+      font-size: 1.5rem !important; /* Larger score number */
+      font-weight: 800; /* Extra bold */
+      margin-left: 20px; /* Increased space from title */
+      min-width: 80px; /* Ensure consistent width */
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(var(--highlight-green-rgb), 0.4); /* Stronger shadow to pop */
+    }
+
+    /* Summary Paragraph */
+    p#summary {
+      color: var(--text-muted); /* Use muted text color */
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 30px !important; /* Increased margin below summary */
+      font-style: normal !important; /* Ensure not italic if it was */
+      text-align: center; /* Center align summary */
+    }
+
+    /* Section Headings (Strengths, Suggestions) */
+    #result-container .mt-4 h5 { /* Targeting h5 directly within mt-4 */
+      font-weight: 600;
+      color: var(--accent-light); /* Use accent light color for subheadings */
+      margin-bottom: 15px !important;
+      border-bottom: 1px solid var(--border-color); /* Use border color for separator */
+      padding-bottom: 10px;
+      font-size: 1.4rem; /* Adjust font size */
+    }
+
+    /* List Items (Strengths, Suggestions) - VISUAL ENHANCEMENT */
+    .list-group-flush .list-group-item {
+      background: transparent; /* Make list items transparent */
+      border: none;
+      padding: 10px 0 10px 30px; /* Add padding for icon */
+      color: var(--text-body); /* Use body text color */
+      font-size: 1rem;
+      line-height: 1.6;
+      position: relative; /* For icon positioning */
+      text-align: left;
+    }
+    .list-group-flush .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Icons for Strengths & Suggestions */
+    #strengths .list-group-item::before {
+        content: '✅'; /* Checkmark icon */
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.1em;
+        margin-right: 10px;
+    }
+
+    #suggestions .list-group-item::before {
+        content: '🛠️'; /* Wrench/Tool icon */
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.1em;
+        margin-right: 10px;
+    }
+
+    /* Keyframe Animations from your provided CSS */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    /* Spinner animation */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      .container {
+        padding: 30px 20px;
+        max-width: 100%;
+      }
+      /* Back to Dashboard button */
+      .back-to-dashboard-container {
+        text-align: center; /* Center the button on small screens */
+        margin-bottom: 1.5rem !important;
+      }
+      .back-to-dashboard-btn {
+        width: 100%; /* Full width on small screens */
+        font-size: 0.9rem;
+        padding: 10px 15px;
+      }
+
+      .h2.text-center.mb-4 {
+        font-size: 1.8rem;
+        margin-bottom: 20px !important;
+      }
+      .card.shadow.p-4, #result-container > .mt-5.d-none {
+        padding: 1.5rem !important;
+      }
+      .btn.btn-primary {
+        padding: 12px;
+        font-size: 1rem;
+      }
+      #result-container h4.mb-3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px !important;
+      }
+      #result-container h4.mb-3 span#score {
+        font-size: 1.1rem !important;
+        padding: 0.5em 0.9em;
+      }
+      p#summary {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem !important;
+      }
+      #result-container .mt-4 h5 {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem !important;
+      }
+      .list-group-flush .list-group-item {
+        font-size: 0.9rem;
+        padding-left: 25px; /* Adjust padding for smaller screens */
+      }
+      #strengths .list-group-item::before,
+      #suggestions .list-group-item::before {
+        font-size: 1em;
+      }
+    }
+
+    /* Styles for the "Back to Dashboard" button */
+    .back-to-dashboard-container {
+      text-align: left; /* Align button to the left */
+      margin-bottom: 2rem !important; /* Space below button */
+    }
+
+    .back-to-dashboard-btn {
+      display: inline-block;
+      background-color: var(--glass-overlay);
+      color: var(--accent-light); /* Use accent-light for text */
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+      border: 1px solid var(--border-color); /* Add a subtle border */
+    }
+
+    .back-to-dashboard-btn:hover {
+      background-color: rgba(var(--text-header-rgb), 0.1); /* Lighter glass effect on hover */
+      transform: translateX(-5px); /* Slide left effect */
+      color: var(--accent-light); /* Keep text color consistent on hover */
+      text-decoration: none; /* Remove underline on hover */
+      border-color: var(--accent-main); /* Highlight border on hover */
+    }
+  </style>
+  </head>
+<body>
   <div class="container py-5">
+    <div class="back-to-dashboard-container">
+      <a href="dashboard.html" class="back-to-dashboard-btn">← Back to Dashboard</a>
+    </div>
+
     <h2 class="text-center mb-4">ATS Resume Scoring</h2>
 
-    <form id="resume-form" class="card shadow p-4">
+    <form id="resume-form" class="card shadow p-4" enctype="multipart/form-data" method="post">
       <div class="mb-3">
         <label for="resume" class="form-label">Upload Your Resume (PDF):</label>
-        <input class="form-control" type="file" id="resume" name="resume" accept="application/pdf" required>
+        <div class="file-input-wrapper">
+          <span id="file-name-display" class="file-input-display">No file chosen</span>
+          <input class="form-control" type="file" id="resume" name="resume" accept="application/pdf" required>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Get ATS Score</button>
+      <button type="submit" class="btn btn-primary">
+        <span class="button-text">Get ATS Score</span>
+        <div class="spinner-border text-light" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </button>
     </form>
 
     <div id="result-container" class="mt-5 d-none">
@@ -35,6 +534,70 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="ats.js"></script>
+  <script>
+    // JavaScript to handle the file input and loading state
+    document.addEventListener('DOMContentLoaded', function() {
+      const resumeInput = document.getElementById('resume');
+      const submitButton = document.querySelector('.btn.btn-primary');
+      const form = document.getElementById('resume-form');
+      const resultContainer = document.getElementById('result-container');
+      const fileNameDisplay = document.getElementById('file-name-display');
+
+      // Update file input's display text when a file is selected
+      resumeInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+          fileNameDisplay.textContent = this.files[0].name;
+          fileNameDisplay.classList.add('has-file');
+        } else {
+          fileNameDisplay.textContent = 'No file chosen';
+          fileNameDisplay.classList.remove('has-file');
+        }
+      });
+
+      // Handle form submission to show loading state
+      form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission to handle via JS
+
+        submitButton.classList.add('loading');
+        
+        // --- IMPORTANT: Replace the setTimeout below with your actual ATS backend call ---
+        // Your ats.js should contain the logic to send the resume and get the score.
+        // Once your backend responds, you'll update the UI and remove the 'loading' class.
+
+        // Example of what your ats.js might do (simulated with setTimeout):
+        // (Assuming your ats.js would make a fetch request and then process the response)
+        const formData = new FormData(form);
+        // You would typically send formData to your backend:
+        // fetch('/api/ats-score', { method: 'POST', body: formData })
+        //   .then(response => response.json())
+        //   .then(data => { /* Update UI with data */ })
+        //   .catch(error => { /* Handle error */ })
+        //   .finally(() => { submitButton.classList.remove('loading'); });
+
+        // SIMULATED ASYNC CALL (REMOVE IN PRODUCTION WITH REAL BACKEND INTEGRATION)
+        setTimeout(() => {
+             // Simulate success:
+             resultContainer.classList.remove('d-none'); // Make results visible
+             document.getElementById('score').textContent = '85%';
+             document.getElementById('summary').textContent = 'Your resume is highly optimized for ATS. Great job! It contains strong keywords and presents your experience clearly, which are critical for passing initial screening.';
+             document.getElementById('strengths').innerHTML = `
+                <li class="list-group-item">Strong keyword matching relevant to target roles.</li>
+                <li class="list-group-item">Clear and concise experience section with action verbs.</li>
+                <li class="list-group-item">Well-structured contact information for easy parsing.</li>
+                <li class="list-group-item">Appropriate use of industry-standard headings.</li>
+             `;
+             document.getElementById('suggestions').innerHTML = `
+                <li class="list-group-item">Consider adding more quantifiable achievements (e.g., "Increased sales by 15%").</li>
+                <li class="list-group-item">Ensure consistent formatting for all dates and job titles.</li>
+                <li class="list-group-item">Review for any unusual characters or symbols that might confuse parsing.</li>
+                <li class="list-group-item">If applicable, add a brief, targeted professional summary or objective.</li>
+             `;
+            submitButton.classList.remove('loading'); // Hide spinner
+        }, 2500); // Simulate 2.5 seconds of loading
+      });
+    });
+  </script>
 </body>
 </html>

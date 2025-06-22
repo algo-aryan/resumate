@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       formData.append('resume', file);
   
       try {
-        const res = await fetch('http://resumate-production-a93f.up.railway.app/api/ats-score', {
+        const res = await fetch('https://resumate-production-a93f.up.railway.app/api/ats-score', {
           method: 'POST',
           body: formData
         });
@@ -32,19 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
   
-        // Update score and summary
         scoreEl.textContent = data.score ?? 'N/A';
         summaryEl.textContent = data.summary ?? 'No summary.';
   
         let parsed = { strengths: [], suggestions: [] };
   
-        // Try parsing Gemini response
         try {
           if (data.raw && data.raw.includes('```json')) {
             const match = data.raw.match(/```json\s*([\s\S]*?)\s*```/);
-            if (match && match[1]) {
-              parsed = JSON.parse(match[1]);
-            }
+            if (match && match[1]) parsed = JSON.parse(match[1]);
           } else if (data.raw) {
             parsed = JSON.parse(data.raw);
           }
@@ -52,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
           console.warn('⚠️ Gemini JSON parsing failed:', err);
         }
   
-        // Populate strengths
         strengthsEl.innerHTML = '';
         (parsed.strengths || []).forEach(item => {
           const li = document.createElement('li');
@@ -61,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
           strengthsEl.appendChild(li);
         });
   
-        // Populate suggestions
         suggestionsEl.innerHTML = '';
         (parsed.suggestions || []).forEach(item => {
           const li = document.createElement('li');
@@ -70,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
           suggestionsEl.appendChild(li);
         });
   
-        // Reveal results
         resultContainer.classList.remove('d-none');
       } catch (err) {
         console.error('❌ Frontend Error:', err);
