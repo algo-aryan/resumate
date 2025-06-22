@@ -15,7 +15,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from './models/User.js'; // adjust the path if it's different
 import TrackedInternship from './models/TrackedInternship.js';
-import { fetchGitHubProfile } from '/github/importGitHub.js';
+import { fetchGitHubProfile } from './github/tempFile.js';
 
 dotenv.config();
 
