@@ -400,72 +400,6 @@
         opacity: 1;
     }
 
-    /* GitHub Import Section */
-    .github-import {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-      width: 100%;
-      max-width: 550px;
-      align-items: center;
-    }
-
-    .github-import input[type="text"] {
-      flex: 1;
-      padding: 14px 18px;
-      font-size: 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 12px; /* Rounded corners for input */
-      outline: none;
-      background: var(--secondary-bg);
-      color: var(--text-body);
-      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .github-import input[type="text"]:focus {
-      background: rgba(var(--text-header-rgb), 0.1);
-      border-color: var(--accent-light);
-      box-shadow: 0 0 0 3px rgba(var(--accent-light-rgb), 0.2);
-    }
-
-    .github-import button {
-      padding: 14px 24px;
-      font-size: 16px;
-      background: var(--gradient-button);
-      color: var(--text-header);
-      border: 2px solid transparent;
-      border-radius: 12px; /* Rounded corners for button */
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      font-weight: 600;
-      /* Override input-box button styles */
-      border-top-left-radius: 12px;
-      border-bottom-left-radius: 12px;
-    }
-
-    .github-import button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.2);
-      transform: skewX(-20deg);
-      transition: transform 0.6s ease-out;
-    }
-    .github-import button:hover::before {
-      transform: translateX(100%) skewX(-20deg);
-    }
-    .github-import button:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 25px rgba(var(--accent-main-rgb), 0.4);
-      border-color: var(--highlight-green);
-    }
-
-
     /* Responsive adjustments */
     @media (max-width: 768px) {
       h1 {
@@ -496,18 +430,6 @@
       .theme-switch {
         top: 15px;
         right: 15px;
-      }
-      .github-import {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .github-import input[type="text"] {
-        width: 100%;
-        border-radius: 12px;
-      }
-      .github-import button {
-        width: 100%;
-        border-radius: 12px;
       }
     }
 
@@ -557,6 +479,7 @@
     let currentQuestion = 0;
     let data = { education: [], experience: [], projects: [] };
     let temp = {}; // Temporary object to store multi-part answers (e.g., for education, experience, projects)
+    let waitingForGitHubUsername = false; // Flag to indicate if we're waiting for GitHub username
 
     const questions = [
       { key: 'name', text: "👋 Hi there! I'm ResuMate. Let's build your resume. What's your full name?" },
@@ -594,6 +517,16 @@
       const msg = userInput.value.trim();
       if (!msg) return;
       userReply(msg);
+
+      if (waitingForGitHubUsername) {
+        await importFromGitHub(msg);
+        waitingForGitHubUsername = false;
+        questions.splice(currentQuestion + 1, 0, { key: 'skills', text: '💡 Finally, list your key skills (comma-separated).' });
+        currentQuestion++; // Move past the "enter username" state
+        botReply(questions[currentQuestion].text);
+        userInput.value = '';
+        return;
+      }
 
       const q = questions[currentQuestion];
 
@@ -645,40 +578,18 @@
         }
       } else if (q?.key === 'proj-import-or-add') {
         if (msg.toLowerCase().includes('github')) {
-          botReply("Please enter your **GitHub username** below. I will fetch your projects automatically.");
-          // Dynamically add GitHub input and button
-          const githubImportDiv = document.createElement('div');
-          githubImportDiv.className = 'github-import';
-          githubImportDiv.innerHTML = `
-            <input type="text" id="githubUsername" placeholder="Enter GitHub username">
-            <button id="importGithubBtn">Import from GitHub</button>
-          `;
-          chatbox.appendChild(githubImportDiv);
-          chatbox.scrollTop = chatbox.scrollHeight;
-
-          document.getElementById('importGithubBtn').addEventListener('click', async () => {
-            const username = document.getElementById('githubUsername').value;
-            if (!username) {
-              alert("Please enter a GitHub username.");
-              return;
-            }
-            botReply("Fetching projects from GitHub...");
-            await importFromGitHub(username); // Call the import function
-            githubImportDiv.remove(); // Remove the input field after import attempt
-
-            // After GitHub import, proceed to skills or ask to add more manually if desired
-            questions.splice(currentQuestion + 1, 0, { key: 'skills', text: '💡 Finally, list your key skills (comma-separated).' });
-            currentQuestion++; // Move past the proj-import-or-add question
-            botReply(questions[currentQuestion].text);
-          });
-          // Do not increment currentQuestion yet, wait for GitHub input/button interaction
+          botReply("Please enter your **GitHub username** now.");
+          waitingForGitHubUsername = true; // Set flag
+          // Do not increment currentQuestion here, stay on the same logical "question" until username is provided
+          userInput.value = '';
           return;
 
         } else if (msg.toLowerCase().includes('add')) {
           questions.splice(currentQuestion + 1, 0, { key: 'proj-title', text: '💡 Great! What is the title of your project?' });
         } else {
           botReply('Please type "github" to import or "add" to manually add projects.');
-          return; // Stay on the same question
+          userInput.value = '';
+          return; // Stay on the same question if input is invalid
         }
       } else if (q?.key === 'proj-title') {
         temp.title = msg;
@@ -698,6 +609,7 @@
       } else if (q?.key === 'skills') {
         data.skills = msg;
         generateResume(); // This is the last step before generation
+        userInput.value = '';
         return; // Exit to prevent further question processing
       } else if (q) {
         // For simple key-value pairs (name, email, phone, linkedin, goal)
@@ -854,4 +766,3 @@
   </script>
 </body>
 </html>
-```
