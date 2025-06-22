@@ -78,6 +78,7 @@ router.post('/ats-score', upload.single('resume'), async (req, res) => {
     const resumeText = await extractTextFromPDF(resumePath);
 
     const geminiResponse = await getATSScore(resumeText);
+    console.log("🔍 Gemini raw response:\n", geminiResponse); 
 
     // Try to extract JSON block safely even if Gemini adds markdown
     const match = geminiResponse.match(/```json([\s\S]*?)```/);
