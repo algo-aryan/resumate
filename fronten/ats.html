@@ -35,64 +35,6 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('resume-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const form = e.target;
-      const fileInput = form.querySelector('#resume');
-      const file = fileInput.files[0];
-
-      const formData = new FormData();
-      formData.append('resume', file);
-
-      const resultContainer = document.getElementById('result-container');
-      const scoreEl = document.getElementById('score');
-      const summaryEl = document.getElementById('summary');
-      const strengthsEl = document.getElementById('strengths');
-      const suggestionsEl = document.getElementById('suggestions');
-
-      try {
-        const res = await fetch('http://resumate-production-a93f.up.railway.app/api/ats-score', {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await res.json();
-
-        if (data.error) {
-          alert('❌ ' + (data.reason || data.error));
-          return;
-        }
-
-        const { score, summary, raw } = data;
-        scoreEl.textContent = score;
-        summaryEl.textContent = summary;
-
-        const parsed = JSON.parse(raw.match(/```json\n([\s\S]+?)\n```/)[1]);
-
-        strengthsEl.innerHTML = '';
-        parsed.strengths.forEach(strength => {
-          const li = document.createElement('li');
-          li.className = 'list-group-item';
-          li.textContent = strength;
-          strengthsEl.appendChild(li);
-        });
-
-        suggestionsEl.innerHTML = '';
-        parsed.suggestions.forEach(suggestion => {
-          const li = document.createElement('li');
-          li.className = 'list-group-item';
-          li.textContent = suggestion;
-          suggestionsEl.appendChild(li);
-        });
-
-        resultContainer.classList.remove('d-none');
-      } catch (err) {
-        console.error(err);
-        alert('Something went wrong while scoring the resume.');
-      }
-    });
-  </script>
+  <script src="ats.js"></script>
 </body>
 </html>
