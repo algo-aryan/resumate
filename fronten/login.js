@@ -26,31 +26,43 @@ document.addEventListener("DOMContentLoaded", function () {
       const password = document.getElementById("password").value;
       const loginSpinner = document.getElementById("loadingSpinner");
       const loadingMessage = document.getElementById("loadingMessage");
-  
+    
+      console.log("🟡 Logging in with:", email, password);
+    
       loginSpinner.style.display = "block";
       loadingMessage.style.display = "block";
-  
+    
       try {
         const res = await fetch("https://resumate-production-a93f.up.railway.app/api/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password })
         });
-  
+    
         const data = await res.json();
+    
+        console.log("🟢 Server response:", data);  // 👈 ADD THIS
+    
         loginSpinner.style.display = "none";
         loadingMessage.style.display = "none";
-  
+    
         if (res.ok) {
+          if (!data.token || !data.user) {
+            alert("🛑 Login response missing data");
+            return;
+          }
+    
           localStorage.setItem("token", data.token);
           localStorage.setItem("userId", data.user._id);
           window.location.href = "dashboard.html";
         } else {
           alert(data.message || "Login failed!");
         }
+    
       } catch (err) {
         loginSpinner.style.display = "none";
         loadingMessage.style.display = "none";
+        console.error("❌ Network/login error:", err);
         alert("Login failed. Network error.");
       }
     });
