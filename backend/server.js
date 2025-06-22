@@ -16,11 +16,14 @@ import jwt from 'jsonwebtoken';
 import User from './models/User.js'; // adjust the path if it's different
 import TrackedInternship from './models/TrackedInternship.js';
 import { fetchGitHubProfile } from './github/tempFile.js';
+import atsScoreRoute from './routes/atsScore.js';
+
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 const app = express();
 app.use(cors({ origin: '*', methods: ['GET', 'POST', 'DELETE'] }));
@@ -279,6 +282,8 @@ app.get('/api/import/github/:username', async (req, res) => {
     res.status(500).json({ error: "Failed to fetch GitHub data" });
   }
 });
+
+app.use('/api', atsScoreRoute);
   
 
 // ✅ Start server
