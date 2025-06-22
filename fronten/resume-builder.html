@@ -574,11 +574,11 @@
           questions.splice(currentQuestion + 1, 0, { key: 'exp-role', text: '💼 Another Role?' });
         } else {
           // Transition to projects
-          questions.splice(currentQuestion + 1, 0, { key: 'proj-import-or-add', text: '💡 Now for projects. Would you like to **import from GitHub** or **manually add**? (type "github" or "add")' });
+          questions.splice(currentQuestion + 1, 0, { key: 'proj-import-or-add', text: '💡 Now for projects. Would you like to import from GitHub or manually add? (type "github" or "add")' });
         }
       } else if (q?.key === 'proj-import-or-add') {
         if (msg.toLowerCase().includes('github')) {
-          botReply("Please enter your **GitHub username** now.");
+          botReply("Please enter your GitHub username now.");
           waitingForGitHubUsername = true; // Set flag
           // Do not increment currentQuestion here, stay on the same logical "question" until username is provided
           userInput.value = '';
