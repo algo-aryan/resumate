@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
+import applicationRoutes from './routes/application.js';
 import { exec } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -13,6 +14,7 @@ import puppeteer from 'puppeteer';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from './models/User.js'; // adjust the path if it's different
+import TrackedInternship from './models/TrackedInternship.js';
 
 dotenv.config();
 
@@ -189,6 +191,44 @@ app.post('/api/download-resume-pdf', async (req, res) => {
 // ✅ Connect DB and Auth
 connectDB();
 app.use('/api', authRoutes);
+app.use('/api', applicationRoutes);
+
+// ✅ Track Internship Route
+app.post('/api/track-internship', async (req, res) => {
+  const { userId, title, company, link, ats } = req.body;
+
+  if (!userId || !title || !company || !link) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  try {
+    const newTrack = new TrackedInternship({
+      userId,
+      title,
+      company,
+      link,
+      ats
+    });
+
+    await newTrack.save();
+    res.status(201).json({ message: "Internship tracked successfully" });
+  } catch (err) {
+    console.error("Track error:", err);
+    res.status(500).json({ message: "Server error while tracking internship" });
+  }
+});
+
+// ✅ Get All Tracked Internships for a User
+app.get('/api/tracked-internships/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const internships = await TrackedInternship.find({ userId }).sort({ trackedAt: -1 });
+    res.status(200).json(internships);
+  } catch (err) {
+    console.error("Fetch error:", err);
+    res.status(500).json({ message: "Failed to fetch tracked internships." });
+  }
+});
 
 // ✅ Signup Route
 app.post('/api/signup', async (req, res) => {

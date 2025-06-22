@@ -2986,3 +2986,16 @@ Timestamp,Event,Details
 2025-06-21 11:39:34,ATS Scored,Software Development - ATS: 20
 2025-06-21 11:39:36,ATS Scored,WordPress Development - ATS: 45
 2025-06-21 11:39:37,ATS Scored,React Native - ATS: 40
+2025-06-21 17:47:12,Scraping Started,"URL: https://internshala.com/internships/css,python,html-internship"
+2025-06-21 17:47:14,Internship Skipped (Not Eligible),UI/UX Design - https://internshala.com/internship/detail/ui-ux-design-internship-in-jaipur-at-mr-n-mrs-pet1750506702
+2025-06-21 17:47:19,Parse Error for Individual Internship,'NoneType' object has no attribute 'text'
+2025-06-21 17:47:23,ATS Scored,WordPress Development - ATS: 45
+2025-06-21 17:47:25,ATS Scored,Front End Development - ATS: 45
+2025-06-21 17:47:28,ATS Scored,ReactJS Development - ATS: 20
+2025-06-21 17:47:31,ATS Scored,Artificial Intelligence (AI) - ATS: 40
+2025-06-21 17:47:32,ATS Scored,Data Analytics - ATS: 60
+2025-06-21 17:47:35,ATS Scored,WordPress Development - ATS: 40
+2025-06-21 17:47:36,ATS Scored,Data Science Mentor - ATS: 45
+2025-06-21 17:47:38,ATS Scored,Machine Learning - ATS: 20
+2025-06-21 17:47:40,ATS Scored,Full Stack Development - ATS: 40
+2025-06-21 17:47:41,ATS Scored,AI/Prompt Engineer - ATS: 40

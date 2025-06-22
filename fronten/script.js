@@ -153,47 +153,45 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 
-  // --- Internship Rendering Function ---
   function renderInternships(internshipsToRender) {
     internshipResults.innerHTML = "<h3 style='margin-bottom: 20px;'>Internship Matches</h3>";
-
+  
     if (!internshipsToRender || internshipsToRender.length === 0) {
       internshipResults.innerHTML += "<p>No results found after filtering.</p>";
       return;
     }
-
+  
     internshipsToRender.forEach(job => {
       const matchDiv = document.createElement("div");
       matchDiv.className = "card";
-
+  
       const atsScore = job.ats !== 'N/A' ? parseInt(job.ats) : 0;
       let atsClass = 'ats-none';
       let color = '';
       let bgColor = '';
       let glow = '';
-
+  
       if (atsScore >= 80) {
         atsClass = 'ats-high';
-        color = '#00e676'; // Green
+        color = '#00e676';
         bgColor = 'rgba(0, 230, 118, 0.08)';
         glow = '0 0 15px rgba(0, 230, 118, 0.5)';
       } else if (atsScore >= 45) {
         atsClass = 'ats-medium';
-        color = '#ffc107'; // Yellow
+        color = '#ffc107';
         bgColor = 'rgba(255, 193, 7, 0.08)';
         glow = '0 0 15px rgba(255, 193, 7, 0.4)';
       } else {
         atsClass = 'ats-low';
-        color = '#ff4d4f'; // Red
+        color = '#ff4d4f';
         bgColor = 'rgba(255, 77, 79, 0.08)';
         glow = '0 0 15px rgba(255, 77, 79, 0.4)';
       }
-
-      // Apply dynamic styling directly
+  
       matchDiv.style.borderLeft = `6px solid ${color}`;
       matchDiv.style.backgroundColor = bgColor;
       matchDiv.style.boxShadow = glow;
-
+  
       matchDiv.innerHTML = `
         <h4>${job.title}</h4>
         <p><strong>Company:</strong> ${job.company || 'N/A'}</p>
@@ -202,8 +200,42 @@ document.addEventListener("DOMContentLoaded", function () {
         <p><strong>📊 ATS Match:</strong> <span class="${atsClass}">${job.ats}%</span></p>
         <p><strong>🔗 <a href="${job.link}" target="_blank">View Internship</a></strong></p>
         <p><strong>🚀 <a href="${job.apply}" target="_blank">Apply Now</a></strong></p>
+        <button class="track-btn" data-title="${job.title}" data-company="${job.company}" data-link="${job.link}" data-ats="${job.ats}">📌 Track</button>
       `;
+  
       internshipResults.appendChild(matchDiv);
+  
+      // 🔻 Add event listener for the "Track" button here:
+      const trackBtn = matchDiv.querySelector(".track-btn");
+      trackBtn.addEventListener("click", async function () {
+        const internshipData = {
+          title: this.dataset.title,
+          company: this.dataset.company,
+          link: this.dataset.link,
+          ats: this.dataset.ats,
+          userId: localStorage.getItem("userId") || ""
+        };
+  
+        try {
+          const response = await fetch("https://resumate-production-a93f.up.railway.app/api/track-internship", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(internshipData)
+          });
+  
+          if (response.ok) {
+            alert("✅ Internship tracked successfully!");
+          } else {
+            const errData = await response.json();
+            alert(`❌ Failed to track internship: ${errData.message}`);
+          }
+        } catch (err) {
+          console.error("Tracking Error:", err);
+          alert("❌ Could not track the internship. Try again.");
+        }
+      });
     });
   }
 
