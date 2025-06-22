@@ -465,6 +465,11 @@
     </div>
   </div>
 
+  <div class="github-import">
+    <input type="text" id="githubUsername" placeholder="Enter GitHub username">
+    <button onclick="importFromGitHub()">Import from GitHub</button>
+  </div>
+
   <div id="resumeOutput"></div>
   <button id="downloadBtn">📥 Download Resume as PDF</button>
 
@@ -665,5 +670,30 @@
       botReply(questions[0].text);
     };
   </script>
+  <script>
+    async function importFromGitHub() {
+      const username = document.getElementById('githubUsername').value;
+      if (!username) return alert("Enter GitHub username");
+    
+      const res = await fetch(`/api/import/github/${username}`);
+      const data = await res.json();
+    
+      if (data.error) {
+        alert("GitHub fetch failed.");
+        return;
+      }
+    
+      // Autofill your resume form
+      document.querySelector('input[name="name"]').value = data.name || '';
+      document.querySelector('textarea[name="goal"]').value = data.bio || '';
+      document.querySelector('input[name="email"]').value = data.email || '';
+      document.querySelector('input[name="location"]').value = data.location || '';
+    
+      document.querySelector('textarea[name="skills"]').value = data.skills.join(', ');
+    
+      const projectsBox = document.querySelector('textarea[name="projects"]');
+      projectsBox.value = data.projects.map(p => `${p.title}, ${p.description}`).join('\n');
+    }
+    </script>
 </body>
 </html>

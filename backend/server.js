@@ -15,6 +15,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from './models/User.js'; // adjust the path if it's different
 import TrackedInternship from './models/TrackedInternship.js';
+import { fetchGitHubProfile } from '/github/importGitHub.js';
 
 dotenv.config();
 
@@ -265,6 +266,17 @@ app.delete('/api/untrack-internship/:id', async (req, res) => {
   } catch (err) {
     console.error("Untrack error:", err);
     res.status(500).json({ message: "Server error during untracking" });
+  }
+});
+
+
+app.get('/api/import/github/:username', async (req, res) => {
+  try {
+    const data = await fetchGitHubProfile(req.params.username);
+    res.status(200).json(data);
+  } catch (err) {
+    console.error("GitHub Import Error:", err);
+    res.status(500).json({ error: "Failed to fetch GitHub data" });
   }
 });
   
