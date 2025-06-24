@@ -6,7 +6,7 @@ import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
 const { GlobalWorkerOptions } = pdfjsLib;
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-// Corrected import: Only import GoogleGenerativeAI directly.
+// Only import GoogleGenerativeAI directly. Error types are accessed via its instances or error.name/message.
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const router = express.Router();
@@ -91,31 +91,25 @@ router.post('/ats-score', upload.single('resume'), async (req, res) => {
         } catch (geminiError) {
             console.error("❌ Gemini API call failed for ATS score:", geminiError);
 
-            // --- START OF MODIFIED ERROR HANDLING FOR GEMINI API ---
-            // Access error types from the GoogleGenerativeAI object
-            const { GoogleGenerativeAIError, ResourceExhaustedError } = GoogleGenerativeAI;
-
-            if (geminiError instanceof ResourceExhaustedError) {
-                // Specific error for quota limits (e.g., free tier exceeded)
+            // --- START OF MODIFIED ERROR HANDLING (using error.name and error.message string checks) ---
+            // Check if the error message indicates a 429 Too Many Requests (quota issue)
+            if (geminiError.message && geminiError.message.includes('429 Too Many Requests') && 
+                geminiError.message.includes('quota')) {
                 return res.status(429).json({
                     error: "AI assistant is currently unavailable due to quota limits.",
                     reason: "Gemini API quota exceeded. Please try again later."
                 });
-            } else if (geminiError instanceof GoogleGenerativeAIError && 
-                       geminiError.message.includes('429 Too Many Requests')) {
-                // If it's a general GoogleGenerativeAIError, check its message for 429
-                return res.status(429).json({
-                    error: "AI assistant is currently unavailable due to quota limits.",
-                    reason: "Gemini API quota exceeded. Please try again later."
-                });
-            } else if (geminiError instanceof GoogleGenerativeAIError) {
-                // Catch other specific Google Generative AI errors
+            } 
+            // Check for specific error names that might indicate API issues
+            else if (geminiError.name === 'ResourceExhaustedError' || geminiError.name === 'GoogleGenerativeAIError') {
+                 // Even if 'instanceof' fails, 'name' property should be a string
                 return res.status(500).json({
                     error: "AI assistant encountered an API error.",
-                    reason: geminiError.message
+                    reason: geminiError.message || "An unspecified Google Generative AI error occurred."
                 });
-            } else {
-                // Generic error for other unexpected errors during Gemini call
+            }
+            // Generic error for any other unexpected errors during Gemini call
+            else {
                 return res.status(500).json({
                     error: "Failed to get ATS score from AI assistant.",
                     reason: geminiError.message || "An unexpected error occurred during AI processing."
