@@ -115,6 +115,7 @@ app.post('/api/generate-resume', async (req, res) => {
       console.error(`🔴 resume.py stderr: ${data}`);
     });
     let summary = [];
+    let pythonError = null; // Variable to store custom Python error
 
     child.stdin.write(JSON.stringify(resumeData));
     child.stdin.end();
@@ -122,11 +123,34 @@ app.post('/api/generate-resume', async (req, res) => {
     let stdout = '';
     child.stdout.on('data', data => { stdout += data; });
 
-    child.on('close', async () => {
+    child.on('close', async (code) => { // Listen to the exit code
       try {
-        summary = JSON.parse(stdout);
+        if (code !== 0) { // Python script exited with an error
+            try {
+                const errorOutput = JSON.parse(stdout); // Try to parse stdout as JSON error
+                if (errorOutput.error === "Gemini_Quota_Exhausted") {
+                    pythonError = { status: 429, message: `Gemini API high usage: ${errorOutput.message}` }; // 429 Too Many Requests
+                } else if (errorOutput.error === "Summary_Generation_Failed") {
+                    pythonError = { status: 500, message: `Summary generation failed in Python: ${errorOutput.message}` };
+                } else {
+                    pythonError = { status: 500, message: `Unknown Python script error: ${stdout}` };
+                }
+            } catch (parseError) {
+                // If stdout is not JSON, it's a generic Python error
+                pythonError = { status: 500, message: `Python script exited with code ${code} and non-JSON output: ${stdout}` };
+            }
+        } else {
+            // Script exited successfully, try to parse summary
+            summary = JSON.parse(stdout);
+        }
       } catch (err) {
-        summary = ["Summary generation failed."];
+        // This catch handles errors during JSON parsing of stdout if code is 0
+        pythonError = { status: 500, message: `Failed to parse Python script stdout as JSON: ${err.message}. Raw output: ${stdout}` };
+      }
+
+      if (pythonError) {
+          console.error("❌ Resume generation error from Python:", pythonError.message);
+          return res.status(pythonError.status).send(pythonError.message);
       }
 
       const template = await readFile(path.resolve(__dirname, 'templates/modern.html'), 'utf-8');
@@ -157,7 +181,7 @@ filled = filled.replace(
     });
 
   } catch (err) {
-    console.error("❌ Resume generation error:", err);
+    console.error("❌ Resume generation error (Node.js caught):", err);
     res.status(500).send("Resume generation failed.");
   }
 });
@@ -284,7 +308,7 @@ app.get('/api/import/github/:username', async (req, res) => {
 });
 
 app.use('/api', atsScoreRoute);
-  
+
 
 // ✅ Start server
 const PORT = process.env.PORT || 3000;
