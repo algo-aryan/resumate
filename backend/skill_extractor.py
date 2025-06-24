@@ -14,7 +14,6 @@ import google.generativeai as genai
 import time
 import json
 # Import specific error types from google.api_core.exceptions
-# These are the exceptions raised by the google-generativeai client library
 from google.api_core.exceptions import ResourceExhausted, GoogleAPIError, Aborted
 
 # ✅ Load environment and configure Gemini
@@ -34,7 +33,7 @@ except LookupError:
 nlp = spacy.load("en_core_web_sm")
 
 top_n = 10
-# ... (SKILL_KEYWORDS unchanged – keep your full list here)
+# SKILL_KEYWORDS (unchanged - keep your full list here)
 SKILL_KEYWORDS = [
     # 🧠 Broad Skill Domains / Roles
     "frontend developer", "backend developer", "fullstack developer", "data scientist",
@@ -116,7 +115,8 @@ def extract_skills(text):
     return list(found_skills)
 
 def get_ats_score(resume_text, job_description):
-    retries = 5
+    # Modified: Reduced retries from 5 to 2
+    retries = 2
     base_delay = 5
     model_name = "gemini-1.5-flash"
 
@@ -150,7 +150,10 @@ Job Description: {job_description[:3000]}
                     delay = base_delay * (2 ** attempt)
 
                 sys.stderr.write(f"Retrying in {delay} seconds due to quota limit...\n")
-                time.sleep(delay)
+                if attempt < retries - 1: # Only sleep if there are more retries left
+                    time.sleep(delay)
+                else: # If this is the last attempt and it failed, re-raise
+                    raise # Re-raise if retries exhausted
             else: # Other GoogleAPIError types might not be retriable for this function
                 sys.stderr.write(f"Non-quota related ResourceExhausted/Aborted error encountered, stopping retries: {error_message}\n")
                 raise # Re-raise if not a quota error or something we handle here
@@ -346,7 +349,6 @@ if __name__ == "__main__":
         skills = extract_skills(text)
         sys.stderr.write(f"Extracted Skills: {skills}\n")
 
-        # Pass top_n for ATS scoring limit and initial scrape limit
         results = scrape_internshala(skills, text, num_to_score=top_n, initial_scrape_limit=50) 
         
         results_sorted = results 
@@ -354,7 +356,7 @@ if __name__ == "__main__":
         final_output = []
         for i, job in enumerate(results_sorted[:top_n], 1):
             job_apply_link = convert_link(job["link"])
-            job["apply_link"] = job_apply_link # Add to job dict for CSV/JSON consistency
+            job["apply_link"] = job_apply_link
 
             final_output.append({
                 "title": job['title'],
@@ -369,19 +371,15 @@ if __name__ == "__main__":
         save_links_to_txt(results_sorted[:top_n])
         details_to_csv(results_sorted[:top_n])
 
-        # ✅ Output as JSON to stdout (used by Node server)
-        # This must be the ONLY thing printed to stdout.
         sys.stdout.write(json.dumps({ "internships": final_output }))
         
     except (ResourceExhausted, GoogleAPIError) as e:
-        # Catch specific Gemini API errors and output as structured JSON for Node.js
         error_type = "Gemini_Quota_Exhausted" if isinstance(e, ResourceExhausted) else "Gemini_API_Error"
         error_message = str(e)
         error_payload = {"error": error_type, "message": error_message}
         sys.stdout.write(json.dumps(error_payload))
-        sys.exit(1) # Exit with an error code
+        sys.exit(1)
     except Exception as e:
-        # Catch any other unexpected errors in the main execution block
         error_payload = {"error": "Script_Execution_Failed", "message": str(e)}
         sys.stdout.write(json.dumps(error_payload))
-        sys.exit(1) # Exit with an error code
+        sys.exit(1)
