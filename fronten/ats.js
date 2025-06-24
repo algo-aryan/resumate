@@ -30,22 +30,35 @@ document.addEventListener('DOMContentLoaded', () => {
         body: formData
       });
 
-      const data = await res.json();
+      // --- Start of minimal changes for error handling ---
+      if (!res.ok) { // Check if response status is not in the 200-299 range
+        const errorData = await res.json(); // Assuming error responses are JSON
+        let errorMessage = 'Something went wrong while scoring the resume.'; // Default generic message
 
-      if (data.error) {
-        alert('❌ ' + (data.reason || data.error));
-        return;
+        if (res.status === 429) {
+          errorMessage = '⚠️ AI assistant is currently unavailable due to quota limits. Please try again later.';
+        } else {
+          // Use the error message from the backend if available, otherwise fallback
+          errorMessage = errorData.reason || errorData.error || errorMessage;
+          errorMessage = '❌ ' + errorMessage; // Add the X for consistency
+        }
+        alert(errorMessage);
+        console.error('❌ Backend Error for ATS score:', res.status, errorData);
+        return; // Stop execution if there was an error
       }
+      // --- End of minimal changes for error handling ---
 
-       // --- Corrected Line for Score Display ---
-       let scoreValue = 'N/A';
-       if (typeof data.score === 'number') { // Check if it's a number
-         scoreValue = data.score + '%';
-       } else if (typeof data.score === 'string') { // Check if it's a string
-         scoreValue = data.score.replace(/%/g, '') + '%'; // Use regex to remove all % instances
-       }
-       scoreEl.textContent = scoreValue;
-       // --- End Corrected Line ---
+      const data = await res.json(); // Parse JSON for successful responses
+
+      // --- Corrected Line for Score Display ---
+      let scoreValue = 'N/A';
+      if (typeof data.score === 'number') { // Check if it's a number
+        scoreValue = data.score + '%';
+      } else if (typeof data.score === 'string') { // Check if it's a string
+        scoreValue = data.score.replace(/%/g, '') + '%'; // Use regex to remove all % instances
+      }
+      scoreEl.textContent = scoreValue;
+      // --- End Corrected Line --- 
       summaryEl.textContent = data.summary ?? 'No summary.';
 
       let parsed = { strengths: [], suggestions: [] };
@@ -58,8 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
           parsed = JSON.parse(data.raw);
         }
       } catch (err) {
-        console.warn('⚠️ Gemini JSON parsing failed:', err);
+        console.warn('⚠️ Gemini JSON parsing failed (for ATS suggestions):', err);
+        // Fallback or display a message if the raw output isn't parsable JSON
+        strengthsEl.innerHTML = '<li class="list-group-item text-red-500">Could not parse strengths from AI response.</li>';
+        suggestionsEl.innerHTML = '<li class="list-group-item text-red-500">Could not parse suggestions from AI response.</li>';
+        resultContainer.classList.remove('d-none'); // Still show container even if partial data
+        return; // Exit here as parsing failed
       }
+
 
       strengthsEl.innerHTML = '';
       (parsed.strengths || []).forEach(item => {
@@ -79,8 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       resultContainer.classList.remove('d-none'); // Make results visible
     } catch (err) {
-      console.error('❌ Frontend Error:', err);
-      alert('Something went wrong while scoring the resume.');
+      console.error('❌ Frontend Error (Network/Unexpected):', err);
+      // This catch block handles network errors or JSON parsing errors if res.ok was true
+      alert('Something went wrong while scoring the resume. Please check your network connection.');
     } finally {
       // Always remove loading state, regardless of success or failure
       submitButton.classList.remove('loading');

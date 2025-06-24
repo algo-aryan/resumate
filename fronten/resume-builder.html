@@ -642,22 +642,36 @@
           body: JSON.stringify(data)
         });
 
+        // Check if the response was NOT successful (status outside 200-299 range)
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Server responded with status ${response.status}: ${errorText}`);
+            const errorText = await response.text(); // Get the detailed error message from the server
+
+            if (response.status === 429) {
+                // Specific message for quota exhaustion
+                botReply("⚠️ AI assistant is currently unavailable due to quota limits. Please try again later.");
+            } else {
+                // Generic error for other non-2xx status codes
+                botReply("❌ Oh no! There was an error generating your resume. Please check the console for details or try again.");
+            }
+            // Log the full server error to the console for debugging
+            console.error(`Server responded with status ${response.status}: ${errorText}`);
+            return; // Exit the function as we've handled the error
         }
 
+        // If response.ok is true, proceed with successful processing
         const html = await response.text();
         resumeOutput.style.display = 'block';
         resumeOutput.innerHTML = html;
         window.generatedResumeHTML = html; // Store HTML for PDF download
         downloadBtn.style.display = 'block';
         botReply("✅ Done! You can now review and download your resume.");
+
       } catch (error) {
-        console.error("Error generating resume:", error);
-        botReply("❌ Oh no! There was an error generating your resume. Please check the console for details or try again.");
+        // This catch block will now primarily handle network errors (e.g., server unreachable)
+        console.error("Network or unexpected error generating resume:", error);
+        botReply("❌ Oh no! There was a network error or an unexpected issue. Please check your connection or try again.");
       } finally {
-        sendBtn.disabled = false; // Re-enable input
+        sendBtn.disabled = false; // Re-enable input regardless of success or failure
       }
     }
 
