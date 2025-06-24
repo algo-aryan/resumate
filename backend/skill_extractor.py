@@ -13,6 +13,9 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import time
 import json
+# Import specific error types from google.api_core.exceptions
+# These are the exceptions raised by the google-generativeai client library
+from google.api_core.exceptions import ResourceExhausted, GoogleAPIError, Aborted
 
 # ✅ Load environment and configure Gemini
 load_dotenv()
@@ -29,11 +32,6 @@ except LookupError:
     stop_words = set(stopwords.words('english'))
 
 nlp = spacy.load("en_core_web_sm")
-
-# Use a global variable for pdf_path and top_n for easier access in main block
-# It's better to get pdf_path from sys.argv directly in the main block
-# if it's strictly a command-line script.
-# top_n can be passed as an argument to scrape_internshala
 
 top_n = 10
 # ... (SKILL_KEYWORDS unchanged – keep your full list here)
@@ -132,38 +130,42 @@ Job Description: {job_description[:3000]}
 """
             model = genai.GenerativeModel("gemini-1.5-flash")
             response = model.generate_content(prompt)
-
-            # ❌ REMOVE/COMMENT OUT these print statements if they are causing JSON issues
-            # print(f"📤 Gemini Prompt (Attempt {attempt+1}/{retries}):", prompt, file=sys.stderr) # Print to stderr for debug
-            # print(f"📥 Gemini Response (Attempt {attempt+1}/{retries}):", response.text, file=sys.stderr) # Print to stderr for debug
-
+            
             score_match = re.findall(r'\d+', response.text)
             if score_match:
                 score = int(score_match[0])
             else:
                 score = 0
-                # print(f"⚠️ Warning: No numeric score found in Gemini response for attempt {attempt+1}.", file=sys.stderr)
             return score
 
-        except Exception as e:
+        except (ResourceExhausted, Aborted) as e: # Catch specific quota errors
             error_message = str(e)
-            # print(f"❌ Gemini scoring error (Attempt {attempt+1}/{retries}):", error_message, file=sys.stderr)
+            sys.stderr.write(f"❌ Gemini scoring error (Attempt {attempt+1}/{retries}): {error_message}\n")
 
-            if "429 You exceeded your current quota" in error_message:
+            if "429 You exceeded your current quota" in error_message or isinstance(e, ResourceExhausted):
                 match = re.search(r"retry_delay {\s+seconds: (\d+)", error_message)
                 if match:
                     delay = int(match.group(1))
                 else:
                     delay = base_delay * (2 ** attempt)
 
-                # print(f"Retrying in {delay} seconds due to quota limit...", file=sys.stderr)
+                sys.stderr.write(f"Retrying in {delay} seconds due to quota limit...\n")
                 time.sleep(delay)
-            else:
-                # print(f"Non-quota related error encountered, stopping retries: {error_message}", file=sys.stderr)
-                return 0
+            else: # Other GoogleAPIError types might not be retriable for this function
+                sys.stderr.write(f"Non-quota related ResourceExhausted/Aborted error encountered, stopping retries: {error_message}\n")
+                raise # Re-raise if not a quota error or something we handle here
+        except GoogleAPIError as e: # Catch other general API errors
+            sys.stderr.write(f"Non-quota related GoogleAPIError encountered, stopping retries: {str(e)}\n")
+            raise # Re-raise other API errors
+        except Exception as e:
+            sys.stderr.write(f"❌ Unexpected error in get_ats_score (Attempt {attempt+1}/{retries}): {str(e)}\n")
+            raise # Re-raise other unexpected errors
 
-    # print(f"❌ Gemini scoring failed after {retries} attempts due to persistent quota limits or other errors.", file=sys.stderr)
-    return 0
+    # If loop finishes without returning, it means retries were exhausted
+    # Due to quota or other unhandled errors that were re-raised.
+    sys.stderr.write(f"❌ Gemini scoring failed after {retries} attempts due to persistent quota limits or other errors.\n")
+    raise ResourceExhausted("Gemini API quota exceeded after multiple retries.")
+
 
 def check_eligible(link):
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -175,7 +177,7 @@ def check_eligible(link):
         text = button.get_text(strip=True).lower()
         return "apply now" in text and "login" not in text and "eligible" not in text
     except Exception as e:
-        # print(f"Error checking {link}: {e}", file=sys.stderr)
+        sys.stderr.write(f"Error checking {link}: {e}\n")
         return False
 
 def parse_stipend(stipend_str):
@@ -228,35 +230,43 @@ def scrape_internshala(skills, resume_text, num_to_score=10, initial_scrape_limi
 
             except Exception as e:
                 log_to_csv("Parse Error for Individual Internship", str(e))
+                sys.stderr.write(f"Parse Error for Individual Internship: {e}\n")
                 continue
 
     except Exception as e:
         log_to_csv("Scraping Failed for Internshala URL", str(e))
+        sys.stderr.write(f"Scraping Failed for Internshala URL: {e}\n")
         return []
 
     final_scored_internships = []
-    # print(f"\n--- Fetching Job Descriptions and ATS Scores for Top {min(len(eligible_internships_for_scoring), num_to_score)} Internships ---", file=sys.stderr)
+    sys.stderr.write(f"\n--- Fetching Job Descriptions and ATS Scores for Top {min(len(eligible_internships_for_scoring), num_to_score)} Internships ---\n")
 
     for i, job_data in enumerate(eligible_internships_for_scoring[:num_to_score]):
         try:
-            # print(f"Processing ATS for: {job_data['title']} at {job_data['company']} ({i+1}/{min(len(eligible_internships_for_scoring), num_to_score)})", file=sys.stderr)
+            sys.stderr.write(f"Processing ATS for: {job_data['title']} at {job_data['company']} ({i+1}/{min(len(eligible_internships_for_scoring), num_to_score)})\n")
             
             job_resp = requests.get(job_data["link"], headers=headers)
             job_soup = BeautifulSoup(job_resp.text, "html.parser")
             jd_div = job_soup.find("div", class_="internship_details")
             job_desc = jd_div.get_text(strip=True) if jd_div else ""
 
-            ats_score = get_ats_score(resume_text, job_desc)
+            ats_score = get_ats_score(resume_text, job_desc) # This can now raise exceptions
             
             job_data["ats_score"] = ats_score
             final_scored_internships.append(job_data)
             log_to_csv("ATS Scored", f"{job_data['title']} - ATS: {ats_score}")
 
+        except (ResourceExhausted, GoogleAPIError, Aborted) as e:
+            # If a Gemini error occurred during scoring, re-raise it
+            # The main block will catch it and format the output for Node.js
+            log_to_csv("ATS Scoring Error (Gemini API)", f"Error for {job_data['title']}: {str(e)}")
+            raise # Re-raise so the main block catches it
         except Exception as e:
-            log_to_csv("ATS Scoring Error", f"Error for {job_data['title']}: {str(e)}")
+            log_to_csv("ATS Scoring Error (Other)", f"Error for {job_data['title']}: {str(e)}")
+            sys.stderr.write(f"ATS Scoring Error (Other) for {job_data['title']}: {str(e)}\n")
             job_data["ats_score"] = 0
             final_scored_internships.append(job_data)
-            continue
+            continue # Continue to next job if non-Gemini error
 
     def get_ats_value(ats):
         if ats is None:
@@ -321,57 +331,57 @@ def details_to_csv(lod, filename="Details_csv.csv"):
             writer.writeheader()
             writer.writerows(lod)
         else:
-            # print("Warning: No data to write to CSV.", file=sys.stderr)
-            pass # Or log this as a warning
+            sys.stderr.write("Warning: No data to write to CSV.\n")
 
 # --- Main execution block ---
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        # print("Usage: python skill_extractor.py <path_to_your_resume.pdf>", file=sys.stderr) # Print to stderr
-        sys.exit(1)
+    try:
+        if len(sys.argv) < 2:
+            sys.stderr.write("Usage: python skill_extractor.py <path_to_your_resume.pdf>\n")
+            sys.exit(1)
 
-    pdf_path = sys.argv[1]
-    # top_n is defined globally at the top of the script
-    # It now acts as the 'num_to_score' for ATS calls and display limit.
+        pdf_path = sys.argv[1]
 
-    text = extract_text_from_pdf(pdf_path)
-    skills = extract_skills(text)
-    # print("Extracted Skills:", skills, file=sys.stderr) # Print to stderr for debug
+        text = extract_text_from_pdf(pdf_path)
+        skills = extract_skills(text)
+        sys.stderr.write(f"Extracted Skills: {skills}\n")
 
-    # Pass top_n for ATS scoring limit and initial scrape limit
-    results = scrape_internshala(skills, text, num_to_score=top_n, initial_scrape_limit=50) 
-    
-    # Sort the results by ATS descending, then by stipend descending (already done in scrape_internshala)
-    # results_sorted = sorted(results, key=lambda x: parse_stipend(x["stipend"]), reverse=True)
-    # The 'results' list returned by scrape_internshala is ALREADY sorted by ATS then stipend.
-    results_sorted = results # No need to re-sort here
+        # Pass top_n for ATS scoring limit and initial scrape limit
+        results = scrape_internshala(skills, text, num_to_score=top_n, initial_scrape_limit=50) 
+        
+        results_sorted = results 
 
-    final_output = []
-    # Ensure to only iterate up to top_n for the final output
-    for i, job in enumerate(results_sorted[:top_n], 1):
-        # Create 'apply_link' for each job directly here before appending to final_output
-        job_apply_link = convert_link(job["link"])
-        job["apply_link"] = job_apply_link # Add to job dict for CSV/JSON consistency
+        final_output = []
+        for i, job in enumerate(results_sorted[:top_n], 1):
+            job_apply_link = convert_link(job["link"])
+            job["apply_link"] = job_apply_link # Add to job dict for CSV/JSON consistency
 
-        final_output.append({
-            "title": job['title'], # Keep title clean, let frontend format "1. Title..."
-            "company": job['company'],
-            "location": job["location"],
-            "stipend": job["stipend"],
-            "link": job["link"],
-            "apply": job_apply_link, # Use the correctly generated apply link
-            "ats": job.get('ats_score', 'N/A')
-        })
+            final_output.append({
+                "title": job['title'],
+                "company": job['company'],
+                "location": job["location"],
+                "stipend": job["stipend"],
+                "link": job["link"],
+                "apply": job_apply_link,
+                "ats": job.get('ats_score', 'N/A')
+            })
 
-    # Save for download (optional)
-    save_links_to_txt(results_sorted[:top_n])
-    # The 'apply_link' is already added within the loop above, so this block is not strictly necessary anymore:
-    # for job in results_sorted[:top_n]:
-    #     job["apply_link"] = convert_link(job["link"])
-    details_to_csv(results_sorted[:top_n])
+        save_links_to_txt(results_sorted[:top_n])
+        details_to_csv(results_sorted[:top_n])
 
-    # ✅ Output as JSON to stdout (used by Node server)
-    # This must be the ONLY thing printed to stdout.
-    sys.stdout.write(json.dumps({ "internships": final_output }))
-    # The second call to details_to_csv is redundant
-    # details_to_csv(results_sorted[:top_n])
+        # ✅ Output as JSON to stdout (used by Node server)
+        # This must be the ONLY thing printed to stdout.
+        sys.stdout.write(json.dumps({ "internships": final_output }))
+        
+    except (ResourceExhausted, GoogleAPIError) as e:
+        # Catch specific Gemini API errors and output as structured JSON for Node.js
+        error_type = "Gemini_Quota_Exhausted" if isinstance(e, ResourceExhausted) else "Gemini_API_Error"
+        error_message = str(e)
+        error_payload = {"error": error_type, "message": error_message}
+        sys.stdout.write(json.dumps(error_payload))
+        sys.exit(1) # Exit with an error code
+    except Exception as e:
+        # Catch any other unexpected errors in the main execution block
+        error_payload = {"error": "Script_Execution_Failed", "message": str(e)}
+        sys.stdout.write(json.dumps(error_payload))
+        sys.exit(1) # Exit with an error code

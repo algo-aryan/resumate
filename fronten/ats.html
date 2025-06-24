@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATS Resume Score</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
   <script src="https://cdn.lordicon.com/lordicon.js"></script>
@@ -654,6 +653,10 @@
     .hidden {
         display: none !important;
     }
+    /* Ensure .error-message is always block when not hidden */
+    .error-message:not(.hidden) {
+        display: block !important;
+    }
   </style>
 </head>
 
@@ -704,18 +707,16 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // ats.js content moved here for self-containment
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('resume-form');
       const fileInput = document.getElementById('resume');
-      const submitButton = document.querySelector('.btn.btn-primary'); // Get the submit button
+      const submitButton = document.querySelector('.btn.btn-primary'); 
       const resultContainer = document.getElementById('result-container');
       const scoreEl = document.getElementById('score');
       const summaryEl = document.getElementById('summary');
       const strengthsEl = document.getElementById('strengths');
       const suggestionsEl = document.getElementById('suggestions');
       
-      // Get the ATS error display element
       const atsErrorDisplay = document.getElementById('atsErrorDisplay');
 
       form.addEventListener('submit', async (e) => {
@@ -723,13 +724,13 @@
 
         const file = fileInput.files[0];
         if (!file) {
-          alert('Please select a resume file.'); // Keep alert for direct user input missing
+          alert('Please select a resume file.'); 
           return;
         }
 
         // Show loading state
         submitButton.classList.add('loading');
-        resultContainer.classList.add('d-none'); // Hide previous results if any
+        resultContainer.classList.add('d-none'); 
         
         // Clear and hide previous ATS errors
         atsErrorDisplay.classList.add('hidden');
@@ -744,44 +745,47 @@
             body: formData
           });
 
-          if (!res.ok) { // Check if response status is not in the 200-299 range
-            const errorData = await res.json(); // Assuming error responses are JSON
+          if (!res.ok) { 
+            const rawErrorText = await res.text();
+            console.error('❌ Raw Backend Error Response Text:', rawErrorText);
+
+            let errorData = {};
+            try {
+                errorData = JSON.parse(rawErrorText);
+            } catch (parseError) {
+                console.error('❌ Failed to parse backend error response as JSON:', parseError);
+                errorData = { reason: rawErrorText }; 
+            }
             
-            let userFacingMessage = 'Something went wrong while scoring the resume. Please try again.'; // Default generic message
+            let userFacingMessage = 'Something went wrong while scoring the resume. Please try again.'; 
 
             if (res.status === 429) {
               userFacingMessage = '⚠️ AI assistant is currently unavailable due to quota limits. Please try again later.';
             } else {
-              // For other errors, provide a generic message, log details to console
-              console.error('❌ Backend Error for ATS score:', res.status, errorData);
-              userFacingMessage = '❌ An error occurred during ATS scoring.';
+              console.error('❌ Backend Error for ATS score (parsed):', res.status, errorData);
+              userFacingMessage = `❌ An error occurred during ATS scoring: ${errorData.reason || 'Unknown error'}.`;
             }
             
-            // Display error in the dedicated div
             atsErrorDisplay.innerText = userFacingMessage;
             atsErrorDisplay.classList.remove('hidden');
             
-            // Clear previous results on error
             scoreEl.textContent = 'N/A';
             summaryEl.textContent = 'No data.';
             strengthsEl.innerHTML = '';
             suggestionsEl.innerHTML = '';
             
-            return; // Stop execution if there was an error
+            return; 
           }
 
-          // If response.ok is true, parse data
           const data = await res.json();
 
-          // --- Corrected Line for Score Display ---
           let scoreValue = 'N/A';
-          if (typeof data.score === 'number') { // Check if it's a number
+          if (typeof data.score === 'number') { 
             scoreValue = data.score + '%';
-          } else if (typeof data.score === 'string') { // Check if it's a string
-            scoreValue = data.score.replace(/%/g, '') + '%'; // Use regex to remove all % instances
+          } else if (typeof data.score === 'string') { 
+            scoreValue = data.score.replace(/%/g, '') + '%'; 
           }
           scoreEl.textContent = scoreValue;
-          // --- End Corrected Line --- 
           summaryEl.textContent = data.summary ?? 'No summary.';
 
           let parsed = { strengths: [], suggestions: [] };
@@ -795,13 +799,11 @@
             }
           } catch (err) {
             console.warn('⚠️ Gemini JSON parsing failed (for ATS suggestions):', err);
-            // Fallback or display a message if the raw output isn't parsable JSON
             strengthsEl.innerHTML = '<li class="list-group-item text-red-500">Could not parse strengths from AI response.</li>';
             suggestionsEl.innerHTML = '<li class="list-group-item text-red-500">Could not parse suggestions from AI response.</li>';
-            resultContainer.classList.remove('d-none'); // Still show container even if partial data
-            return; // Exit here as parsing failed
+            resultContainer.classList.remove('d-none'); 
+            return; 
           }
-
 
           strengthsEl.innerHTML = '';
           (parsed.strengths || []).forEach(item => {
@@ -819,29 +821,24 @@
             suggestionsEl.appendChild(li);
           });
 
-          resultContainer.classList.remove('d-none'); // Make results visible
+          resultContainer.classList.remove('d-none'); 
         } catch (err) {
           console.error('❌ Frontend Error (Network/Unexpected for ATS):', err);
-          // This catch block handles network errors or errors before response.json()
           atsErrorDisplay.innerText = 'Network error. Please check your internet connection and try again.';
           atsErrorDisplay.classList.remove('hidden');
           
-          // Clear previous results on network error
           scoreEl.textContent = 'N/A';
           summaryEl.textContent = 'No data.';
           strengthsEl.innerHTML = '';
           suggestionsEl.innerHTML = '';
         } finally {
-          // Always remove loading state, regardless of success or failure
           submitButton.classList.remove('loading');
         }
       });
 
-      // JavaScript to handle the file input's display text
       const resumeInput = document.getElementById('resume');
       const fileNameDisplay = document.getElementById('file-name-display');
 
-      // Update file input's display text when a file is selected
       resumeInput.addEventListener('change', function () {
         if (this.files && this.files.length > 0) {
           fileNameDisplay.textContent = this.files[0].name;

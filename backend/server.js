@@ -44,22 +44,47 @@ app.post('/api/upload', upload.single('resume'), (req, res) => {
           VIRTUAL_ENV: path.resolve(__dirname, 'venv')
       }
   }, (err, stdout, stderr) => {
-      // IMPORTANT: Ensure the uploaded file is cleaned up
+      // IMPORTANT: Ensure the uploaded file is cleaned up regardless of outcome
       fs.unlink(uploadedPath, (unlinkErr) => {
           if (unlinkErr) console.error("Error deleting uploaded file:", unlinkErr);
       });
 
-      if (err) {
-          console.error("❌ Python Execution Error (stderr):", stderr);
-          console.error("❌ Python Execution Error (stdout):", stdout); // Log stdout as well for debugging
-          return res.status(500).json({ error: `Python script execution failed: ${stderr || err.message}` });
+      // Log both stdout and stderr for full debugging context
+      console.log("Python script raw stdout:\n", stdout);
+      if (stderr) console.error("Python script raw stderr:\n", stderr);
+
+
+      if (err) { // Python script exited with a non-zero code
+          console.error("❌ Python Execution Error (exit code !== 0):", err);
+          
+          try {
+              const errorOutput = JSON.parse(stdout); // Attempt to parse stdout as JSON error
+              if (errorOutput.error === "Gemini_Quota_Exhausted") {
+                  // If skill_extractor.py explicitly signals quota exhaustion
+                  return res.status(429).json({ 
+                      error: "AI assistant is currently unavailable due to quota limits.",
+                      reason: errorOutput.message 
+                  });
+              } else {
+                  // Other types of structured errors from the Python script
+                  return res.status(500).json({ 
+                      error: `Python script error: ${errorOutput.error || 'Unknown'}`, 
+                      reason: errorOutput.message || stdout 
+                  });
+              }
+          } catch (jsonParseError) {
+              // If stdout is not valid JSON when an error occurred, it's a generic script failure
+              console.error("❌ Failed to parse Python script stdout as JSON (during error):", jsonParseError);
+              return res.status(500).json({ 
+                  error: "Python script execution failed.", 
+                  reason: stderr || err.message || stdout // Provide stderr, exec error message, or raw stdout
+              });
+          }
       }
 
-      // Log raw stdout to see what Python printed (should be JSON)
-      console.log("Python script raw stdout:\n", stdout);
-
+      // If execution was successful (err is null or code is 0)
       try {
-          // Attempt to parse stdout as JSON
+          // Attempt to parse stdout as JSON for successful execution
           const pythonOutput = JSON.parse(stdout);
 
           if (pythonOutput && Array.isArray(pythonOutput.internships)) {
@@ -71,8 +96,8 @@ app.post('/api/upload', upload.single('resume'), (req, res) => {
               return res.status(500).json({ error: "Invalid output format from Python script." });
           }
       } catch (jsonParseError) {
-          // stdout was not valid JSON
-          console.error("❌ Failed to parse Python script stdout as JSON:", jsonParseError);
+          // stdout was not valid JSON for a successful response (unexpected)
+          console.error("❌ Failed to parse Python script stdout as JSON (during success):", jsonParseError);
           console.error("Raw stdout causing parse error:", stdout);
           return res.status(500).json({ error: "Invalid or malformed JSON output from Python script." });
       }
