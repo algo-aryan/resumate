@@ -17,6 +17,7 @@ import User from './models/User.js'; // adjust the path if it's different
 import TrackedInternship from './models/TrackedInternship.js';
 import { fetchGitHubProfile } from './github/tempFile.js';
 import atsScoreRoute from './routes/atsScore.js';
+import chatbotRoute from './routes/chatbot.js';
 
 
 dotenv.config();
@@ -30,6 +31,8 @@ app.use(cors({ origin: '*', methods: ['GET', 'POST', 'DELETE'] }));
 app.use(express.json());
 
 const upload = multer({ dest: 'uploads/' });
+
+app.use('/api', chatbotRoute);
 
 // ✅ Python resume extractor route
 app.post('/api/upload', upload.single('resume'), (req, res) => {
