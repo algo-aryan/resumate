@@ -29,7 +29,7 @@ router.post('/signup', async (req, res) => {
 // Correct Login (moved from server.js)
 router.post('/login', async (req, res) => {
 	const { email, password } = req.body;
-	console.log('📥 Login attempt:', email);
+	console.log('Login attempt:', email);
 
 	try {
 		const user = await User.findOne({ email });
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
 				user: { _id: user._id, name: user.name, email: user.email },
 			});
 	} catch (err) {
-		console.error('🔥 Login Error:', err);
+		console.error('Login Error:', err);
 		return res.status(500).json({ message: 'Server error during login' });
 	}
 });
