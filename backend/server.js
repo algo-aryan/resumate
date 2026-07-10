@@ -89,6 +89,24 @@ app.delete('/api/untrack-internship/:id', async (req, res) => {
   }
 });
 
+// Serve static files from the frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+app.use((req, res) => {
+  console.log(
+    `[DEBUG] Catch-all route hit for ${req.originalUrl}. Sending index.html from:`,
+    path.join(__dirname, '../frontend/index.html'),
+  );
+  res.sendFile(path.join(__dirname, '../frontend/index.html'), (err) => {
+    if (err) {
+      console.error('[DEBUG] Error sending index.html:', err);
+      res.status(500).send(
+        'Server Error: Cannot find frontend/index.html. Are you sure the frontend folder was included in the Render build?',
+      );
+    }
+  });
+});
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () =>
